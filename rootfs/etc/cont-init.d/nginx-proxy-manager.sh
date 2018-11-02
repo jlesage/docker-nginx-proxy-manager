@@ -20,6 +20,8 @@ mkdir -p \
     /config/nginx/stream \
     /config/nginx/dead_host \
     /config/nginx/temp \
+    /config/log/letsencrypt \
+    /config/letsencrypt-workdir \
     $XDG_CONFIG_HOME/letsencrypt
 
 # Create nginx log files.
