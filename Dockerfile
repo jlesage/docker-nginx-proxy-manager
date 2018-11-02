@@ -110,26 +110,11 @@ RUN \
     # Fix nginx test command line.
     sed-patch 's|-g "error_log off;"||' /opt/nginx-proxy-manager/src/backend/internal/nginx.js && \
 
-    # Make sure nginx runs under the proper user.
-    #sed-patch 's|user root;|user app;|' /etc/nginx/nginx.conf && \
-
     # Remove the `user` directive, since we want nginx to run as non-root.
     sed-patch 's|user root;|#user root;|' /etc/nginx/nginx.conf && \
 
     # Make sure nginx loads the stream module.
     sed-patch '/daemon off;/a load_module /usr/lib/nginx/modules/ngx_stream_module.so;' /etc/nginx/nginx.conf && \
-
-    # Adjust paths.
-#    sed-patch 's|/data/|/config/|' /etc/nginx/nginx.conf && \
-#    sed-patch 's|/data/|/config/|' /etc/nginx/conf.d/default.conf && \
-#    sed-patch 's|/data/|/config/|' /opt/nginx-proxy-manager/src/backend/templates/proxy_host.conf && \
-#    sed-patch 's|/logs/|/log/|' /etc/nginx/nginx.conf && \
-#    sed-patch 's|/logs/|/log/|' /etc/nginx/conf.d/default.conf && \
-#    sed-patch 's|/logs/|/log/|' /opt/nginx-proxy-manager/src/backend/templates/proxy_host.conf && \
-
-    # Adjust the nginx proxy cache path.
-#    sed-patch 's|/var/lib/nginx/cache/|/config/nginx/cache/|' /etc/nginx/nginx.conf && \
-
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
