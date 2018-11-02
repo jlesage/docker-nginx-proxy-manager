@@ -25,6 +25,7 @@ RUN \
         mariadb \
         mariadb-client \
         certbot \
+        openssl \
         && \
     # Clean some uneeded stuff from mariadb.
     rm -r \
