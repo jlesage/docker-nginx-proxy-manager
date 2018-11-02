@@ -52,6 +52,7 @@ RUN \
     add-pkg --virtual build-dependencies \
         build-base \
         curl \
+        patch \
         yarn \
         git \
         python \
@@ -67,6 +68,9 @@ RUN \
     echo "Downloading Nginx Proxy Manager package..." && \
     mkdir nginx-proxy-manager && \
     curl -# -L ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C nginx-proxy-manager && \
+
+    # Patch.
+    curl -# -L https://github.com/jlesage/nginx-proxy-manager/commit/0aa1cb0aa.patch | patch -d nginx-proxy-manager -p1 && \
 
     # Build Nginx Proxy Manager.
     echo "Building Nginx Proxy Manager..." && \
@@ -100,6 +104,7 @@ RUN \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/src/backend/templates/_listen.conf && \
 
     # Change the HTTPs port 443 to the unprivileged port 4443.
+    sed-patch 's|listen 443 |listen 4443 |' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|listen 443 |listen 4443 |' /opt/nginx-proxy-manager/src/backend/templates/_listen.conf && \
 
     # Fix nginx test command line.
