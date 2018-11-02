@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv sh
+
+set -e # Exit immediately if a command exits with a non-zero status.
+set -u # Treat unset variables as an error.
+
+mkdir -p /run/mysqld
+chown $USER_ID:$GROUP_ID /run/mysqld
+
+echo "[$(basename "$(pwd)")] starting..."
+exec s6-applyuidgid -u $USER_ID -g $GROUP_ID -G ${SUP_GROUP_IDS:-$GROUP_ID} /usr/bin/mysqld --datadir /config/mysql --tmpdir /tmp/
+
+# vim:ft=sh:ts=4:sw=4:et:sts=4

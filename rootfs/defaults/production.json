@@ -1,0 +1,10 @@
+{
+  "database": {
+    "engine": "mysql",
+    "host": "127.0.0.1",
+    "name": "nginxproxymanager",
+    "user": "nginxproxymanager",
+    "password": "password123",
+    "port": 3306
+  }
+}
