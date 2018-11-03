@@ -70,7 +70,7 @@ RUN \
     curl -# -L ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C nginx-proxy-manager && \
 
     # Patch.
-    curl -# -L https://github.com/jlesage/nginx-proxy-manager/commit/0aa1cb0aa.patch | patch -d nginx-proxy-manager -p1 && \
+    curl -# -L https://github.com/jlesage/nginx-proxy-manager/commit/20fd18565.patch | patch -d nginx-proxy-manager -p1 || true && \
 
     # Build Nginx Proxy Manager.
     echo "Building Nginx Proxy Manager..." && \
