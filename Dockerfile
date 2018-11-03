@@ -132,6 +132,7 @@ RUN \
     # Cleanup.
     del-pkg build-dependencies && \
     rm -r \
+        /root/.node-gyp \
         /app \
         /usr/lib/node_modules \
         /opt/nginx-proxy-manager/node_modules/bcrypt/build \
