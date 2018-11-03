@@ -28,6 +28,7 @@ Nginx Proxy Manager enables you to easily forward to your websites running at ho
       * [User/Group IDs](#usergroup-ids)
       * [Accessing the GUI](#accessing-the-gui)
       * [Shell Access](#shell-access)
+      * [Default Administrator Account](#default-administrator-account)
       * [Accessibility From The Internet](#accessibility-from-the-internet)
       * [Support or Contact](#support-or-contact)
 
@@ -244,6 +245,15 @@ docker exec -ti CONTAINER sh
 
 Where `CONTAINER` is the ID or the name of the container used during its
 creation (e.g. `crashplan-pro`).
+
+## Default Administrator Account
+
+After a fresh install, use the following credentials to login:
+  - Email address: `admin@example.com`
+  - Password: `changeme`.
+
+After you login with this default user, you will be asked to modify your details
+and change your password.
 
 ## Accessibility From The Internet
 
