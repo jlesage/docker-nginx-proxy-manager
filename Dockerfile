@@ -8,7 +8,7 @@
 FROM jlesage/baseimage:alpine-3.8-v2.4.1
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.0.3
+ARG NGINX_PROXY_MANAGER_VERSION=2.0.5
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz
@@ -69,9 +69,6 @@ RUN \
     mkdir nginx-proxy-manager && \
     curl -# -L ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C nginx-proxy-manager && \
 
-    # Patch.
-    curl -# -L https://github.com/jlesage/nginx-proxy-manager/commit/20fd18565.patch | patch -d nginx-proxy-manager -p1 || true && \
-
     # Build Nginx Proxy Manager.
     echo "Building Nginx Proxy Manager..." && \
     cp -r nginx-proxy-manager /app && \
@@ -115,6 +112,8 @@ RUN \
 
     # Make sure nginx loads the stream module.
     sed-patch '/daemon off;/a load_module /usr/lib/nginx/modules/ngx_stream_module.so;' /etc/nginx/nginx.conf && \
+
+    sed-patch 's|include conf.d/include/ssl-ciphers.conf;|ssl_ciphers aNULL;|' /etc/nginx/conf.d/default.conf && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
