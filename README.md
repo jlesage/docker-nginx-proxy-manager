@@ -182,7 +182,7 @@ container image.
 
   1.  Open the *Docker* application.
   2.  Click on *Registry* in the left pane.
-  3.  In the search bar, type the name of the container (`jlesage/docker-nginx-proxy-manager`).
+  3.  In the search bar, type the name of the container (`jlesage/nginx-proxy-manager`).
   4.  Select the image, click *Download* and then choose the `latest` tag.
   5.  Wait for the download to complete.  A  notification will appear once done.
   6.  Click on *Container* in the left pane.
