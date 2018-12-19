@@ -250,7 +250,7 @@ creation (e.g. `crashplan-pro`).
 
 After a fresh install, use the following credentials to login:
   - Email address: `admin@example.com`
-  - Password: `changeme`.
+  - Password: `changeme`
 
 After you login with this default user, you will be asked to modify your details
 and change your password.
