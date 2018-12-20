@@ -91,6 +91,11 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.0.1</version>
+        <date>2018-12-19</date>
+        <change>Fixed an issue where creation of an access list would fail.</change>
+      </release>
+      <release>
         <version>1.0.0</version>
         <date>2018-12-19</date>
         <change>Initial release.</change>
