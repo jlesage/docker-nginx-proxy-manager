@@ -91,6 +91,13 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.1.0</version>
+        <date>2019-01-03</date>
+        <change>Upgraded Nginx Proxy Manager to version 2.0.7.</change>
+        <change level="2">Added HTTP/2 option for SSL enabled hosts.</change>
+        <change level="2">Added upstream SSL option for proxy hosts.</change>
+      </release>
+      <release>
         <version>1.0.1</version>
         <date>2018-12-19</date>
         <change>Fixed an issue where creation of an access list would fail.</change>
