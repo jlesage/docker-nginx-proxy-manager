@@ -33,6 +33,7 @@ touch /config/log/nginx/manager.log
 ln -sf log/nginx /config/logs
 
 # Install default config.
+[ -f /config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /config/nginx/
 [ -f /config/production.json ] || cp /defaults/production.json /config/
 [ -f $XDG_CONFIG_HOME/letsencrypt/cli.ini ] || cp /defaults/cli.ini $XDG_CONFIG_HOME/letsencrypt/
 

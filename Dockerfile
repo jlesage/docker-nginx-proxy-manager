@@ -8,7 +8,7 @@
 FROM jlesage/baseimage:alpine-3.8-v2.4.1
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.0.7
+ARG NGINX_PROXY_MANAGER_VERSION=2.0.8
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz
@@ -116,6 +116,10 @@ RUN \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
+
+    # Make sure the config file for IP ranges is stored in persistent volume.
+    mv /etc/nginx/conf.d/include/ip_ranges.conf /defaults/ && \
+    ln -sf /config/nginx/ip_ranges.conf /etc/nginx/conf.d/include/ip_ranges.conf && \
 
     # Make sure nginx cache is stored on the persistent volume.
     ln -s /config/nginx/cache /var/lib/nginx/cache && \
