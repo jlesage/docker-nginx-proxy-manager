@@ -37,11 +37,19 @@ ln -sf log/nginx /config/logs
 [ -f /config/production.json ] || cp /defaults/production.json /config/
 [ -f $XDG_CONFIG_HOME/letsencrypt/cli.ini ] || cp /defaults/cli.ini $XDG_CONFIG_HOME/letsencrypt/
 
+# Protect against database initialization failure: make sure to remove the
+# database directory if it didn't initialized properly.
+if [ -d /config/mysql ] && [ -f /config/db_init_in_progress ]; then
+    rm -r /config/mysql
+fi
+
 # Initialize the database data directory.
 if [ ! -d /config/mysql ]; then
     MYSQL_DATABASE=nginxproxymanager
     MYSQL_USER=nginxproxymanager
     MYSQL_PASSWORD=password123
+
+    touch /config/db_init_in_progress
 
     log "Initializing database data directory..."
     mysql_install_db --datadir=/config/mysql >/config/log/init_db.log 2>&1
@@ -85,6 +93,9 @@ if [ ! -d /config/mysql ]; then
         exit 1
     fi
 fi
+
+# Database initialized properly.
+rm -f /config/db_init_in_progress
 
 # Generate dummy self-signed certificate.
 if [ ! -f /config/nginx/dummycert.pem ] || [ ! -f /config/nginx/dummykey.pem ]
