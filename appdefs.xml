@@ -91,6 +91,11 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.3.1</version>
+        <date>2019-02-21</date>
+        <change>During startup, make sure there is no migration lock held.</change>
+      </release>
+      <release>
         <version>1.3.0</version>
         <date>2019-02-21</date>
         <change>Make sure to upgrade the database if required.</change>
