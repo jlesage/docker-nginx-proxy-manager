@@ -114,6 +114,12 @@ if [ ! -f /config/db_init_in_progress ]; then
     /usr/bin/mysql_upgrade --silent
 fi
 
+# Make sure there is no migration lock held.
+# See https://github.com/jlesage/docker-nginx-proxy-manager/issues/4
+if [ ! -f /config/db_init_in_progress ]; then
+    echo 'DELETE FROM nginxproxymanager.migrations_lock WHERE is_locked = 1;' | mysql
+fi
+
 # Database initialized properly.
 rm -f /config/db_init_in_progress
 
