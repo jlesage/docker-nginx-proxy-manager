@@ -24,6 +24,7 @@ RUN \
         nginx-mod-stream \
         mariadb \
         mariadb-client \
+        mariadb-server-utils \
         certbot \
         openssl \
         apache2-utils \
