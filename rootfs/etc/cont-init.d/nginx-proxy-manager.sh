@@ -47,6 +47,8 @@ mkdir -p \
     /config/letsencrypt-acme-challenge \
     /config/custom_ssl \
     /config/access \
+    /config/nginx/default_host \
+    /config/nginx/default_www \
     /config/nginx/cache \
     /config/nginx/proxy_host \
     /config/nginx/redirection_host \

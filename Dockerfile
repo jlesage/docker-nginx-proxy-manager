@@ -8,7 +8,7 @@
 FROM jlesage/baseimage:alpine-3.8-v2.4.1
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.0.9
+ARG NGINX_PROXY_MANAGER_VERSION=2.0.11
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz
@@ -98,9 +98,10 @@ RUN \
     sed-patch 's|81|8181|' /etc/nginx/conf.d/default.conf && \
 
     # Change the HTTP port 80 to the unprivileged port 8080.
-    sed-patch 's|listen 80 |listen 8080 |' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|listen 80;|listen 8080;|' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/src/backend/templates/letsencrypt-request.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/src/backend/templates/_listen.conf && \
+    sed-patch 's|listen 80 |listen 8080 |' /opt/nginx-proxy-manager/src/backend/templates/default.conf && \
 
     # Change the HTTPs port 443 to the unprivileged port 4443.
     sed-patch 's|listen 443 |listen 4443 |' /etc/nginx/conf.d/default.conf && \
