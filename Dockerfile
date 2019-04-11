@@ -8,7 +8,7 @@
 FROM jlesage/baseimage:alpine-3.8-v2.4.1
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.0.11
+ARG NGINX_PROXY_MANAGER_VERSION=e7ddcb9
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz
