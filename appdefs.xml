@@ -91,6 +91,11 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.4.2</version>
+        <date>2019-04-18</date>
+        <change>Fixed issue where using a hostname for the upstream proxy host would not work.</change>
+      </release>
+      <release>
         <version>1.4.1</version>
         <date>2019-04-10</date>
         <change>Updated Nginx Proxy Manager to version 2.0.12.</change>
