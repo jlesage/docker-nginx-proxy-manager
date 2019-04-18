@@ -123,6 +123,10 @@ RUN \
     mv /etc/nginx/conf.d/include/ip_ranges.conf /defaults/ && \
     ln -sf /config/nginx/ip_ranges.conf /etc/nginx/conf.d/include/ip_ranges.conf && \
 
+    # Make sure the config file for resovers is stored in persistent volume.
+    rm /etc/nginx/conf.d/include/resolvers.conf && \
+    ln -sf /config/nginx/resolvers.conf /etc/nginx/conf.d/include/resolvers.conf && \
+
     # Make sure nginx cache is stored on the persistent volume.
     ln -s /config/nginx/cache /var/lib/nginx/cache && \
 
