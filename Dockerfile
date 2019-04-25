@@ -5,7 +5,7 @@
 #
 
 # Pull base image.
-FROM jlesage/baseimage:alpine-3.8-v2.4.1
+FROM jlesage/baseimage:alpine-3.8-v2.4.2
 
 # Define software versions.
 ARG NGINX_PROXY_MANAGER_VERSION=e7ddcb9
