@@ -91,6 +91,11 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.5.1</version>
+        <date>2019-07-02</date>
+        <change>Fixed issue where the wrong SSL protocols/ciphers were used.</change>
+      </release>
+      <release>
         <version>1.5.0</version>
         <date>2019-05-09</date>
         <change>Upgraded Nginx Proxy Manager to version 2.0.13.</change>
