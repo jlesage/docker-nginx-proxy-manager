@@ -116,6 +116,9 @@ RUN \
     # Make sure nginx loads the stream module.
     sed-patch '/daemon off;/a load_module /usr/lib/nginx/modules/ngx_stream_module.so;' /etc/nginx/nginx.conf && \
 
+    # Fix to use correct SSL protocols/ciphers.
+    sed-patch 's|ssl_ciphers aNULL;|include conf.d/include/ssl-ciphers.conf;|' /etc/nginx/conf.d/default.conf && \
+
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
 
