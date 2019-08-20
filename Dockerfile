@@ -46,7 +46,9 @@ RUN \
     # nginx always tries to open /var/lib/nginx/logs/error.log before reading
     # its configuration.  Make sure it exists.
     mkdir -p /var/lib/nginx/logs && \
-    ln -sf /config/log/nginx/error.log /var/lib/nginx/logs/error.log
+    ln -sf /config/log/nginx/error.log /var/lib/nginx/logs/error.log && \
+    # Make sure mariadb listen on port 3306
+    sed-patch 's/^skip-networking/#skip-networking/' /etc/my.cnf.d/mariadb-server.cnf
 
 # Install Nginx Proxy Manager.
 RUN \
