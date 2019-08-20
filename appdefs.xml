@@ -91,6 +91,13 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.5.2</version>
+        <date>2019-08-20</date>
+        <change>Use baseimage based on Alpine 3.9.</change>
+        <change level="2">This fixes TLS1.3 support.</change>
+        <change>Keep the `fastcgi.conf` and `fastcgi_params` Nginx configuration files.</change>
+      </release>
+      <release>
         <version>1.5.1</version>
         <date>2019-07-02</date>
         <change>Fixed issue where the wrong SSL protocols/ciphers were used.</change>
