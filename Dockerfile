@@ -34,6 +34,8 @@ RUN \
         /var/lib/mysql \
         && \
     # Clean some uneeded stuff from nginx.
+    mv /etc/nginx/fastcgi.conf /tmp/ && \
+    mv /etc/nginx/fastcgi_params /tmp/ && \
     rm -r \
         /var/log/nginx \
         /var/lib/nginx \
@@ -42,6 +44,9 @@ RUN \
         /etc/init.d/nginx \
         /etc/logrotate.d/nginx \
         /var/www && \
+    mkdir /etc/nginx && \
+    mv /tmp/fastcgi.conf /etc/nginx/ && \
+    mv /tmp/fastcgi_params /etc/nginx/ && \
     ln -s /tmp/nginx /var/tmp/nginx && \
     # nginx always tries to open /var/lib/nginx/logs/error.log before reading
     # its configuration.  Make sure it exists.
