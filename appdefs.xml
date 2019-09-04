@@ -91,6 +91,11 @@ For more details about port forwarding, see the following links:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.5.3</version>
+        <date>2019-09-04</date>
+        <change>Upgraded Nginx Proxy Manager to version 2.0.14.</change>
+      </release>
+      <release>
         <version>1.5.2</version>
         <date>2019-08-20</date>
         <change>Use baseimage based on Alpine 3.9.</change>
