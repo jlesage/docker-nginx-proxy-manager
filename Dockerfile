@@ -8,7 +8,7 @@
 FROM jlesage/baseimage:alpine-3.9-v2.4.2
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.0.13
+ARG NGINX_PROXY_MANAGER_VERSION=2.0.14
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz
@@ -122,9 +122,6 @@ RUN \
 
     # Make sure nginx loads the stream module.
     sed-patch '/daemon off;/a load_module /usr/lib/nginx/modules/ngx_stream_module.so;' /etc/nginx/nginx.conf && \
-
-    # Fix to use correct SSL protocols/ciphers.
-    sed-patch 's|ssl_ciphers aNULL;|include conf.d/include/ssl-ciphers.conf;|' /etc/nginx/conf.d/default.conf && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
