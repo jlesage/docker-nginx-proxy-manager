@@ -147,6 +147,7 @@ ports are part of the example.
 version: '3'
 services:
   nginx-proxy-manager:
+    image: jlesage/nginx-proxy-manager
     build: .
     ports:
       - "8181:8181"
