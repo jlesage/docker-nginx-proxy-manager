@@ -4,6 +4,8 @@
 # https://github.com/jlesage/docker-nginx-proxy-manager
 #
 
+ARG DOCKER_IMAGE_VERSION=unknown
+
 # Pull base image.
 FROM jlesage/baseimage:alpine-3.9-v2.4.2
 
@@ -174,6 +176,6 @@ EXPOSE 8080 4443 8181
 LABEL \
       org.label-schema.name="nginx-proxy-manager" \
       org.label-schema.description="Docker container for Nginx Proxy Manager" \
-      org.label-schema.version="unknown" \
+      org.label-schema.version="$DOCKER_IMAGE_VERSION" \
       org.label-schema.vcs-url="https://github.com/jlesage/docker-nginx-proxy-manager" \
       org.label-schema.schema-version="1.0"
