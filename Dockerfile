@@ -4,10 +4,11 @@
 # https://github.com/jlesage/docker-nginx-proxy-manager
 #
 
-ARG DOCKER_IMAGE_VERSION=unknown
-
 # Pull base image.
 FROM jlesage/baseimage:alpine-3.9-v2.4.2
+
+# Docker image version is provided via build arg.
+ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG NGINX_PROXY_MANAGER_VERSION=2.0.14
