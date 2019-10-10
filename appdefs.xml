@@ -110,6 +110,12 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.6.0</version>
+        <date>2019-10-10</date>
+        <change>Rotate Nginx log files.</change>
+        <change>Added tool to reset password of a user of the management interface.</change>
+      </release>
+      <release>
         <version>1.5.3</version>
         <date>2019-09-04</date>
         <change>Upgraded Nginx Proxy Manager to version 2.0.14.</change>
