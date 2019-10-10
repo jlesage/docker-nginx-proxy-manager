@@ -31,7 +31,10 @@ RUN \
         certbot \
         openssl \
         apache2-utils \
+        logrotate \
         && \
+    # Adjust the logrotate config file.
+    sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf && \
     # Clean some uneeded stuff from mariadb.
     rm -r \
         /var/lib/mysql \
