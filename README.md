@@ -30,6 +30,8 @@ Nginx Proxy Manager enables you to easily forward to your websites running at ho
       * [Shell Access](#shell-access)
       * [Default Administrator Account](#default-administrator-account)
       * [Accessibility From The Internet](#accessibility-from-the-internet)
+      * [Troubleshooting](#troubleshooting)
+         * [Password Reset](#password-reset)
       * [Support or Contact](#support-or-contact)
 
 ## Quick Start
@@ -295,6 +297,21 @@ In a such scenario, `XXXX` must be set to `80` and `YYYY` to `443`.
 For more details about port forwarding, see the following links:
   - [How to Port Forward - General Guide to Multiple Router Brands](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)
   - [How to Forward Ports on Your Router](https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/)
+
+## Troubleshooting
+
+### Password Reset
+
+The password of a user can be reset to `changeme` with the following command:
+
+```
+docker exec CONTAINER_NAME /opt/nginx-proxy-manager/reset-password.sh USER_EMAIL
+```
+
+Where:
+
+  - `CONTAINER_NAME` is the name of the running container.
+  - `USER_EMAIL` is the email of the address to reset the password.
 
 [TimeZone]: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 

@@ -157,6 +157,24 @@ RUN \
         && \
     rm -rf /tmp/* /tmp/.[!.]*
 
+# Install bcrypt-tool.
+RUN \
+    # Install packages needed by the build.
+    add-pkg --virtual build-dependencies \
+        go \
+        upx \
+        git \
+        musl-dev \
+        && \
+    mkdir /tmp/go && \
+    env GOPATH=/tmp/go go get gophers.dev/cmds/bcrypt-tool && \
+    strip /tmp/go/bin/bcrypt-tool && \
+    upx /tmp/go/bin/bcrypt-tool && \
+    cp -v /tmp/go/bin/bcrypt-tool /usr/bin/ && \
+    # Cleanup.
+    del-pkg build-dependencies && \
+    rm -rf /tmp/* /tmp/.[!.]*
+
 # Add files.
 COPY rootfs/ /
 
