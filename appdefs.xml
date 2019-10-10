@@ -23,8 +23,8 @@ from Jinja2 templates.
     accessible from the internet, make sure ports [b]80[/b] and [b]443[/b] on
     the internet side of your router are properly forwarded to this container.
     See the documentation for more details.[br][br]
-    [span style='color: red;'][b]Note:[/b][/span] After a fresh install, login
-    to the management interface using the following credentials:
+    [span style='color: red;'][b]Note:[/b][/span] After a fresh install, the
+    default username/password to connect to the management interface are:
     [b]admin@example.com[/b]/[b]changeme[/b].
       </extra_description>
     </unraid>
