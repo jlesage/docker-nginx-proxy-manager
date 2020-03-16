@@ -110,6 +110,14 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.7.0</version>
+        <date>2020-03-16</date>
+        <change>Upgraded Nginx Proxy Manager to version 2.2.0.</change>
+        <change>Now using baseimage v2.4.3, which brings the following changes:</change>
+        <change level="2">Updated installed packages to get latest security fixes.</change>
+        <change level="2">Make sure the tzdata is installed.</change>
+      </release>
+      <release>
         <version>1.6.0</version>
         <date>2019-10-10</date>
         <change>Rotate Nginx log files.</change>
