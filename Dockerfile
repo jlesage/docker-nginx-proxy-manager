@@ -11,10 +11,10 @@ FROM jlesage/baseimage:alpine-3.9-v2.4.3
 ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.0.14
+ARG NGINX_PROXY_MANAGER_VERSION=2.2.0
 
 # Define software download URLs.
-ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz
+ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
 
 # Define working directory.
 WORKDIR /tmp
@@ -84,44 +84,56 @@ RUN \
     mkdir nginx-proxy-manager && \
     curl -# -L ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C nginx-proxy-manager && \
 
-    # Build Nginx Proxy Manager.
-    echo "Building Nginx Proxy Manager..." && \
+    sed-patch "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" nginx-proxy-manager/frontend/package.json && \
+    sed-patch "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" nginx-proxy-manager/backend/package.json && \
+
     cp -r nginx-proxy-manager /app && \
-    cd /app && \
+
+    # Build Nginx Proxy Manager frontend.
+    echo "Building Nginx Proxy Manager frontend..." && \
+    cd /app/frontend && \
     yarn install && \
-    npm --cache /tmp/.npm run-script build && \
-    rm -rf node_modules && \
+    yarn build && \
+    /tmp/bin/node-prune && \
+    cd /tmp && \
+
+    # Build Nginx Proxy Manager backend.
+    echo "Building Nginx Proxy Manager backend..." && \
+    cd /app/backend && \
     yarn install --prod && \
     /tmp/bin/node-prune && \
     cd /tmp && \
 
     # Install Nginx Proxy Manager.
     echo "Installing Nginx Proxy Manager..." && \
-    mkdir -p /opt/nginx-proxy-manager/src && \
-    cp -r /app/dist /opt/nginx-proxy-manager/ && \
-    cp -r /app/node_modules /opt/nginx-proxy-manager/ && \
-    cp -r /app/src/backend /opt/nginx-proxy-manager/src/ && \
-    cp -r /app/package.json /opt/nginx-proxy-manager/ && \
-    cp -r /app/knexfile.js /opt/nginx-proxy-manager/ && \
-    cp -r nginx-proxy-manager/rootfs/etc/nginx /etc/ && \
-    cp -r nginx-proxy-manager/rootfs/var/www /var/ && \
+    mkdir -p /opt && \
+    cp -r /app/backend /opt/nginx-proxy-manager && \
+    cp -r /app/frontend/dist /opt/nginx-proxy-manager/frontend && \
+    cp -r nginx-proxy-manager/docker/rootfs/etc/nginx /etc/ && \
+    cp -r nginx-proxy-manager/docker/rootfs/var/www /var/ && \
+    cp -r nginx-proxy-manager/docker/rootfs/etc/letsencrypt.ini /etc/ && \
+
+    # Remove the nginx development config.
+    rm /etc/nginx/conf.d/dev.conf && \
 
     # Change the management interface port to the unprivileged port 8181.
-    sed-patch 's|81|8181|' /opt/nginx-proxy-manager/src/backend/index.js && \
-    sed-patch 's|81|8181|' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|81 default|8181 default|' /etc/nginx/conf.d/production.conf && \
+
+    # Change the management interface root.
+    sed-patch 's|/app/frontend;|/opt/nginx-proxy-manager/frontend;|' /etc/nginx/conf.d/production.conf && \
 
     # Change the HTTP port 80 to the unprivileged port 8080.
-    sed-patch 's|listen 80;|listen 8080;|' /etc/nginx/conf.d/default.conf && \
-    sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/src/backend/templates/letsencrypt-request.conf && \
-    sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/src/backend/templates/_listen.conf && \
-    sed-patch 's|listen 80 |listen 8080 |' /opt/nginx-proxy-manager/src/backend/templates/default.conf && \
+    sed-patch 's|80;|8080;|' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
+    sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
+    sed-patch 's|listen 80 |listen 8080 |' /opt/nginx-proxy-manager/templates/default.conf && \
 
     # Change the HTTPs port 443 to the unprivileged port 4443.
-    sed-patch 's|listen 443 |listen 4443 |' /etc/nginx/conf.d/default.conf && \
-    sed-patch 's|listen 443 |listen 4443 |' /opt/nginx-proxy-manager/src/backend/templates/_listen.conf && \
+    sed-patch 's|443 |4443 |' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|listen 443 |listen 4443 |' /opt/nginx-proxy-manager/templates/_listen.conf && \
 
     # Fix nginx test command line.
-    sed-patch 's|-g "error_log off;"||' /opt/nginx-proxy-manager/src/backend/internal/nginx.js && \
+    sed-patch 's|-g "error_log off;"||' /opt/nginx-proxy-manager/internal/nginx.js && \
 
     # Remove the `user` directive, since we want nginx to run as non-root.
     sed-patch 's|user root;|#user root;|' /etc/nginx/nginx.conf && \
@@ -137,13 +149,13 @@ RUN \
     ln -sf /config/nginx/ip_ranges.conf /etc/nginx/conf.d/include/ip_ranges.conf && \
 
     # Make sure the config file for resovers is stored in persistent volume.
-    rm /etc/nginx/conf.d/include/resolvers.conf && \
     ln -sf /config/nginx/resolvers.conf /etc/nginx/conf.d/include/resolvers.conf && \
 
     # Make sure nginx cache is stored on the persistent volume.
     ln -s /config/nginx/cache /var/lib/nginx/cache && \
 
     # Make sure the manager config file is stored in persistent volume.
+    rm -r /opt/nginx-proxy-manager/config && \
     mkdir /opt/nginx-proxy-manager/config && \
     ln -s /config/production.json /opt/nginx-proxy-manager/config/production.json && \
 
