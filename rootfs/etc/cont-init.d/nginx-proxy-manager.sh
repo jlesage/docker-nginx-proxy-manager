@@ -144,7 +144,7 @@ then
 fi
 
 # Generate the resolvers configuration file.
-echo resolver $(awk 'BEGIN{ORS=" "} $1=="nameserver" {print $2}' /etc/resolv.conf) ";" > /config/nginx/resolvers.conf
+echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" {print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf);" > /config/nginx/resolvers.conf
 
 # Take ownership of the config directory content.
 find /config -mindepth 1 -exec chown $USER_ID:$GROUP_ID {} \;
