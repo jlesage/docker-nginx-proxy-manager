@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.7.2</version>
+        <date>2020-04-06</date>
+        <change>Fixed generation of resolvers.conf when IPv6 is involved.</change>
+      </release>
+      <release>
         <version>1.7.1</version>
         <date>2020-04-06</date>
         <change>Upgraded Nginx Proxy Manager to version 2.2.1.</change>
