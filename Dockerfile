@@ -11,7 +11,7 @@ FROM jlesage/baseimage:alpine-3.9-v2.4.3
 ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.2.1
+ARG NGINX_PROXY_MANAGER_VERSION=2.2.2
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
@@ -164,11 +164,13 @@ RUN \
 
     # Cleanup.
     del-pkg build-dependencies && \
+    find /opt/nginx-proxy-manager -name "*.h" -delete && \
+    find /opt/nginx-proxy-manager -name "*.cc" -delete && \
+    find /opt/nginx-proxy-manager -name "*.c" -delete && \
+    find /opt/nginx-proxy-manager -name "*.gyp" -delete && \
     rm -r \
-        /root/.node-gyp \
         /app \
         /usr/lib/node_modules \
-        /opt/nginx-proxy-manager/node_modules/bcrypt/build \
         && \
     rm -rf /tmp/* /tmp/.[!.]*
 
