@@ -124,13 +124,17 @@ RUN \
 
     # Change the HTTP port 80 to the unprivileged port 8080.
     sed-patch 's|80;|8080;|' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|"80";|"8080";|' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
+    sed-patch 's|:80;|:8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
     sed-patch 's|listen 80 |listen 8080 |' /opt/nginx-proxy-manager/templates/default.conf && \
 
     # Change the HTTPs port 443 to the unprivileged port 4443.
     sed-patch 's|443 |4443 |' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|"443";|"4443";|' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|listen 443 |listen 4443 |' /opt/nginx-proxy-manager/templates/_listen.conf && \
+    sed-patch 's|:443;|:4443;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
 
     # Fix nginx test command line.
     sed-patch 's|-g "error_log off;"||' /opt/nginx-proxy-manager/internal/nginx.js && \
