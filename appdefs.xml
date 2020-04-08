@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.7.4</version>
+        <date>2020-04-08</date>
+        <change>Fixed issue where generated proxy host config would use incorrect ports.</change>
+      </release>
+      <release>
         <version>1.7.3</version>
         <date>2020-04-07</date>
         <change>Upgraded Nginx Proxy Manager to version 2.2.2.</change>
