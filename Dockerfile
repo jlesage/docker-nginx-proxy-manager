@@ -11,7 +11,7 @@ FROM jlesage/baseimage:alpine-3.9-v2.4.3
 ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.2.3
+ARG NGINX_PROXY_MANAGER_VERSION=2.2.4
 
 # Define software download URLs.
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
@@ -126,6 +126,7 @@ RUN \
     sed-patch 's|80;|8080;|' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|"80";|"8080";|' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
+    sed-patch 's|:80;|:8080;|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
     sed-patch 's|:80;|:8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
     sed-patch 's|listen 80 |listen 8080 |' /opt/nginx-proxy-manager/templates/default.conf && \
