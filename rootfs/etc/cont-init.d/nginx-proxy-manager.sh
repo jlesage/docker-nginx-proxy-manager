@@ -64,8 +64,13 @@ touch /config/log/nginx/error.log
 touch /config/log/nginx/default.log
 touch /config/log/nginx/manager.log
 
-# Redirect the logs directory.
-ln -sf log/nginx /config/logs
+# Make sure to remove old logs directory symlink.
+[ ! -L /config/logs ] || rm /config/logs
+
+# Fix any references to the old log path.
+if ls /config/nginx/*/*.conf >/dev/null 2>&1; then
+    sed -i 's|/data/logs/|/config/log/|' /config/nginx/*/*.conf
+fi
 
 # Install default config.
 [ -f /config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /config/nginx/

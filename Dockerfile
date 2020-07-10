@@ -11,20 +11,107 @@ FROM jlesage/baseimage:alpine-3.9-v2.4.3
 ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
-ARG NGINX_PROXY_MANAGER_VERSION=2.2.4
+ARG OPENRESTY_VERSION=1.17.8.1
+ARG NGINX_PROXY_MANAGER_VERSION=2.3.1
 
 # Define software download URLs.
+ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
 
 # Define working directory.
 WORKDIR /tmp
 
+# Build and install OpenResty (nginx).
+RUN \
+    add-pkg --virtual build-dependencies \
+        build-base \
+        curl \
+        linux-headers \
+        perl \
+        pcre-dev \
+        openssl-dev \
+        zlib-dev \
+        && \
+    # Download.
+    echo "Downloading OpenResty..." && \
+    mkdir openresty && \
+    curl -# -L ${OPENRESTY_URL} | tar xz --strip 1 -C openresty && \
+    # Compile.
+    echo "Compiling OpenResty..." && \
+    cd openresty && \
+    ./configure -j$(nproc) \
+	--prefix=/var/lib/nginx \
+	--sbin-path=/usr/sbin/nginx \
+	--modules-path=/usr/lib/nginx/modules \
+	--conf-path=/etc/nginx/nginx.conf \
+	--pid-path=/var/run/nginx/nginx.pid \
+	--lock-path=/var/run/nginx/nginx.lock \
+	--error-log-path=/config/log/nginx/error.log \
+	--http-log-path=/config/log/nginx/access.log \
+	\
+	--http-client-body-temp-path=/var/tmp/nginx/client_body \
+	--http-proxy-temp-path=/var/tmp/nginx/proxy \
+	--http-fastcgi-temp-path=/var/tmp/nginx/fastcgi \
+	--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+	--http-scgi-temp-path=/var/tmp/nginx/scgi \
+	--with-perl_modules_path=/usr/lib/perl5/vendor_perl \
+	\
+	--user=nginx \
+	--group=nginx \
+	--with-threads \
+	--with-file-aio \
+	\
+	--with-http_ssl_module \
+	--with-http_v2_module \
+	--with-http_realip_module \
+	--with-http_addition_module \
+	--with-http_sub_module \
+	--with-http_dav_module \
+	--with-http_flv_module \
+	--with-http_mp4_module \
+	--with-http_gunzip_module \
+	--with-http_gzip_static_module \
+	--with-http_auth_request_module \
+	--with-http_random_index_module \
+	--with-http_secure_link_module \
+	--with-http_degradation_module \
+	--with-http_slice_module \
+	--with-http_stub_status_module \
+	--with-stream \
+	--with-stream_ssl_module \
+	--with-stream_realip_module \
+	--with-stream_ssl_preread_module \
+	--with-pcre-jit \
+        && \
+    make -j$(nproc) && \
+    # Install.
+    echo "Installing OpenResty..." && \
+    make install && \
+    find /var/lib/nginx/ -type f -name '*.so*' -exec strip {} ';' && \
+    strip /usr/sbin/nginx && \
+    cd .. && \
+    # Cleanup.
+    del-pkg build-dependencies && \
+    rm -r \
+        /var/lib/nginx/bin/opm \
+        /var/lib/nginx/bin/nginx-xml2pod \
+        /var/lib/nginx/bin/restydoc-index \
+        /var/lib/nginx/bin/restydoc \
+        /var/lib/nginx/bin/md2pod.pl \
+        /var/lib/nginx/luajit/include \
+        /var/lib/nginx/luajit/lib/libluajit-5.1.a \
+        /var/lib/nginx/luajit/lib/pkgconfig \
+        /var/lib/nginx/luajit/share/man \
+        /var/lib/nginx/pod \
+        /var/lib/nginx/resty.index \
+        /var/lib/nginx/site \
+        && \
+    rm -rf /tmp/* /tmp/.[!.]*
+
 # Install dependencies.
 RUN \
     add-pkg \
         nodejs \
-        nginx \
-        nginx-mod-stream \
         mariadb \
         mariadb-client \
         mariadb-server-utils \
@@ -39,25 +126,6 @@ RUN \
     rm -r \
         /var/lib/mysql \
         && \
-    # Clean some uneeded stuff from nginx.
-    mv /etc/nginx/fastcgi.conf /tmp/ && \
-    mv /etc/nginx/fastcgi_params /tmp/ && \
-    rm -r \
-        /var/log/nginx \
-        /var/lib/nginx \
-        /var/tmp/nginx \
-        /etc/nginx \
-        /etc/init.d/nginx \
-        /etc/logrotate.d/nginx \
-        /var/www && \
-    mkdir /etc/nginx && \
-    mv /tmp/fastcgi.conf /etc/nginx/ && \
-    mv /tmp/fastcgi_params /etc/nginx/ && \
-    ln -s /tmp/nginx /var/tmp/nginx && \
-    # nginx always tries to open /var/lib/nginx/logs/error.log before reading
-    # its configuration.  Make sure it exists.
-    mkdir -p /var/lib/nginx/logs && \
-    ln -sf /config/log/nginx/error.log /var/lib/nginx/logs/error.log && \
     # Make sure mariadb listen on port 3306
     sed-patch 's/^skip-networking/#skip-networking/' /etc/my.cnf.d/mariadb-server.cnf
 
@@ -143,8 +211,17 @@ RUN \
     # Remove the `user` directive, since we want nginx to run as non-root.
     sed-patch 's|user root;|#user root;|' /etc/nginx/nginx.conf && \
 
-    # Make sure nginx loads the stream module.
-    sed-patch '/daemon off;/a load_module /usr/lib/nginx/modules/ngx_stream_module.so;' /etc/nginx/nginx.conf && \
+    # Change log paths.
+    sed-patch 's|/data/logs/|/config/log/|' /etc/nginx/nginx.conf && \
+    sed-patch 's|/data/logs/|/config/log/|' /etc/nginx/conf.d/default.conf && \
+    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/dead_host.conf && \
+    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/default.conf && \
+    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
+    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/proxy_host.conf && \
+    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/redirection_host.conf && \
+
+    # Change client_body_temp_path.
+    sed-patch 's|/tmp/nginx/body|/var/tmp/nginx/body|' /etc/nginx/nginx.conf && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
@@ -153,7 +230,7 @@ RUN \
     mv /etc/nginx/conf.d/include/ip_ranges.conf /defaults/ && \
     ln -sf /config/nginx/ip_ranges.conf /etc/nginx/conf.d/include/ip_ranges.conf && \
 
-    # Make sure the config file for resovers is stored in persistent volume.
+    # Make sure the config file for resolvers is stored in persistent volume.
     ln -sf /config/nginx/resolvers.conf /etc/nginx/conf.d/include/resolvers.conf && \
 
     # Make sure nginx cache is stored on the persistent volume.
