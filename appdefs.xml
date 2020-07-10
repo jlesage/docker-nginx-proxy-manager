@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.9.2</version>
+        <date>2020-07-10</date>
+        <change>Fixed an issue where the container would fail to start if custom Nginx files are mounted by Docker.</change>
+      </release>
+      <release>
         <version>1.9.1</version>
         <date>2020-07-10</date>
         <change>Improved compatibility by disabling usage of SSE4.2 in OpenResty.</change>
