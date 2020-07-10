@@ -68,9 +68,10 @@ touch /config/log/nginx/manager.log
 [ ! -L /config/logs ] || rm /config/logs
 
 # Fix any references to the old log path.
-if ls /config/nginx/*/*.conf >/dev/null 2>&1; then
-    sed -i 's|/data/logs/|/config/log/|' /config/nginx/*/*.conf
-fi
+find /config/nginx -not \( -path /config/nginx/custom -prune \) -type f -name '*.conf' | while read file
+do
+    sed -i 's|/data/logs/|/config/log/|' "$file"
+done
 
 # Install default config.
 [ -f /config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /config/nginx/
