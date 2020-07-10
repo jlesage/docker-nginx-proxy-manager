@@ -39,6 +39,8 @@ RUN \
     # Compile.
     echo "Compiling OpenResty..." && \
     cd openresty && \
+    # Disable SSE4.2 since this is not supported by all CPUs...
+    sed-patch 's|#ifndef __SSE4_2__|#if 1|' configure && \
     ./configure -j$(nproc) \
 	--prefix=/var/lib/nginx \
 	--sbin-path=/usr/sbin/nginx \
