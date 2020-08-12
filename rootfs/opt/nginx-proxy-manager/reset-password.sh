@@ -20,4 +20,4 @@ if [ -z "$USER_EMAIL" ]; then
 fi
 PASSWORD_HASH="$(/usr/bin/bcrypt-tool hash "${2:-changeme}" 13)"
 
-/usr/bin/mysql --execute "UPDATE user,auth SET auth.secret = '$PASSWORD_HASH' WHERE user.id = auth.user_id and user.email = '$USER_EMAIL'" nginxproxymanager
+/usr/bin/sqlite3 /config/database.sqlite "UPDATE auth SET secret = '$PASSWORD_HASH' WHERE EXISTS (SELECT * FROM user WHERE user.id = auth.user_id AND user.email = '$USER_EMAIL')"

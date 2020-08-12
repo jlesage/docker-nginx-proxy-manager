@@ -114,22 +114,16 @@ RUN \
 RUN \
     add-pkg \
         nodejs \
-        mariadb \
-        mariadb-client \
-        mariadb-server-utils \
+        sqlite \
         certbot \
         openssl \
         apache2-utils \
         logrotate \
+        # For openresty
+        pcre \
         && \
     # Adjust the logrotate config file.
-    sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf && \
-    # Clean some uneeded stuff from mariadb.
-    rm -r \
-        /var/lib/mysql \
-        && \
-    # Make sure mariadb listen on port 3306
-    sed-patch 's/^skip-networking/#skip-networking/' /etc/my.cnf.d/mariadb-server.cnf
+    sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf
 
 # Install Nginx Proxy Manager.
 RUN \

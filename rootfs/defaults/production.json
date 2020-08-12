@@ -1,10 +1,12 @@
 {
   "database": {
-    "engine": "mysql",
-    "host": "127.0.0.1",
-    "name": "nginxproxymanager",
-    "user": "nginxproxymanager",
-    "password": "password123",
-    "port": 3306
+    "engine": "knex-native",
+    "knex": {
+      "client": "sqlite3",
+      "connection": {
+        "filename": "/config/database.sqlite"
+      },
+      "useNullAsDefault": true
+    }
   }
 }
