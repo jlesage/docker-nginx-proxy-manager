@@ -5,7 +5,7 @@
 #
 
 # Pull base image.
-FROM jlesage/baseimage:alpine-3.9-v2.4.3
+FROM jlesage/baseimage:alpine-3.12-v2.4.4
 
 # Docker image version is provided via build arg.
 ARG DOCKER_IMAGE_VERSION=unknown
@@ -134,7 +134,7 @@ RUN \
         patch \
         yarn \
         git \
-        python \
+        python3 \
         npm \
         bash \
         && \
