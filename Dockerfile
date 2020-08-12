@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.17.8.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.3.1
+ARG NGINX_PROXY_MANAGER_VERSION=2.5.0
 
 # Define software download URLs.
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
