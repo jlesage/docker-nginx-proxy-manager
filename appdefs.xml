@@ -257,7 +257,20 @@ Where:
   </app>
   <container>
     <!-- Environment variables -->
-    <environment_variables/>
+    <environment_variables>
+      <environment_variable>
+        <name>DISABLE_IPV6</name>
+        <description>When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is not enabled/supported on the host.</description>
+        <default>0</default>
+        <unraid_template>
+          <title>Automatic Video Converter: Preset</title>
+          <description>When set to '1', IPv6 support is disabled.</description>
+          <display>advanced</display>
+          <required>false</required>
+          <mask>false</mask>
+        </unraid_template>
+      </environment_variable>
+    </environment_variables>
     <!-- Volumes -->
     <volumes/>
     <!-- Network ports -->

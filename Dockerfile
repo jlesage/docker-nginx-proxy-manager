@@ -275,7 +275,8 @@ COPY rootfs/ /
 
 # Set environment variables.
 ENV APP_NAME="Nginx Proxy Manager" \
-    KEEP_APP_RUNNING=1
+    KEEP_APP_RUNNING=1 \
+    DISABLE_IPV6=0
 
 # Define mountable directories.
 VOLUME ["/config"]
