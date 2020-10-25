@@ -13,13 +13,37 @@ ARG DOCKER_IMAGE_VERSION=unknown
 # Define software versions.
 ARG OPENRESTY_VERSION=1.17.8.1
 ARG NGINX_PROXY_MANAGER_VERSION=2.6.1
+ARG WATCH_VERSION=0.3.1
 
 # Define software download URLs.
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
+ARG WATCH_URL=https://github.com/tj/watch/archive/${WATCH_VERSION}.tar.gz
 
 # Define working directory.
 WORKDIR /tmp
+
+# Build and install the watch binary.
+RUN \
+    add-pkg --virtual build-dependencies \
+        build-base \
+        curl \
+        && \
+    # Download.
+    echo "Downloading watch..." && \
+    mkdir watch && \
+    curl -# -L ${WATCH_URL} | tar xz --strip 1 -C watch && \
+    # Compile.
+    echo "Compiling watch..." && \
+    cd watch && \
+    make && \
+    # Install.
+    echo "Installing watch..." && \
+    make install && \
+    strip /usr/local/bin/watch && \
+    # Cleanup.
+    del-pkg build-dependencies && \
+    rm -rf /tmp/* /tmp/.[!.]*
 
 # Build and install OpenResty (nginx).
 RUN \
