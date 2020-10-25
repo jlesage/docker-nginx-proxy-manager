@@ -1,0 +1,80 @@
+#!/usr/bin/python3
+
+import os.path
+import os
+
+from datetime import datetime
+from pathlib import Path
+
+BASE = "/etc/letsencrypt/"
+
+live_dir = os.path.join(BASE, "live")
+archive_dir = os.path.join(BASE, "archive")
+csr_dir = os.path.join(BASE, "csr")
+key_dir = os.path.join(BASE, "keys")
+
+# Set of certificate paths actively used.
+in_use = set()
+
+keep_count = 0
+delete_count = 0
+error_count = 0
+
+def remove_file(f):
+    success = False
+    try:
+        os.remove(f)
+        success = True
+    except OSError as e:
+        print("ERROR: Could not remove {}: {}.".format(f, e))
+    return success
+
+# Build the set of certificates in use.
+for domain in os.path.isdir(live_dir) and os.listdir(live_dir) or [] :
+    domain_dir = os.path.join(live_dir, domain)
+    if not os.path.isdir(domain_dir):
+        continue
+    for certlink in os.listdir(domain_dir):
+        f = os.path.join(domain_dir, certlink)
+        if not os.path.islink(f):
+            continue
+        target = Path(f).resolve()
+        in_use.add(target)
+
+print("----------------------------------------------------------")
+print("Let's Encrypt certificates cleanup - {}".format(datetime.now().strftime("%Y/%m/%d %H:%M:%S")))
+print("----------------------------------------------------------")
+
+# Remove all unused certificates from the archive directory.
+for domain in os.path.isdir(archive_dir) and os.listdir(archive_dir) or []:
+    domain_dir = os.path.join(archive_dir, domain)
+    if not os.path.isdir(domain_dir):
+        continue
+    for certfile in os.listdir(domain_dir):
+        f = Path(os.path.join(domain_dir, certfile))
+        if f.resolve() in in_use:
+            print("Keeping {}.".format(f))
+            keep_count += 1
+        else:
+            print("Deleting {}.".format(f))
+            if remove_file(f):
+                delete_count += 1
+            else:
+                error_count += 1
+
+# Remove all files from the csr and key directories.
+for dir in [ csr_dir, key_dir ]:
+    for file in os.path.isdir(dir) and os.listdir(dir) or []:
+        f = os.path.join(dir, file)
+        if not os.path.isfile(f):
+            continue
+        print("Deleting {}.".format(f))
+        if remove_file(f):
+            delete_count += 1
+        else:
+            error_count += 1
+
+print("{} file(s) kept.".format(keep_count))
+print("{} file(s) deleted.".format(delete_count))
+if error_count > 0:
+    print("{} file(s) failed to be deleted.".format(error_count))
