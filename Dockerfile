@@ -63,7 +63,10 @@ RUN \
     # Compile.
     echo "Compiling OpenResty..." && \
     cd openresty && \
-    # Disable SSE4.2 since this is not supported by all CPUs...
+    # Disable SSE4.2 since this is not supported by all CPUs...  Without this,
+    # Nginx fails to start with the 'Illegal instruction' error on CPU not
+    # supporting SSE4.2.
+    # https://github.com/openresty/openresty/issues/267
     sed-patch 's|#ifndef __SSE4_2__|#if 1|' configure && \
     ./configure -j$(nproc) \
 	--prefix=/var/lib/nginx \
@@ -267,7 +270,7 @@ RUN \
     mkdir /opt/nginx-proxy-manager/config && \
     ln -s /config/production.json /opt/nginx-proxy-manager/config/production.json && \
 
-    # Make sure letencrypt certificates are stored in persistent volume.
+    # Make sure letsencrypt certificates are stored in persistent volume.
     ln -s /config/letsencrypt /etc/letsencrypt && \
 
     # Cleanup.
