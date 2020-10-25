@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.17.8.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.5.0
+ARG NGINX_PROXY_MANAGER_VERSION=2.6.1
 
 # Define software download URLs.
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
@@ -173,6 +173,7 @@ RUN \
     mkdir -p /opt && \
     cp -r /app/backend /opt/nginx-proxy-manager && \
     cp -r /app/frontend/dist /opt/nginx-proxy-manager/frontend && \
+    cp -r /app/global /opt/nginx-proxy-manager && \
     cp -r nginx-proxy-manager/docker/rootfs/etc/nginx /etc/ && \
     cp -r nginx-proxy-manager/docker/rootfs/var/www /var/ && \
     cp -r nginx-proxy-manager/docker/rootfs/etc/letsencrypt.ini /etc/ && \
