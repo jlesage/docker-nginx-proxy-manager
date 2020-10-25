@@ -2,6 +2,9 @@
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
+# Run hourly.
+INTERVAL_IN_SECS=3600
+
 # Make sure we appear with a proper name under `ps`.
 if [ ! -L "$0" ]; then
     SV_NAME="$(basename "$(pwd)")"
@@ -10,17 +13,16 @@ if [ ! -L "$0" ]; then
 fi
 
 log() {
-    echo "[$(basename "$0")] $*"
+    if [ -n "${1-}" ]; then
+        echo "[$(basename "$0")] $*"
+    else
+        while read OUTPUT; do
+            echo "[$(basename "$0")] $OUTPUT"
+        done
+    fi
 }
 
 log "starting..."
-while true; do
-    s6-applyuidgid -u $USER_ID -g $GROUP_ID -G ${SUP_GROUP_IDS:-$GROUP_ID} /usr/sbin/logrotate -s /config/logrotate.status /etc/logrotate.conf
-    EXITVALUE=$?
-    if [ $EXITVALUE != 0 ]; then
-        log "exited abnormally with [$EXITVALUE]"
-    fi
-    sleep 3600
-done
+s6-applyuidgid -u $USER_ID -g $GROUP_ID -G ${SUP_GROUP_IDS:-$GROUP_ID} /usr/local/bin/watch -i "$INTERVAL_IN_SECS" /usr/sbin/logrotate -s /config/logrotate.status /etc/logrotate.conf | log
 
 # vim:ft=sh:ts=4:sw=4:et:sts=4
