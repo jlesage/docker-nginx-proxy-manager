@@ -122,6 +122,7 @@ RUN \
     # Cleanup.
     del-pkg build-dependencies && \
     rm -r \
+        /etc/nginx/*.default \
         /var/lib/nginx/bin/opm \
         /var/lib/nginx/bin/nginx-xml2pod \
         /var/lib/nginx/bin/restydoc-index \
