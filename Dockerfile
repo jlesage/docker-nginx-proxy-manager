@@ -241,6 +241,11 @@ RUN \
     sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/proxy_host.conf && \
     sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/redirection_host.conf && \
 
+    # Adjust certbot config.
+    sed-patch 's|/data/|/config/|g' /etc/letsencrypt.ini && \
+    echo "logs-dir = /config/log/letsencrypt" >> /etc/letsencrypt.ini && \
+    echo "work-dir = /config/letsencrypt-workdir" >> /etc/letsencrypt.ini && \
+
     # Change client_body_temp_path.
     sed-patch 's|/tmp/nginx/body|/var/tmp/nginx/body|' /etc/nginx/nginx.conf && \
 

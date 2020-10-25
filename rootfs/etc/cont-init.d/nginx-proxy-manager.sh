@@ -24,7 +24,6 @@ mkdir -p \
     /config/nginx/temp \
     /config/log/letsencrypt \
     /config/letsencrypt-workdir \
-    $XDG_CONFIG_HOME/letsencrypt
 
 # Create nginx log files.
 touch /config/log/nginx/error.log
@@ -33,6 +32,9 @@ touch /config/log/nginx/manager.log
 
 # Make sure to remove old logs directory symlink.
 [ ! -L /config/logs ] || rm /config/logs
+
+# Make sure to remove old letsencrypt config file.
+[ ! -f $XDG_CONFIG_HOME/letsencrypt/cli.ini ] || mv $XDG_CONFIG_HOME/letsencrypt/cli.ini $XDG_CONFIG_HOME/letsencrypt/cli.ini.removed
 
 # Fix any references to the old log path.
 find /config/nginx -not \( -path /config/nginx/custom -prune \) -type f -name '*.conf' | while read file
@@ -43,7 +45,6 @@ done
 # Install default config.
 [ -f /config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /config/nginx/
 [ -f /config/production.json ] || cp /defaults/production.json /config/
-[ -f $XDG_CONFIG_HOME/letsencrypt/cli.ini ] || cp /defaults/cli.ini $XDG_CONFIG_HOME/letsencrypt/
 
 # Make sure there is no migration lock held.
 # See https://github.com/jlesage/docker-nginx-proxy-manager/issues/4
