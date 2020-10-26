@@ -274,7 +274,7 @@ Where:
         <description>When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is not enabled/supported on the host.</description>
         <default>0</default>
         <unraid_template>
-          <title>Automatic Video Converter: Preset</title>
+          <title>Disable IPv6</title>
           <description>When set to '1', IPv6 support is disabled.</description>
           <display>advanced</display>
           <required>false</required>
