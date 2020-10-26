@@ -97,7 +97,7 @@ For more details about port forwarding, see the following links:
 The password of a user can be reset to `changeme` with the following command:
 
 ```
-docker exec CONTAINER_NAME /opt/nginx-proxy-manager/reset-password.sh USER_EMAIL
+docker exec CONTAINER_NAME /opt/nginx-proxy-manager/bin/reset-password USER_EMAIL
 ```
 
 Where:

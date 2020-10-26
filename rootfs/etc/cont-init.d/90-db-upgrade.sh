@@ -83,7 +83,7 @@ log "Dumping database..."
 
 # Convert the database.
 log "Converting database..."
-/opt/nginx-proxy-manager/mysql2sqlite /tmp/mysqldump.sql | sqlite3 /config/database.sqlite
+/opt/nginx-proxy-manager/bin/mysql2sqlite /tmp/mysqldump.sql | sqlite3 /config/database.sqlite
 
 # Update the database settings in configuration.
 if [ -f /config/production.json ]; then

@@ -23,6 +23,6 @@ log() {
 }
 
 log "starting..."
-s6-applyuidgid -u $USER_ID -g $GROUP_ID -G ${SUP_GROUP_IDS:-$GROUP_ID} /usr/local/bin/watch -i "$INTERVAL_IN_SECS" /opt/nginx-proxy-manager/lecleaner | log
+s6-applyuidgid -u $USER_ID -g $GROUP_ID -G ${SUP_GROUP_IDS:-$GROUP_ID} /usr/local/bin/watch -i "$INTERVAL_IN_SECS" /opt/nginx-proxy-manager/bin/lecleaner | log
 
 # vim:ft=sh:ts=4:sw=4:et:sts=4
