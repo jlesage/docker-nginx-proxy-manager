@@ -70,6 +70,10 @@ fi
 # Generate the resolvers configuration file.
 echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" {print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf);" > /config/nginx/resolvers.conf
 
+# Hnandle IPv6 settings.
+/opt/nginx-proxy-manager/handle-ipv6-setting /etc/nginx/conf.d
+/opt/nginx-proxy-manager/handle-ipv6-setting /config/nginx
+
 # Take ownership of the config directory content.
 find /config -mindepth 1 -exec chown $USER_ID:$GROUP_ID {} \;
 

@@ -147,6 +147,8 @@ RUN \
         openssl \
         apache2-utils \
         logrotate \
+        # For /opt/nginx-proxy-manager/handle-ipv6-setting
+        bash \
         # For openresty
         pcre \
         && \
@@ -202,6 +204,7 @@ RUN \
     cp -r /app/backend /opt/nginx-proxy-manager && \
     cp -r /app/frontend/dist /opt/nginx-proxy-manager/frontend && \
     cp -r /app/global /opt/nginx-proxy-manager && \
+    cp -r nginx-proxy-manager/docker/rootfs/bin/handle-ipv6-setting /opt/nginx-proxy-manager && \
     cp -r nginx-proxy-manager/docker/rootfs/etc/nginx /etc/ && \
     cp -r nginx-proxy-manager/docker/rootfs/var/www /var/ && \
     cp -r nginx-proxy-manager/docker/rootfs/etc/letsencrypt.ini /etc/ && \
