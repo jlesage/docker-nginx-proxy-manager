@@ -110,6 +110,17 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.10.0</version>
+        <date>2020-10-25</date>
+        <change>Updated Nginx Proxy Manager to version 2.6.1.</change>
+        <change>Now using baseimage version 2.4.4, based on Alpine 3.12, which brings the following changes:</change>
+        <change level="2">Upgraded glibc to version 2.31 on Alpine Linux images with glibc integrated.</change>
+        <change level="2">Updated installed packages to get latest security fixes.</change>
+        <change>Use sqlite as database instead of mariadb.</change>
+        <change>Added proper support for the `DISABLE_IPV6` environment variable.</change>
+        <change>Periodically clean Let's Encrypt certificates.</change>
+      </release>
+      <release>
         <version>1.9.2</version>
         <date>2020-07-10</date>
         <change>Fixed an issue where the container would fail to start if custom Nginx files are mounted by Docker.</change>
