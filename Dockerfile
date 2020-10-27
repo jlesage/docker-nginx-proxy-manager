@@ -252,11 +252,12 @@ RUN \
 
     # Adjust certbot config.
     sed-patch 's|/data/|/config/|g' /etc/letsencrypt.ini && \
-    echo "logs-dir = /config/log/letsencrypt" >> /etc/letsencrypt.ini && \
-    echo "work-dir = /config/letsencrypt-workdir" >> /etc/letsencrypt.ini && \
 
     # Change client_body_temp_path.
     sed-patch 's|/tmp/nginx/body|/var/tmp/nginx/body|' /etc/nginx/nginx.conf && \
+
+    # Fix the pip install command.
+    sed-patch 's|pip3 install |pip3 install --user |' /opt/nginx-proxy-manager/internal/certificate.js && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
@@ -278,6 +279,10 @@ RUN \
 
     # Make sure letsencrypt certificates are stored in persistent volume.
     ln -s /config/letsencrypt /etc/letsencrypt && \
+
+    # Make sure some default certbot directories are stored in persistent volume.
+    ln -s /config/letsencrypt-workdir /var/lib/letsencrypt && \
+    ln -s /config/log/letsencrypt /var/log/letsencrypt && \
 
     # Cleanup.
     del-pkg build-dependencies && \

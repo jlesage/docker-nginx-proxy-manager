@@ -3,6 +3,7 @@
 set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error.
 
+export HOME=/config
 export NODE_ENV=production
 export SUPPRESS_NO_CONFIG_WARNING=1
 
