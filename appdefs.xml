@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.10.1</version>
+        <date>2020-10-26</date>
+        <change>Fixed automatic installation of Certbot plugins.</change>
+      </release>
+      <release>
         <version>1.10.0</version>
         <date>2020-10-25</date>
         <change>Updated Nginx Proxy Manager to version 2.6.1.</change>
