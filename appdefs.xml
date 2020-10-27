@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.10.2</version>
+        <date>2020-10-26</date>
+        <change>Fixed generation of certificates that use DNS challenge.</change>
+      </release>
+      <release>
         <version>1.10.1</version>
         <date>2020-10-26</date>
         <change>Fixed automatic installation of Certbot plugins.</change>
