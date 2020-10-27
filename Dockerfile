@@ -142,6 +142,7 @@ RUN \
 RUN \
     add-pkg \
         nodejs \
+        py3-pip \
         sqlite \
         certbot \
         openssl \
