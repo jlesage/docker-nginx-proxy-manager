@@ -9,7 +9,7 @@ log() {
 
 # Make sure mandatory directories exist.
 mkdir -p \
-    /config/log/nginx \
+    /config/log \
     /config/letsencrypt/archive \
     /config/letsencrypt-acme-challenge \
     /config/custom_ssl \
@@ -24,11 +24,6 @@ mkdir -p \
     /config/nginx/temp \
     /config/log/letsencrypt \
     /config/letsencrypt-workdir \
-
-# Create nginx log files.
-touch /config/log/nginx/error.log
-touch /config/log/nginx/default.log
-touch /config/log/nginx/manager.log
 
 # Make sure to remove old logs directory symlink.
 [ ! -L /config/logs ] || rm /config/logs

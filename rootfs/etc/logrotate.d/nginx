@@ -1,4 +1,4 @@
-/config/log/nginx/*.log {
+/config/log/*.log {
 	daily
 	compress
 	rotate 14
