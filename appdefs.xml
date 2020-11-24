@@ -110,6 +110,12 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.11.0</version>
+        <date>2020-11-24</date>
+        <change>Updated Nginx Proxy Manager to version 2.7.1.</change>
+        <change>Fixed rotation of nginx log files.</change>
+      </release>
+      <release>
         <version>1.10.3</version>
         <date>2020-11-06</date>
         <change>Updated Nginx Proxy Manager to version 2.6.2.</change>
