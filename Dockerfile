@@ -29,6 +29,11 @@ RUN \
         build-base \
         curl \
         && \
+    # Set same default compilation flags as abuild.
+    export CFLAGS="-Os -fomit-frame-pointer" && \
+    export CXXFLAGS="$CFLAGS" && \
+    export CPPFLAGS="$CFLAGS" && \
+    export LDFLAGS="-Wl,--as-needed" && \
     # Download.
     echo "Downloading watch..." && \
     mkdir watch && \
@@ -57,6 +62,11 @@ RUN \
         zlib-dev \
         geoip-dev \
         && \
+    # Set same default compilation flags as abuild.
+    export CFLAGS="-Os -fomit-frame-pointer" && \
+    export CXXFLAGS="$CFLAGS" && \
+    export CPPFLAGS="$CFLAGS" && \
+    export LDFLAGS="-Wl,--as-needed" && \
     # Download.
     echo "Downloading OpenResty..." && \
     mkdir openresty && \
