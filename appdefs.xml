@@ -110,6 +110,12 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.12.0</version>
+        <date>2021-01-06</date>
+        <change>Updated Nginx Proxy Manager to version 2.7.2.</change>
+        <change>Added the GeoIP Nginx module.</change>
+      </release>
+      <release>
         <version>1.11.0</version>
         <date>2020-11-24</date>
         <change>Updated Nginx Proxy Manager to version 2.7.1.</change>
