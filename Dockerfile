@@ -55,6 +55,7 @@ RUN \
         pcre-dev \
         openssl-dev \
         zlib-dev \
+        geoip-dev \
         && \
     # Download.
     echo "Downloading OpenResty..." && \
@@ -106,10 +107,12 @@ RUN \
 	--with-http_degradation_module \
 	--with-http_slice_module \
 	--with-http_stub_status_module \
+        --with-http_geoip_module \
 	--with-stream \
 	--with-stream_ssl_module \
 	--with-stream_realip_module \
 	--with-stream_ssl_preread_module \
+        --with-stream_geoip_module \
 	--with-pcre-jit \
         && \
     make -j$(nproc) && \
@@ -152,6 +155,7 @@ RUN \
         bash \
         # For openresty
         pcre \
+        geoip \
         && \
     # Adjust the logrotate config file.
     sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf
