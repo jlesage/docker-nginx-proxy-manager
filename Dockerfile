@@ -11,7 +11,7 @@ FROM jlesage/baseimage:alpine-3.12-v2.4.4
 ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
-ARG OPENRESTY_VERSION=1.17.8.1
+ARG OPENRESTY_VERSION=1.19.3.1
 ARG NGINX_PROXY_MANAGER_VERSION=2.7.2
 ARG WATCH_VERSION=0.3.1
 
@@ -74,11 +74,6 @@ RUN \
     # Compile.
     echo "Compiling OpenResty..." && \
     cd openresty && \
-    # Disable SSE4.2 since this is not supported by all CPUs...  Without this,
-    # Nginx fails to start with the 'Illegal instruction' error on CPU not
-    # supporting SSE4.2.
-    # https://github.com/openresty/openresty/issues/267
-    sed-patch 's|#ifndef __SSE4_2__|#if 1|' configure && \
     ./configure -j$(nproc) \
         --prefix=/var/lib/nginx \
         --sbin-path=/usr/sbin/nginx \
