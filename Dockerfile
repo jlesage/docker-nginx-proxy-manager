@@ -13,11 +13,15 @@ ARG DOCKER_IMAGE_VERSION=unknown
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.3.1
 ARG NGINX_PROXY_MANAGER_VERSION=2.7.3
+ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
+ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG WATCH_VERSION=0.3.1
 
 # Define software download URLs.
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
+ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
+ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${LIBMAXMINDDB_VERSION}/libmaxminddb-${LIBMAXMINDDB_VERSION}.tar.gz
 ARG WATCH_URL=https://github.com/tj/watch/archive/${WATCH_VERSION}.tar.gz
 
 # Define working directory.
@@ -60,7 +64,6 @@ RUN \
         pcre-dev \
         openssl-dev \
         zlib-dev \
-        geoip-dev \
         && \
     # Set same default compilation flags as abuild.
     export CFLAGS="-Os -fomit-frame-pointer" && \
@@ -71,7 +74,24 @@ RUN \
     echo "Downloading OpenResty..." && \
     mkdir openresty && \
     curl -# -L ${OPENRESTY_URL} | tar xz --strip 1 -C openresty && \
+    echo "Downloading GeoIP2 module..." && \
+    mkdir ngx_http_geoip2_module && \
+    curl -# -L ${NGINX_HTTP_GEOIP2_MODULE_URL} | tar xz --strip 1 -C ngx_http_geoip2_module && \
+    echo "Downloading libmaxminddb..." && \
+    mkdir libmaxminddb && \
+    curl -# -L ${LIBMAXMINDDB_URL} | tar xz --strip 1 -C libmaxminddb && \
     # Compile.
+    echo "Compiling libmaxminddb..." && \
+    cd libmaxminddb && \
+    ./configure  \
+        --prefix=/usr \
+        --mandir=/tmp/libmaxminddb-man \
+        --with-pic \
+        --enable-shared=no \
+        --enable-static=yes \
+        && \
+    make -j$(nproc) install && \
+    cd .. && \
     echo "Compiling OpenResty..." && \
     cd openresty && \
     ./configure -j$(nproc) \
@@ -112,13 +132,13 @@ RUN \
         --with-http_degradation_module \
         --with-http_slice_module \
         --with-http_stub_status_module \
-        --with-http_geoip_module \
         --with-stream \
         --with-stream_ssl_module \
         --with-stream_realip_module \
         --with-stream_ssl_preread_module \
-        --with-stream_geoip_module \
         --with-pcre-jit \
+        \
+        --add-module=/tmp/ngx_http_geoip2_module \
         && \
     make -j$(nproc) && \
     # Install.
@@ -144,6 +164,13 @@ RUN \
         /var/lib/nginx/resty.index \
         /var/lib/nginx/site \
         && \
+    rm \
+        /usr/include/maxminddb*.h \
+        /usr/lib/libmaxminddb* \
+        /usr/lib/pkgconfig/libmaxminddb.pc \
+        && \
+    [ -n "$(ls /usr/include)" ] || rm -r /usr/include && \
+    [ -n "$(ls /usr/lib/pkgconfig)" ] || rm -r /usr/lib/pkgconfig && \
     rm -rf /tmp/* /tmp/.[!.]*
 
 # Install dependencies.
@@ -160,7 +187,6 @@ RUN \
         bash \
         # For openresty
         pcre \
-        geoip \
         && \
     # Adjust the logrotate config file.
     sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf
