@@ -146,6 +146,7 @@ RUN \
     make install && \
     find /var/lib/nginx/ -type f -name '*.so*' -exec strip {} ';' && \
     strip /usr/sbin/nginx && \
+    ln -s /config/geoip2 /var/lib/GeoIP2 && \
     cd .. && \
     # Cleanup.
     del-pkg build-dependencies && \
@@ -187,6 +188,8 @@ RUN \
         bash \
         # For openresty
         pcre \
+        # For GeoIP2 database update
+        curl \
         && \
     # Adjust the logrotate config file.
     sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf
@@ -355,7 +358,9 @@ COPY rootfs/ /
 # Set environment variables.
 ENV APP_NAME="Nginx Proxy Manager" \
     KEEP_APP_RUNNING=1 \
-    DISABLE_IPV6=0
+    DISABLE_IPV6=0 \
+    MAXMINDDB_EDITION=GeoLite2-Country \
+    MAXMINDDB_LICENSE_KEY=
 
 # Define mountable directories.
 VOLUME ["/config"]
