@@ -111,8 +111,8 @@ RUN \
         --http-scgi-temp-path=/var/tmp/nginx/scgi \
         --with-perl_modules_path=/usr/lib/perl5/vendor_perl \
         \
-        --user=nginx \
-        --group=nginx \
+        --user=app \
+        --group=app \
         --with-threads \
         --with-file-aio \
         \
