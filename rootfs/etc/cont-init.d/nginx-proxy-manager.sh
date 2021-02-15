@@ -24,7 +24,6 @@ mkdir -p \
     /config/nginx/temp \
     /config/log/letsencrypt \
     /config/letsencrypt-workdir \
-    /config/geoip2 \
 
 # Make sure to remove old logs directory symlink.
 [ ! -L /config/logs ] || rm /config/logs
