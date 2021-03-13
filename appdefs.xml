@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.13.1</version>
+        <date>2021-03-13</date>
+        <change>Fixed issue where saving the default site setting would fail.</change>
+      </release>
+      <release>
         <version>1.13.0</version>
         <date>2021-02-09</date>
         <change>Updated Nginx Proxy Manager to version 2.8.0.</change>
