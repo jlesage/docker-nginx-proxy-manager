@@ -151,7 +151,6 @@ version: '3'
 services:
   nginx-proxy-manager:
     image: jlesage/nginx-proxy-manager
-    build: .
     ports:
       - "8181:8181"
       - "8080:8080"
