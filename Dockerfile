@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.3.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.8.1
+ARG NGINX_PROXY_MANAGER_VERSION=2.9.1
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG WATCH_VERSION=0.3.1
@@ -308,9 +308,6 @@ RUN \
 
     # Change client_body_temp_path.
     sed-patch 's|/tmp/nginx/body|/var/tmp/nginx/body|' /etc/nginx/nginx.conf && \
-
-    # Fix the pip install command.
-    sed-patch 's|pip3 install |pip3 install --user |' /opt/nginx-proxy-manager/internal/certificate.js && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
