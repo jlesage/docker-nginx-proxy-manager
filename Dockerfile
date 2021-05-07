@@ -179,17 +179,34 @@ RUN \
         nodejs \
         py3-pip \
         sqlite \
-        certbot \
         openssl \
         apache2-utils \
         logrotate \
-        # For /opt/nginx-proxy-manager/bin/handle-ipv6-setting
+        # For /opt/nginx-proxy-manager/bin/handle-ipv6-setting.
         bash \
-        # For openresty
+        # For openresty.
         pcre \
         && \
     # Adjust the logrotate config file.
     sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf
+
+# Build and install certbot.
+RUN \
+    add-pkg --virtual build-dependencies \
+        build-base \
+        python3-dev \
+        libffi-dev \
+        openssl-dev \
+        cargo \
+        && \
+    CARGO_HOME=/tmp/.cargo pip install --prefix=/usr certbot && \
+    find /usr/lib/python3.8/site-packages -type f -name "*.so" -exec strip {} ';' && \
+    find /usr/lib/python3.8/site-packages -type f -name "*.h" -delete && \
+    find /usr/lib/python3.8/site-packages -type f -name "*.c" -delete && \
+    find /usr/lib/python3.8/site-packages -type d -name tests -print0 | xargs -0 rm -r && \
+    # Cleanup.
+    del-pkg build-dependencies && \
+    rm -rf /tmp/* /tmp/.[!.]*
 
 # Install Nginx Proxy Manager.
 RUN \
