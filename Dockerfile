@@ -294,18 +294,6 @@ RUN \
     # Remove the `user` directive, since we want nginx to run as non-root.
     sed-patch 's|user root;|#user root;|' /etc/nginx/nginx.conf && \
 
-    # Change log paths.
-    sed-patch 's|/data/logs/|/config/log/|' /etc/nginx/nginx.conf && \
-    sed-patch 's|/data/logs/|/config/log/|' /etc/nginx/conf.d/default.conf && \
-    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/dead_host.conf && \
-    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/default.conf && \
-    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
-    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/proxy_host.conf && \
-    sed-patch 's|/data/logs/|/config/log/|' /opt/nginx-proxy-manager/templates/redirection_host.conf && \
-
-    # Adjust certbot config.
-    sed-patch 's|/data/|/config/|g' /etc/letsencrypt.ini && \
-
     # Change client_body_temp_path.
     sed-patch 's|/tmp/nginx/body|/var/tmp/nginx/body|' /etc/nginx/nginx.conf && \
 

@@ -25,8 +25,8 @@ mkdir -p \
     /config/log/letsencrypt \
     /config/letsencrypt-workdir \
 
-# Make sure to remove old logs directory symlink.
-[ ! -L /config/logs ] || rm /config/logs
+# Create symlinks for logs.
+ln -sf log /config/logs
 
 # Make sure to remove old letsencrypt config file.
 [ ! -f $XDG_CONFIG_HOME/letsencrypt/cli.ini ] || mv $XDG_CONFIG_HOME/letsencrypt/cli.ini $XDG_CONFIG_HOME/letsencrypt/cli.ini.removed
