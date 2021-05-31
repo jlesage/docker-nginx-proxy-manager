@@ -176,8 +176,9 @@ RUN \
 # Install dependencies.
 RUN \
     add-pkg \
+        curl \
         nodejs \
-        py3-pip \
+        python3 \
         sqlite \
         openssl \
         apache2-utils \
@@ -199,10 +200,20 @@ RUN \
         openssl-dev \
         cargo \
         && \
-    CARGO_HOME=/tmp/.cargo pip install --prefix=/usr certbot && \
+    # Install pip first.
+    # NOTE: pip from the Alpine package repository is debundled, meaning that
+    #       its dependencies are part of the system-wide ones.  This save a lot
+    #       of space, but these dependencies conflict with the ones required by
+    #       Certbot plugins. Thus, we need to manually install pip (with its
+    #       built-in dependencies).  See:
+    #       https://pip.pypa.io/en/stable/development/vendoring-policy/
+    curl -# -L "https://bootstrap.pypa.io/get-pip.py" | python3 && \
+    # Then install certbot.
+    CARGO_HOME=/tmp/.cargo pip install --no-cache-dir --prefix=/usr certbot && \
     find /usr/lib/python3.8/site-packages -type f -name "*.so" -exec strip {} ';' && \
     find /usr/lib/python3.8/site-packages -type f -name "*.h" -delete && \
     find /usr/lib/python3.8/site-packages -type f -name "*.c" -delete && \
+    find /usr/lib/python3.8/site-packages -type f -name "*.exe" -delete && \
     find /usr/lib/python3.8/site-packages -type d -name tests -print0 | xargs -0 rm -r && \
     # Cleanup.
     del-pkg build-dependencies && \
