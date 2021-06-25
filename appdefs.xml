@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.17.0</version>
+        <date>2021-06-25</date>
+        <change>Updated Nginx Proxy Manager to version 2.9.4.</change>
+      </release>
+      <release>
         <version>1.16.1</version>
         <date>2021-05-31</date>
         <change>Fixed issue where Certbot plugins installation would cause Python packages conflicts.</change>
