@@ -1,0 +1,25 @@
+name: Build Master
+# Anytime there's a push to master it will build
+on:
+  push:
+    branches: 
+        - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: install buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          qemu-version: latest
+      - name: login to docker hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: build the image
+        run: |
+          docker buildx build --push \
+            --tag jlesage/nginx-proxy-manager \
+            --platform linux/amd64,linux/arm,linux/arm64 .
