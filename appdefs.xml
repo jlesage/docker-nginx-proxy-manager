@@ -19,13 +19,13 @@ from Jinja2 templates.
       <support_url>https://forums.unraid.net/topic/76460-support-nginx-proxy-manager/</support_url>
       <category>Network:Web Network:Proxy Tools:</category>
       <extra_description>
-    [span style='color: red;'][b]Note:[/b][/span] For this container to be
-    accessible from the internet, make sure ports [b]80[/b] and [b]443[/b] on
-    the internet side of your router are properly forwarded to this container.
-    See the documentation for more details.[br][br]
-    [span style='color: red;'][b]Note:[/b][/span] After a fresh install, the
-    default username/password to connect to the management interface are:
-    [b]admin@example.com[/b]/[b]changeme[/b].
+**NOTE**: For this container to be accessible from the internet, make sure ports
+**80** and **443** on the internet side of your router are properly forwarded to
+this container.  See the documentation for more details.
+
+**NOTE**: After a fresh install, the default username/password to connect to the
+management interface are:
+> admin@example.com/changeme.
       </extra_description>
     </unraid>
     <container>
