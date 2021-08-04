@@ -313,7 +313,9 @@ RUN \
     sed-patch 's|root root|app app|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|/run/nginx.pid|/run/nginx/nginx.pid|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' /opt/nginx-proxy-manager/setup.js && \
-#    ln -s /config/logrotate.status /var/lib/logrotate.status && \
+
+    # Disable random sleep delay of certbot when forced renewal.
+    sed-patch 's|renew --force-renewal|renew --force-renewal --no-random-sleep-on-renew|' /opt/nginx-proxy-manager/internal/certificate.js && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
