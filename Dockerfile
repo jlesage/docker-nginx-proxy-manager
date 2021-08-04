@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.3.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.9.4
+ARG NGINX_PROXY_MANAGER_VERSION=2.9.6
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG WATCH_VERSION=0.3.1
@@ -273,6 +273,7 @@ RUN \
     cp -r nginx-proxy-manager/docker/rootfs/etc/nginx /etc/ && \
     cp -r nginx-proxy-manager/docker/rootfs/var/www /var/ && \
     cp -r nginx-proxy-manager/docker/rootfs/etc/letsencrypt.ini /etc/ && \
+    cp -r nginx-proxy-manager/docker/rootfs/etc/logrotate.d /etc/ && \
 
     # Remove the nginx development config.
     rm /etc/nginx/conf.d/dev.conf && \
@@ -307,6 +308,12 @@ RUN \
 
     # Change client_body_temp_path.
     sed-patch 's|/tmp/nginx/body|/var/tmp/nginx/body|' /etc/nginx/nginx.conf && \
+
+    # Fix the logrotate config.
+    sed-patch 's|root root|app app|' /etc/logrotate.d/nginx-proxy-manager && \
+    sed-patch 's|/run/nginx.pid|/run/nginx/nginx.pid|' /etc/logrotate.d/nginx-proxy-manager && \
+    sed-patch 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' /opt/nginx-proxy-manager/setup.js && \
+#    ln -s /config/logrotate.status /var/lib/logrotate.status && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
