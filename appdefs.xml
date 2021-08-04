@@ -110,6 +110,12 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.18.0</version>
+        <date>2021-08-03</date>
+        <change>Updated Nginx Proxy Manager to version 2.6.9.</change>
+        <change>Removed random delay that was applied when manually renewing a certificate.</change>
+      </release>
+      <release>
         <version>1.17.0</version>
         <date>2021-06-25</date>
         <change>Updated Nginx Proxy Manager to version 2.9.4.</change>
