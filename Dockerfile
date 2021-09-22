@@ -298,6 +298,7 @@ RUN \
     sed-patch 's|443 |4443 |' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|"443";|"4443";|' /etc/nginx/conf.d/default.conf && \
     sed-patch 's|listen 443 |listen 4443 |' /opt/nginx-proxy-manager/templates/_listen.conf && \
+    sed-patch 's|:443 |:4443 |' /opt/nginx-proxy-manager/templates/_listen.conf && \
     sed-patch 's|:443;|:4443;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
 
     # Fix nginx test command line.
