@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.3.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.9.11
+ARG NGINX_PROXY_MANAGER_VERSION=2.9.12
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG WATCH_VERSION=0.3.1
@@ -314,9 +314,6 @@ RUN \
     sed-patch 's|root root|app app|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|/run/nginx.pid|/run/nginx/nginx.pid|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' /opt/nginx-proxy-manager/setup.js && \
-
-    # Disable random sleep delay of certbot when forced renewal.
-    sed-patch 's|renew --force-renewal|renew --force-renewal --no-random-sleep-on-renew|' /opt/nginx-proxy-manager/internal/certificate.js && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
