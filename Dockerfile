@@ -317,6 +317,9 @@ RUN \
     sed-patch 's|/data/logs/\*/access.log|/data/logs/access.log|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|/data/logs/\*/error.log|/data/logs/error.log|' /etc/logrotate.d/nginx-proxy-manager && \
 
+    # Fix typo in config file.
+    sed-patch 's|fallback-access.log|fallback_access.log|' /etc/nginx/conf.d/default.conf && \
+
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
 
