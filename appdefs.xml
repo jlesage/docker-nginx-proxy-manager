@@ -110,6 +110,14 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.23.0</version>
+        <date>2021-12-26</date>
+        <change>Updated Nginx Proxy Manager to version 2.9.13.</change>
+        <change>Updated OpenResty to version 1.19.9.1.</change>
+        <change>Fixed rotation of some log files.</change>
+        <change>Properly handle nameserver in resolv.conf with interface name appended to its IPv6 address.</change>
+      </release>
+      <release>
         <version>1.22.1</version>
         <date>2021-11-08</date>
         <change>Updated NginxProxyManager to version 2.9.12.</change>
