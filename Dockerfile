@@ -314,6 +314,8 @@ RUN \
     sed-patch 's|root root|app app|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|/run/nginx.pid|/run/nginx/nginx.pid|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' /opt/nginx-proxy-manager/setup.js && \
+    sed-patch 's|/data/logs/\*/access.log|/data/logs/access.log|' /etc/logrotate.d/nginx-proxy-manager && \
+    sed-patch 's|/data/logs/\*/error.log|/data/logs/error.log|' /etc/logrotate.d/nginx-proxy-manager && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
