@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.23.1</version>
+        <date>2021-12-27</date>
+        <change>Fixed issue where custom SSL certificate could not be added.</change>
+      </release>
+      <release>
         <version>1.23.0</version>
         <date>2021-12-26</date>
         <change>Updated Nginx Proxy Manager to version 2.9.13.</change>
