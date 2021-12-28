@@ -245,6 +245,9 @@ RUN \
     sed-patch "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" nginx-proxy-manager/frontend/package.json && \
     sed-patch "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" nginx-proxy-manager/backend/package.json && \
 
+    # Fix for custom certificate upload modal not working.
+    curl -# -L https://github.com/jc21/nginx-proxy-manager/commit/40b1521f723d1a485a99c47f4f7505ba26d1469f.patch | patch -p1 -d nginx-proxy-manager && \
+
     cp -r nginx-proxy-manager /app && \
 
     # Build Nginx Proxy Manager frontend.
