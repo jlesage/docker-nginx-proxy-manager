@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.9.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.9.13
+ARG NGINX_PROXY_MANAGER_VERSION=2.9.14
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG WATCH_VERSION=0.3.1
@@ -245,9 +245,6 @@ RUN \
     sed-patch "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" nginx-proxy-manager/frontend/package.json && \
     sed-patch "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" nginx-proxy-manager/backend/package.json && \
 
-    # Fix for custom certificate upload modal not working.
-    curl -# -L https://github.com/jc21/nginx-proxy-manager/commit/40b1521f723d1a485a99c47f4f7505ba26d1469f.patch | patch -p1 -d nginx-proxy-manager && \
-
     cp -r nginx-proxy-manager /app && \
 
     # Build Nginx Proxy Manager frontend.
@@ -294,8 +291,7 @@ RUN \
     sed-patch 's|:80;|:8080;|' /opt/nginx-proxy-manager/templates/letsencrypt-request.conf && \
     sed-patch 's|listen 80;|listen 8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
     sed-patch 's|:80;|:8080;|' /opt/nginx-proxy-manager/templates/_listen.conf && \
-    sed-patch 's|listen 80 |listen 8080 |' /opt/nginx-proxy-manager/templates/default.conf && \
-    sed-patch 's|:80;|:8080;|' /opt/nginx-proxy-manager/templates/default.conf && \
+    sed-patch 's|80 default;|8080 default;|' /opt/nginx-proxy-manager/templates/default.conf && \
 
     # Change the HTTPs port 443 to the unprivileged port 4443.
     sed-patch 's|443 |4443 |' /etc/nginx/conf.d/default.conf && \
@@ -319,9 +315,6 @@ RUN \
     sed-patch 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' /opt/nginx-proxy-manager/setup.js && \
     sed-patch 's|/data/logs/\*/access.log|/data/logs/access.log|' /etc/logrotate.d/nginx-proxy-manager && \
     sed-patch 's|/data/logs/\*/error.log|/data/logs/error.log|' /etc/logrotate.d/nginx-proxy-manager && \
-
-    # Fix typo in config file.
-    sed-patch 's|fallback-access.log|fallback_access.log|' /etc/nginx/conf.d/default.conf && \
 
     # Redirect `/data' to '/config'.
     ln -s /config /data && \
