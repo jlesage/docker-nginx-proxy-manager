@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.25.0</version>
+        <date>2022-01-21</date>
+        <change>Updated Nginx Proxy Manager to version 2.9.15.</change>
+      </release>
+      <release>
         <version>1.24.1</version>
         <date>2022-01-02</date>
         <change>Now using baseimage version 2.4.6, based on Alpine 3.15, which brings the following change:</change>
