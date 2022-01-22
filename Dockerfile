@@ -186,10 +186,7 @@ RUN \
         # For /opt/nginx-proxy-manager/bin/handle-ipv6-setting.
         bash \
         # For openresty.
-        pcre \
-        && \
-    # Adjust the logrotate config file.
-    sed-patch 's|^/var/log/messages|#/var/log/messages|' /etc/logrotate.conf
+        pcre
 
 # Build and install certbot.
 RUN \
