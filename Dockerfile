@@ -12,6 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.9.1
+ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.0
 ARG NGINX_PROXY_MANAGER_VERSION=2.9.15
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
@@ -19,6 +20,7 @@ ARG WATCH_VERSION=0.3.1
 
 # Define software download URLs.
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
+ARG CROWDSEC_OPENRESTY_BOUNCER_URL=https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
 ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
 ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${LIBMAXMINDDB_VERSION}/libmaxminddb-${LIBMAXMINDDB_VERSION}.tar.gz
@@ -147,6 +149,10 @@ RUN \
     find /var/lib/nginx/ -type f -name '*.so*' -exec strip {} ';' && \
     strip /usr/sbin/nginx && \
     cd .. && \
+
+    #Install lua-resty-http required for Crowdsec OpenResty Bouncer 
+    /var/lib/nginx/bin/opm get pintsized/lua-resty-http && \
+
     # Cleanup.
     del-pkg build-dependencies && \
     rm -r \
@@ -162,7 +168,6 @@ RUN \
         /var/lib/nginx/luajit/share/man \
         /var/lib/nginx/pod \
         /var/lib/nginx/resty.index \
-        /var/lib/nginx/site \
         && \
     rm \
         /usr/include/maxminddb*.h \
@@ -369,12 +374,31 @@ RUN \
     del-pkg build-dependencies && \
     rm -rf /tmp/* /tmp/.[!.]*
 
+# Install Crowdsec OpenResty Bouncer.
+RUN \
+    # Download the Crowdsec OpenResty Bouncer package.
+    echo "Downloading Crowdsec Openresty Bouncer package..." && \
+    mkdir crowdsec-openresty-bouncer && \
+    curl -# -L ${CROWDSEC_OPENRESTY_BOUNCER_URL} | tar xz --strip 1 -C crowdsec-openresty-bouncer && \
+    # Deploy Crowdsec Openresty Bouncer.
+    echo "Deploy Crowdsec Openresty Bouncer.." && \
+    mkdir -p /crowdsec/ && \
+    cp /tmp/crowdsec-openresty-bouncer/openresty/crowdsec_openresty.conf /crowdsec/crowdsec_openresty.conf && \
+    sed-patch 's|/etc/crowdsec/bouncers/crowdsec-openresty-bouncer.conf|/config/crowdsec-openresty-bouncer.conf|' /crowdsec/crowdsec_openresty.conf && \
+    sed-patch 's|/usr/local/openresty/lualib/plugins/crowdsec|/var/lib/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf && \
+    sed-patch 's|$prefix/../lualib/plugins/crowdsec|/var/lib/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf && \
+    cp /tmp/crowdsec-openresty-bouncer/config/template.conf /crowdsec/crowdsec-openresty-bouncer.conf && \
+    cp -r /tmp/crowdsec-openresty-bouncer/lua /crowdsec/ && \
+    # Cleanup.
+    rm -rf /tmp/* /tmp/.[!.]*
+
 # Add files.
 COPY rootfs/ /
 
 # Set environment variables.
 ENV APP_NAME="Nginx Proxy Manager" \
-    DISABLE_IPV6=0
+    DISABLE_IPV6=0 \
+    CROWDSEC_BOUNCER=0
 
 # Define mountable directories.
 VOLUME ["/config"]
