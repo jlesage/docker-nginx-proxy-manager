@@ -5,10 +5,15 @@ This fork includes the [OpenResty Crowdsec Bouncer](https://github.com/crowdsecu
 Please see the [crowdsec_support](https://github.com/LePresidente/docker-nginx-proxy-manager/tree/crowdsec_support) branch for the changes as 
 
 Docker images hosted on dockerhub.
-www.dockerhub.com/r/lepresidente/nginx-proxy-manager:latest = V0.1.0 (Built in)
-www.dockerhub.com/r/lepresidente/nginx-proxy-manager:dev = V0.1.1 (PreRelease) (Built in)
 
-Instructions to use
+https://hub.docker.com/r/lepresidente/nginx-proxy-manager
+
+| TAG       | cs-openresty-bouncer version| 
+|-----------|-----------------------------|
+| latest    | 0.1.0                       |
+| dev       | 0.1.1 (PreRelease)          |
+
+Instructions to use:
 To enable it you will need to configure Nginx Proxy Manager as Below then do the following
 
 Enable the following environment Variable by setting it to 1.
