@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.9.1
-ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.0
+ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.1
 ARG NGINX_PROXY_MANAGER_VERSION=2.9.15
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
@@ -385,9 +385,11 @@ RUN \
     mkdir -p /crowdsec/ && \
     cp /tmp/crowdsec-openresty-bouncer/openresty/crowdsec_openresty.conf /crowdsec/crowdsec_openresty.conf && \
     sed-patch 's|/etc/crowdsec/bouncers/crowdsec-openresty-bouncer.conf|/config/crowdsec-openresty-bouncer.conf|' /crowdsec/crowdsec_openresty.conf && \
-    sed-patch 's|/usr/local/openresty/lualib/plugins/crowdsec|/var/lib/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf && \
-    sed-patch 's|$prefix/../lualib/plugins/crowdsec|/var/lib/nginx/lualib/plugins/crowdsec|' /crowdsec/crowdsec_openresty.conf && \
-    cp /tmp/crowdsec-openresty-bouncer/config/template.conf /crowdsec/crowdsec-openresty-bouncer.conf && \
+    sed-patch 's|$prefix/../lualib/plugins/crowdsec|/var/lib/nginx/lualib|' /crowdsec/crowdsec_openresty.conf && \
+    sed-patch 's|resolver local=on ipv6=off;||' /crowdsec/crowdsec_openresty.conf && \
+    sed-patch 's|${SSL_CERTS_PATH}|/etc/ssl/certs/ca-certificates.crt|' /crowdsec/crowdsec_openresty.conf && \
+    cp -r /tmp/crowdsec-openresty-bouncer/templates /crowdsec/ && \
+    cp /tmp/crowdsec-openresty-bouncer/config/config_example.conf /crowdsec/crowdsec-openresty-bouncer.conf && \
     cp -r /tmp/crowdsec-openresty-bouncer/lua /crowdsec/ && \
     # Cleanup.
     rm -rf /tmp/* /tmp/.[!.]*
