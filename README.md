@@ -8,10 +8,14 @@ Docker images hosted on dockerhub.
 
 https://hub.docker.com/r/lepresidente/nginx-proxy-manager
 
-| TAG       | cs-openresty-bouncer version| 
+| TAG       | cs-openresty-bouncer version|
 |-----------|-----------------------------|
 | latest    | 0.1.0                       |
 | dev       | 0.1.1 (PreRelease)          |
+
+###Known Issues:
+0.1.0:
+[logs spammed with errors regarding the use of variable ('err')](https://github.com/crowdsecurity/cs-openresty-bouncer/issues/15)
 
 Instructions to use:
 To enable it you will need to configure Nginx Proxy Manager as Below then do the following
