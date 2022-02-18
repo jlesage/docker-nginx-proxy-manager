@@ -14,6 +14,7 @@ https://hub.docker.com/r/lepresidente/nginx-proxy-manager
 | dev       | 0.1.1 (PreRelease)          |
 
 ###Known Issues:
+
 0.1.0:
 [logs spammed with errors regarding the use of variable ('err')](https://github.com/crowdsecurity/cs-openresty-bouncer/issues/15)
 
