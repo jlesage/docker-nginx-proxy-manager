@@ -1,5 +1,7 @@
 ## Note
 
+This is a drop in replacement for [jlesage/nginx-proxy-manager](https://hub.docker.com/r/jlesage/nginx-proxy-manager)
+
 This fork includes the [OpenResty Crowdsec Bouncer](https://github.com/crowdsecurity/cs-openresty-bouncer)
 
 Please see the [crowdsec_support](https://github.com/LePresidente/docker-nginx-proxy-manager/tree/crowdsec_support) branch for the changes as 
