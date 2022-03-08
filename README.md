@@ -12,27 +12,16 @@ https://hub.docker.com/r/lepresidente/nginx-proxy-manager
 
 | TAG       | cs-openresty-bouncer version|
 |-----------|-----------------------------|
-| latest    | 0.1.0                       |
-| dev       | 0.1.1 (PreRelease)          |
+| latest    | 0.1.1 (PreRelease)          |
 
-###Known Issues:
-
-0.1.0:
-[logs spammed with errors regarding the use of variable ('err')](https://github.com/crowdsecurity/cs-openresty-bouncer/issues/15)
 
 Instructions to use:
-To enable it you will need to configure Nginx Proxy Manager as Below then do the following
+Starting the container at this point will start Nginx-Proxy-Manager as before but will create a new file in /config/crowdsec/ called crowdsec-openresty-bouncer.conf
 
-Enable the following environment Variable by setting it to 1.
-| Variable       | Description                                  | Default |
-|----------------|----------------------------------------------|---------|
-|`CROWDSEC_BOUNCER`| When set to `1`, Crowdsec bouncer will be enabled.  This is needed when you want to block hosts using crowdsec. | `0` |
-
-Starting the container at this point will start Nginx-Proxy-Manager as before but will create a new file in /config/ called crowdsec-openresty-bouncer.conf
-
-You will need to edit this file with at least the following changes
+You will need to edit this file with at least the following changes then restart the container.
 
 ```
+ENABLED=true
 API_URL=http://<crowdsecserver>:8080
 API_KEY=<APIKEY>
 ```
