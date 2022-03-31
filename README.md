@@ -12,7 +12,7 @@ https://hub.docker.com/r/lepresidente/nginx-proxy-manager
 
 | TAG       | cs-openresty-bouncer version|
 |-----------|-----------------------------|
-| latest    | 0.1.1 (PreRelease)          |
+| latest    | 0.1.10 (PreRelease)          |
 
 
 Instructions to use:
