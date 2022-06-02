@@ -64,7 +64,7 @@ then
 fi
 
 # Generate the resolvers configuration file.
-echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" { sub(/%.*$/,"",$2); print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf);" > /config/nginx/resolvers.conf
+echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" { sub(/%.*$/,"",$2); print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf) valid=10s;" > /config/nginx/resolvers.conf
 
 # Hnandle IPv6 settings.
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /etc/nginx/conf.d
