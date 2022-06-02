@@ -233,7 +233,8 @@ RUN \
 
     # Install node-prune.
     echo "Installing node-prune..." && \
-    curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash -s -- -b /tmp/bin && \
+    mkdir /tmp/bin && \
+    curl -sfL https://gobinaries.com/tj/node-prune | PREFIX=/tmp/bin sh && \
 
     # Download the Nginx Proxy Manager package.
     echo "Downloading Nginx Proxy Manager package..." && \
