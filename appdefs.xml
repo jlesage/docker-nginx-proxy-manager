@@ -110,6 +110,11 @@ Where:
     <!-- Changelog of the application. -->
     <history>
       <release>
+        <version>1.26.1</version>
+        <date>2022-06-02</date>
+        <change>Updated Nginx Proxy Manager to version 2.9.18.</change>
+      </release>
+      <release>
         <version>1.26.0</version>
         <date>2022-02-22</date>
         <change>Updated Nginx Proxy Manager to version 2.9.16.</change>
