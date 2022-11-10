@@ -12,7 +12,7 @@ ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.9.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.9.16
+ARG NGINX_PROXY_MANAGER_VERSION=2.9.18
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG WATCH_VERSION=0.3.1
@@ -233,7 +233,8 @@ RUN \
 
     # Install node-prune.
     echo "Installing node-prune..." && \
-    curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash -s -- -b /tmp/bin && \
+    mkdir /tmp/bin && \
+    curl -sfL https://gobinaries.com/tj/node-prune | PREFIX=/tmp/bin sh && \
 
     # Download the Nginx Proxy Manager package.
     echo "Downloading Nginx Proxy Manager package..." && \
