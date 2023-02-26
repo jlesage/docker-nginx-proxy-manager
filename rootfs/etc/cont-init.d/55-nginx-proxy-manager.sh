@@ -1,10 +1,10 @@
-#!/usr/bin/with-contenv sh
+#!/bin/sh
 
 set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error.
 
 log() {
-    echo "[cont-init.d] $(basename $0): $*"
+    echo "$@"
 }
 
 # Make sure mandatory directories exist.
@@ -24,6 +24,13 @@ mkdir -p \
     /config/nginx/temp \
     /config/log/letsencrypt \
     /config/letsencrypt-workdir \
+
+# Make sure directories required for nginx exist.
+for DIR in /var/run/nginx /var/tmp/nginx
+do
+    mkdir -p "$DIR"
+    chown app:app "$DIR"
+done
 
 # Create symlinks for logs.
 [ ! -L /config/log/log ] || rm /config/log/log
@@ -64,13 +71,15 @@ then
 fi
 
 # Generate the resolvers configuration file.
-echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" { sub(/%.*$/,"",$2); print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf) valid=10s;" > /config/nginx/resolvers.conf
+if [ "$DISABLE_IPV6" == "true" ] || [ "$DISABLE_IPV6" == "on" ] || [ "$DISABLE_IPV6" == "1" ] || [ "$DISABLE_IPV6" == "yes" ];
+then
+    echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" { sub(/%.*$/,"",$2); print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf) ipv6=off valid=10s;" > /etc/nginx/conf.d/include/resolvers.conf
+else
+    echo resolver "$(awk 'BEGIN{ORS=" "} $1=="nameserver" { sub(/%.*$/,"",$2); print ($2 ~ ":")? "["$2"]": $2}' /etc/resolv.conf) valid=10s;" > /etc/nginx/conf.d/include/resolvers.conf
+fi
 
-# Hnandle IPv6 settings.
+# Handle IPv6 settings.
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /etc/nginx/conf.d
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /config/nginx
-
-# Take ownership of the config directory content.
-find /config -mindepth 1 -exec chown $USER_ID:$GROUP_ID {} \;
 
 # vim:ft=sh:ts=4:sw=4:et:sts=4

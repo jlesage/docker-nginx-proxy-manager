@@ -1,14 +1,14 @@
-#!/usr/bin/with-contenv sh
+#!/bin/sh
 
 set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error.
 
 log() {
     if [ -n "${1-}" ]; then
-        echo "[cont-init.d] $(basename $0): $*"
+        echo "$@"
     else
         while read OUTPUT; do
-            echo "[cont-init.d] $(basename $0): $OUTPUT"
+            echo "$OUTPUT"
         done
     fi
 }
