@@ -1,0 +1,420 @@
+---
+
+#
+# Definitions for Nginx Proxy Manager docker container.
+#
+# This file is used as data source to generate README.md and unRAID template files
+# from Jinja2 templates.
+#
+
+app:
+  id: 18
+  name: nginx-proxy-manager
+  friendly_name: Nginx Proxy Manager
+  gui_type: web
+  gui_port: 8181
+  project:
+    description: |-
+      Nginx Proxy Manager enables you to easily forward to your websites running at
+      home or otherwise, including free SSL, without having to know too much about
+      Nginx or Letsencrypt.
+    url: https://nginxproxymanager.com
+  unraid:
+    support_url: https://forums.unraid.net/topic/76460-support-nginx-proxy-manager/
+    category: "Network:Web Network:Proxy Tools:"
+    extra_description: >-
+      **NOTE**: For this container to be accessible from the internet, make sure ports
+      **80** and **443** on the internet side of your router are properly forwarded to
+      this container.  See the documentation for more details.
+
+      **NOTE**: After a fresh install, the default username/password to connect to the
+      management interface are:
+      > admin@example.com/changeme.
+  documentation:
+    sections:
+      - title: Default Administrator Account
+        level: 2
+        content: |-
+          After a fresh install, use the following credentials to login:
+            - Email address: `admin@example.com`
+            - Password: `changeme`
+
+          After you login with this default user, you will be asked to modify your details
+          and change your password.
+      - title: Accessibility From The Internet
+        level: 2
+        content: |-
+          **NOTE:** This section assumes that the container is using the default `bridge`
+          network type.
+
+          For this container to be accessible from the Internet, port forwarding must be
+          configured on your router.  This allows HTTP (port 80) and HTTPs (port 443)
+          traffic from the Internet to reach this container on your private network.
+
+          Configuration of port forwarding differs from one router to another, but in
+          general the same information must be configured:
+            - **External port**: The Internet-side port to be forwarded.
+            - **Internal port**: The port to forward to.  Also called private port.
+            - **Destination IP address**: The IP address of the device on the local
+              network to forward to.  Also called private IP address.
+
+          The IP address to forward to should be the IP address of the host running the
+          container.  The port to forward to should be the port mapped to the container
+          during its creation (via the `-p` parameter of the `docker run` command).
+
+          Since the container needs to handle both HTTP and HTTPs traffic, two ports need
+          to be forwarded:
+
+          | Traffic type | Container port | Host port mapped to container | External port | Internal port | Internal IP address                           |
+          |--------------|----------------|-------------------------------|---------------|---------------|-----------------------------------------------|
+          | HTTP         | 8080           | XXXX                          | 80            | XXXX          | IP address of the host running the container. |
+          | HTTPs        | 4443           | YYYY                          | 443           | YYYY          | IP address of the host running the container. |
+
+          `XXXX` and `YYYY` are configurable port values.  Unless they conflict with other
+          used ports on the host, they can simply be set to the same value as the
+          container port.
+
+          **NOTE**: Some routers don't offer the ability to configure the internal port
+          to forward to.  This means that internal port is the same as the external one.
+          In a such scenario, `XXXX` must be set to `80` and `YYYY` to `443`.
+
+          For more details about port forwarding, see the following links:
+            - [How to Port Forward - General Guide to Multiple Router Brands](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)
+            - [How to Forward Ports on Your Router](https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/)
+      - title: Troubleshooting
+        level: 2
+      - title: Password Reset
+        level: 3
+        content: |-
+          The password of a user can be reset to `changeme` with the following command:
+
+          ```
+          docker exec CONTAINER_NAME /opt/nginx-proxy-manager/bin/reset-password USER_EMAIL
+          ```
+
+          Where:
+
+            - `CONTAINER_NAME` is the name of the running container.
+            - `USER_EMAIL` is the email of the address to reset the password.
+  changelog:
+    - version: 1.26.1
+      date: 2022-06-02
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.18.'
+    - version: 1.26.0
+      date: 2022-02-22
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.16.'
+    - version: 1.25.0
+      date: 2022-01-21
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.15.'
+    - version: 1.24.1
+      date: 2022-01-02
+      changes:
+        - 'Now using baseimage version 2.4.6, based on Alpine 3.15, which brings the following change:'
+        - '2:Updated installed packages to get latest security fixes.'
+        - 'This also fixes an error that was occurring because of the usage of an insufficient Node.js version.'
+    - version: 1.24.0
+      date: 2022-01-02
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.14.'
+    - version: 1.23.1
+      date: 2021-12-27
+      changes:
+        - 'Fixed issue where custom SSL certificate could not be added.'
+    - version: 1.23.0
+      date: 2021-12-26
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.13.'
+        - 'Updated OpenResty to version 1.19.9.1.'
+        - 'Fixed rotation of some log files.'
+        - 'Properly handle nameserver in resolv.conf with interface name appended to its IPv6 address.'
+    - version: 1.22.1
+      date: 2021-11-08
+      changes:
+        - 'Updated NginxProxyManager to version 2.9.12.'
+    - version: 1.22.0
+      date: 2021-11-02
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.11.'
+    - version: 1.21.1
+      date: 2021-09-21
+      changes:
+        - 'Fixed issue where configuration of a proxy host could fail to load.'
+    - version: 1.21.0
+      date: 2021-09-11
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.9.'
+    - version: 1.20.0
+      date: 2021-08-28
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.8.'
+    - version: 1.19.0
+      date: 2021-08-08
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.7.'
+    - version: 1.18.0
+      date: 2021-08-03
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.6.9.'
+        - 'Removed random delay that was applied when manually renewing a certificate.'
+    - version: 1.17.0
+      date: 2021-06-25
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.4.'
+    - version: 1.16.1
+      date: 2021-05-31
+      changes:
+        - 'Fixed issue where Certbot plugins installation would cause Python packages conflicts.'
+    - version: 1.16.0
+      date: 2021-05-21
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.3.'
+    - version: 1.15.0
+      date: 2021-05-10
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.2.'
+        - 'Use the most recent certbot version.'
+        - 'Updated baseimage to version 2.4.5.'
+    - version: 1.14.0
+      date: 2021-03-22
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.8.1.'
+    - version: 1.13.1
+      date: 2021-03-13
+      changes:
+        - 'Fixed issue where saving the default site setting would fail.'
+    - version: 1.13.0
+      date: 2021-02-09
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.8.0.'
+        - 'Updated OpenResty to version 1.19.3.1.'
+        - 'Replaced the depricated GeoIP module by GeoIP2.'
+    - version: 1.12.0
+      date: 2021-01-06
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.7.2.'
+        - 'Added the GeoIP Nginx module.'
+    - version: 1.11.0
+      date: 2020-11-24
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.7.1.'
+        - 'Fixed rotation of nginx log files.'
+    - version: 1.10.3
+      date: 2020-11-06
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.6.2.'
+    - version: 1.10.2
+      date: 2020-10-26
+      changes:
+        - 'Fixed generation of certificates that use DNS challenge.'
+    - version: 1.10.1
+      date: 2020-10-26
+      changes:
+        - 'Fixed automatic installation of Certbot plugins.'
+    - version: 1.10.0
+      date: 2020-10-25
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.6.1.'
+        - 'Now using baseimage version 2.4.4, based on Alpine 3.12, which brings the following changes:'
+        - '2:Upgraded glibc to version 2.31 on Alpine Linux images with glibc integrated.'
+        - '2:Updated installed packages to get latest security fixes.'
+        - 'Use sqlite as database instead of mariadb.'
+        - 'Added proper support for the `DISABLE_IPV6` environment variable.'
+        - 'Periodically clean Let''s Encrypt certificates.'
+    - version: 1.9.2
+      date: 2020-07-10
+      changes:
+        - 'Fixed an issue where the container would fail to start if custom Nginx files are mounted by Docker.'
+    - version: 1.9.1
+      date: 2020-07-10
+      changes:
+        - 'Improved compatibility by disabling usage of SSE4.2 in OpenResty.'
+    - version: 1.9.0
+      date: 2020-07-09
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.3.1.'
+    - version: 1.8.1
+      date: 2020-05-21
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.2.4.'
+    - version: 1.8.0
+      date: 2020-04-15
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.2.3.'
+    - version: 1.7.4
+      date: 2020-04-08
+      changes:
+        - 'Fixed issue where generated proxy host config would use incorrect ports.'
+    - version: 1.7.3
+      date: 2020-04-07
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.2.2.'
+    - version: 1.7.2
+      date: 2020-04-06
+      changes:
+        - 'Fixed generation of resolvers.conf when IPv6 is involved.'
+    - version: 1.7.1
+      date: 2020-04-06
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.2.1.'
+    - version: 1.7.0
+      date: 2020-03-16
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.2.0.'
+        - 'Now using baseimage v2.4.3, which brings the following changes:'
+        - '2:Updated installed packages to get latest security fixes.'
+        - '2:Make sure the tzdata is installed.'
+    - version: 1.6.0
+      date: 2019-10-10
+      changes:
+        - 'Rotate Nginx log files.'
+        - 'Added tool to reset password of a user of the management interface.'
+    - version: 1.5.3
+      date: 2019-09-04
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.0.14.'
+    - version: 1.5.2
+      date: 2019-08-20
+      changes:
+        - 'Use baseimage based on Alpine 3.9.'
+        - '2:This fixes TLS1.3 support.'
+        - 'Keep the `fastcgi.conf` and `fastcgi_params` Nginx configuration files.'
+    - version: 1.5.1
+      date: 2019-07-02
+      changes:
+        - 'Fixed issue where the wrong SSL protocols/ciphers were used.'
+    - version: 1.5.0
+      date: 2019-05-09
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.0.13.'
+        - 'Now using baseimage v2.4.2, which brings the following changes:'
+        - '2:Updated installed packages to get latest security fixes.'
+    - version: 1.4.2
+      date: 2019-04-18
+      changes:
+        - 'Fixed issue where using a hostname for the upstream proxy host would not work.'
+    - version: 1.4.1
+      date: 2019-04-10
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.0.12.'
+        - 'Fixed a directory traversal vulnerability.'
+    - version: 1.4.0
+      date: 2019-03-05
+      changes:
+        - 'Upgraded Nginx Proxy Manager version 2.0.11.'
+    - version: 1.3.1
+      date: 2019-02-21
+      changes:
+        - 'During startup, make sure there is no migration lock held.'
+    - version: 1.3.0
+      date: 2019-02-21
+      changes:
+        - 'Make sure to upgrade the database if required.'
+        - 'Properly notify the supervisor when the database is ready.'
+        - 'Make sure to not use the database directory if it was not initialized successfully.'
+        - 'Upgraded Nginx Proxy Manager to version 2.0.9.'
+        - '2:Fixed issue where HTTP/2 option could not be disabled.'
+        - '2:Added HSTS settings.'
+    - version: 1.2.1
+      date: 2019-01-26
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.0.9.'
+        - '2:Increased custom SSL certificate file size limit.'
+    - version: 1.2.0
+      date: 2019-01-07
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.0.8.'
+        - '2:Added the ability to enable/disable hosts.'
+        - '2:IP ranges are now fetched dynamically.'
+    - version: 1.1.0
+      date: 2019-01-03
+      changes:
+        - 'Upgraded Nginx Proxy Manager to version 2.0.7.'
+        - '2:Added HTTP/2 option for SSL enabled hosts.'
+        - '2:Added upstream SSL option for proxy hosts.'
+    - version: 1.0.1
+      date: 2018-12-19
+      changes:
+        - 'Fixed an issue where creation of an access list would fail.'
+    - version: 1.0.0
+      date: 2018-12-19
+      changes:
+        - 'Initial release.'
+
+container:
+  unsupported_volume: /storage
+
+  # Environment variables.
+  environment_variables:
+    - name: DISABLE_IPV6
+      description: >-
+        When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is
+        not enabled/supported on the host.
+      type: public
+      default: 0
+      unraid_template:
+        title: Disable IPv6
+        description: >-
+          When set to '1', IPv6 support is disabled.
+        display: advanced
+        required: false
+        mask: false
+
+  # Volumes
+  volumes: []
+
+  # Network ports
+  ports:
+    - number: 8181
+      protocol: tcp
+      description: >-
+        Port used to access the web interface of the application.
+      mandatory: true
+      include_in_quick_start: true
+      unraid_template:
+        title: Web UI Port
+        description: >-
+          Port used to access the web interface of the application.
+        default: "{{ 7800 + app.id|int }}"
+        display: always
+        required: true
+        mask: false
+    - number: 8080
+      protocol: tcp
+      description: >-
+        Port used to serve HTTP requests.
+      mandatory: true
+      include_in_quick_start: true
+      unraid_template:
+        title: HTTP Port
+        description: >-
+          Port used to serve HTTP requests.  NOTE: Your router should be
+          configured to forward port 80 to this port.  If your router doesn't
+          allow setting the destination/internal IP address, this *must* be set
+          to 80.
+        default: "{{ app.id|int }}80"
+        display: always
+        required: true
+        mask: false
+    - number: 4443
+      protocol: tcp
+      description: >-
+        Port used to serve HTTPs requests.
+      mandatory: true
+      include_in_quick_start: true
+      unraid_template:
+        title: HTTPs Port
+        description: >-
+          Port used to serve HTTPs requests.  NOTE: Your router should be
+          configured to forward port 443 to this port.  If your router doesn't
+          allow setting the destination/internal IP address, this *must* be set
+          to 443.
+        default: "{{ app.id|int }}443"
+        display: always
+        required: true
+        mask: false
+
+  # Devices
+  devices: []
