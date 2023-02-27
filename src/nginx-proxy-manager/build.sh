@@ -12,6 +12,8 @@ export LDFLAGS="-Wl,--strip-all -Wl,--as-needed"
 export CC=xx-clang
 export CXX=xx-clang++
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 ROOTFS=/tmp/nginx-proxy-manager-install
 
 function log {
@@ -66,6 +68,9 @@ curl -# -L ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C /tmp/nginx-proxy-man
 #
 # Compile
 #
+
+log "Patching Nginx Proxy Manager..."
+patch -d /tmp/nginx-proxy-manager -p1 < "$SCRIPT_DIR"/case-insensitive-email.patch
 
 # Set the NginxProxyManager version.
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/frontend/package.json
