@@ -58,13 +58,14 @@ fi
 # Generate dummy self-signed certificate.
 if [ ! -f /config/nginx/dummycert.pem ] || [ ! -f /config/nginx/dummykey.pem ]
 then
+    echo "Generating dummy SSL certificate..."
     env HOME=/tmp openssl req \
         -new \
         -newkey rsa:2048 \
         -days 3650 \
         -nodes \
         -x509 \
-        -subj '/O=Nginx Proxy Manager/OU=Dummy Certificate/CN=localhost' \
+        -subj '/O=localhost/OU=localhost/CN=localhost' \
         -keyout /config/nginx/dummykey.pem \
         -out /config/nginx/dummycert.pem \
         > /dev/null 2>&1
