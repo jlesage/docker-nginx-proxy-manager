@@ -138,7 +138,6 @@ RUN \
         sqlite \
         openssl \
         apache2-utils \
-        logrotate \
         # For /opt/nginx-proxy-manager/bin/handle-ipv6-setting.
         bash \
         # For openresty.
