@@ -159,6 +159,8 @@ log "Configuring OpenResty..."
         --with-http_degradation_module \
         --with-http_slice_module \
         --with-http_stub_status_module \
+        --with-mail \
+        --with-mail_ssl_module \
         --with-stream \
         --with-stream_ssl_module \
         --with-stream_realip_module \
