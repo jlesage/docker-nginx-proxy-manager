@@ -24,49 +24,7 @@ ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/$
 FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 
 # Get Python cryptography wheel.  It is needed for certbot.
-# NOTE: It seems to have a bug where `TARGETVARIANT` is not provided for
-# arm64/v8, thus we cannot directly use moonbuggy2000/python-musl-wheels.  For
-# now, manually download the wheels.
-#FROM moonbuggy2000/python-musl-wheels:cryptography-openssl38.0.1-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
-FROM alpine:3.16 as mod_cryptography
-ARG TARGETARCH
-ARG TARGETVARIANT
-ARG WHEELS_DIR=/wheels
-RUN \
-    mkdir "$WHEELS_DIR" && cd "$WHEELS_DIR" && \
-    case "$TARGETARCH" in \
-        amd64) \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/amd64/cffi-1.15.1-cp310-cp310-musllinux_1_1_x86_64.whl && \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/amd64/cryptography-38.0.1-cp36-abi3-musllinux_1_1_x86_64.whl && \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/amd64/pycparser-2.21-py2.py3-none-any.whl \
-            ;; \
-        386) \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/i386/cffi-1.15.1-cp310-cp310-musllinux_1_1_i686.whl && \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/i386/cryptography-38.0.1-cp310-cp310-musllinux_1_2_i686.whl && \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/i386/pycparser-2.21-py2.py3-none-any.whl \
-            ;; \
-        arm) \
-            case "$TARGETVARIANT" in \
-                v6) \
-                    wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/armv6/cffi-1.15.1-cp310-cp310-musllinux_1_2_armv7l.whl && \
-                    wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/armv6/cryptography-38.0.1-cp310-cp310-musllinux_1_2_armv7l.whl && \
-                    wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/armv6/pycparser-2.21-py2.py3-none-any.whl \
-                    ;; \
-                v7) \
-                    wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/armv7/cffi-1.15.1-cp310-cp310-musllinux_1_2_armv7l.whl && \
-                    wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/armv7/cryptography-38.0.1-cp310-cp310-musllinux_1_2_armv7l.whl && \
-                    wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/armv7/pycparser-2.21-py2.py3-none-any.whl \
-                    ;; \
-                *) echo "ERROR: Unknown variant: $TARGETVARIANT" && exit 1 ;; \
-            esac \
-            ;; \
-        arm64) \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/arm64v8/cffi-1.15.1-cp310-cp310-musllinux_1_2_aarch64.whl && \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/arm64v8/cryptography-38.0.1-cp36-abi3-musllinux_1_1_aarch64.whl && \
-            wget https://github.com/moonbuggy/docker-python-musl-wheels/raw/main/wheels/arm64v8/pycparser-2.21-py2.py3-none-any.whl \
-            ;; \
-        *) echo "ERROR: Unknown arch: $TARGETARCH" && exit 1 ;; \
-    esac
+FROM moonbuggy2000/python-musl-wheels:cryptography38.0.1-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
 
 # Build UPX.
 FROM --platform=$BUILDPLATFORM alpine:3.16 AS upx
@@ -109,7 +67,7 @@ RUN upx /tmp/go/bin/bcrypt-tool
 
 # Build certbot.
 FROM alpine:3.16 AS certbot
-COPY --from=mod_cryptography /wheels /wheels
+COPY --from=mod_cryptography / /wheels
 RUN \
     apk --no-cache add build-base curl python3 && \
     curl -# -L "https://bootstrap.pypa.io/get-pip.py" | python3 && \
