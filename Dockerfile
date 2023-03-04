@@ -79,7 +79,7 @@ RUN \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type d -name tests -print0 | xargs -0 rm -r
 
 # Pull base image.
-FROM jlesage/baseimage:alpine-3.16-v3.4.5
+FROM jlesage/baseimage:alpine-3.16-v3.4.6
 
 ARG NGINX_PROXY_MANAGER_VERSION
 ARG DOCKER_IMAGE_VERSION
