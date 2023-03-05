@@ -97,6 +97,14 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 23.03.1
+      date: 2023-03-05
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.9.19.'
+        - 'Versioning scheme of the Docker image changed to `YY.MM.SEQUENCE`.'
+        - 'Updated baseimage to version 3.4.6, which brings:'
+        - '2:Multi-arch image support.'
+        - '2:Multiple internal functional enhancements and improvements.'
     - version: 1.26.1
       date: 2022-06-02
       changes:
