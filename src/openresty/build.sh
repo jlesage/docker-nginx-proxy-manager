@@ -100,8 +100,11 @@ curl -# -L https://github.com/openembedded/meta-openembedded/raw/master/meta-web
 curl -# -L https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/0001-Allow-the-overriding-of-the-endianness-via-the-confi.patch | patch -p1 -d "$NGINX_SRC_DIR"
 
 case "$(xx-info arch)" in
-    x86_64|aarch64) PTRSIZE=8 ;;
-    *) PTRSIZE=4 ;;
+    amd64) PTRSIZE=8; ENDIANNESS=little ;;
+    arm64) PTRSIZE=8; ENDIANNESS=little ;;
+    386)   PTRSIZE=4; ENDIANNESS=little ;;
+    arm)   PTRSIZE=4; ENDIANNESS=little ;;
+    *) echo "Unknown ARCH: $(xx-info arch)" ; exit 1 ;;
 esac
 
 log "Configuring OpenResty..."
@@ -133,11 +136,12 @@ log "Configuring OpenResty..."
         --with-threads \
         --with-file-aio \
         \
+        --with-endian=$ENDIANNESS \
         --with-int=4 \
         --with-long=${PTRSIZE} \
         --with-long-long=8 \
         --with-ptr-size=${PTRSIZE} \
-        --with-sig-atomic-t=${PTRSIZE} \
+        --with-sig-atomic-t=4 \
         --with-size-t=${PTRSIZE} \
         --with-off-t=8 \
         --with-time-t=${PTRSIZE} \
