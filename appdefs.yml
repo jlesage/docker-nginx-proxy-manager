@@ -97,6 +97,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 23.03.2
+      date: 2023-03-05
+      changes:
+        - 'Fixed compilation parameters that were preventing Nginx from working correctly.'
     - version: 23.03.1
       date: 2023-03-05
       changes:
