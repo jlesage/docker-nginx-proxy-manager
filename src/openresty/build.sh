@@ -62,15 +62,15 @@ xx-apk --no-cache --no-scripts add \
 
 log "Downloading OpenResty..."
 mkdir /tmp/openresty
-curl -# -L ${OPENRESTY_URL} | tar xz --strip 1 -C /tmp/openresty
+curl -# -L -f ${OPENRESTY_URL} | tar xz --strip 1 -C /tmp/openresty
 
 log "Downloading GeoIP2 module..."
 mkdir /tmp/ngx_http_geoip2_module
-curl -# -L ${NGINX_HTTP_GEOIP2_MODULE_URL} | tar xz --strip 1 -C /tmp/ngx_http_geoip2_module
+curl -# -L -f ${NGINX_HTTP_GEOIP2_MODULE_URL} | tar xz --strip 1 -C /tmp/ngx_http_geoip2_module
 
 log "Downloading libmaxminddb..."
 mkdir /tmp/libmaxminddb
-curl -# -L ${LIBMAXMINDDB_URL} | tar xz --strip 1 -C /tmp/libmaxminddb
+curl -# -L -f ${LIBMAXMINDDB_URL} | tar xz --strip 1 -C /tmp/libmaxminddb
 
 #
 # Compile.
@@ -96,8 +96,8 @@ make DESTDIR=$(xx-info sysroot) -C /tmp/libmaxminddb install
 log "Patching OpenResty..."
 # Patch Nginx for cross-compile support.  See the Yocto Nginx recipe: https://github.com/openembedded/meta-openembedded/tree/master/meta-webserver/recipes-httpd/nginx
 NGINX_SRC_DIR="$(find /tmp/openresty/bundle -mindepth 1 -maxdepth 1 -type d -name 'nginx-*')"
-curl -# -L https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/nginx-cross.patch | patch -p1 -d "$NGINX_SRC_DIR"
-curl -# -L https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/0001-Allow-the-overriding-of-the-endianness-via-the-confi.patch | patch -p1 -d "$NGINX_SRC_DIR"
+curl -# -L -f https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/nginx-cross.patch | patch -p1 -d "$NGINX_SRC_DIR"
+curl -# -L -f https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/0001-Allow-the-overriding-of-the-endianness-via-the-confi.patch | patch -p1 -d "$NGINX_SRC_DIR"
 
 case "$(xx-info arch)" in
     amd64) PTRSIZE=8; ENDIANNESS=little ;;

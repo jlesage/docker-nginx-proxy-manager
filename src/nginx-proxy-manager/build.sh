@@ -63,7 +63,7 @@ curl -sfL https://gobinaries.com/tj/node-prune | sh
 
 log "Downloading Nginx Proxy Manager..."
 mkdir /tmp/nginx-proxy-manager
-curl -# -L ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C /tmp/nginx-proxy-manager
+curl -# -L -f ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C /tmp/nginx-proxy-manager
 
 #
 # Compile
