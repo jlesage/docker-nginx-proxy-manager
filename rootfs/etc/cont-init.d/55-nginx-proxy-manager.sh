@@ -55,22 +55,6 @@ if [ -f /config/database.sqlite ]; then
     echo 'DELETE FROM migrations_lock WHERE is_locked = 1;' | sqlite3 /config/database.sqlite
 fi
 
-# Generate dummy self-signed certificate.
-if [ ! -f /config/nginx/dummycert.pem ] || [ ! -f /config/nginx/dummykey.pem ]
-then
-    echo "Generating dummy SSL certificate..."
-    env HOME=/tmp openssl req \
-        -new \
-        -newkey rsa:2048 \
-        -days 3650 \
-        -nodes \
-        -x509 \
-        -subj '/O=localhost/OU=localhost/CN=localhost' \
-        -keyout /config/nginx/dummykey.pem \
-        -out /config/nginx/dummycert.pem \
-        > /dev/null 2>&1
-fi
-
 # Generate the resolvers configuration file.
 if [ "$DISABLE_IPV6" == "true" ] || [ "$DISABLE_IPV6" == "on" ] || [ "$DISABLE_IPV6" == "1" ] || [ "$DISABLE_IPV6" == "yes" ];
 then

@@ -69,9 +69,6 @@ curl -# -L -f ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C /tmp/nginx-proxy-
 # Compile
 #
 
-log "Patching Nginx Proxy Manager..."
-patch -d /tmp/nginx-proxy-manager -p1 < "$SCRIPT_DIR"/case-insensitive-email.patch
-
 # Set the NginxProxyManager version.
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/frontend/package.json
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/backend/package.json
@@ -100,7 +97,7 @@ log "Building Nginx Proxy Manager backend..."
     cd /app/backend
     # Use NPM instead of yarn because yarn doesn't seem to be able to install
     # for another achitecture.  Note that NPM install should also use yarn.lock.
-    npm install --omit=dev --target_platform=linux --target_arch=$ARCH
+    npm install --legacy-peer-deps --omit=dev --omit=optional --target_platform=linux --target_arch=$ARCH
     node-prune
     rm -rf /app/backend/node_modules/sqlite3/build
 )
