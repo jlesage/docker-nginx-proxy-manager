@@ -35,40 +35,44 @@ cscli bouncers add npm-proxy
 Currently this is a side project and I will try keep this up to date
 
 # Docker container for Nginx Proxy Manager
-[![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/nginx-proxy-manager/latest)](https://hub.docker.com/r/jlesage/nginx-proxy-manager/tags) [![Build Status](https://drone.le-sage.com/api/badges/jlesage/docker-nginx-proxy-manager/status.svg)](https://drone.le-sage.com/jlesage/docker-nginx-proxy-manager) [![GitHub Release](https://img.shields.io/github/release/jlesage/docker-nginx-proxy-manager.svg)](https://github.com/jlesage/docker-nginx-proxy-manager/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/JocelynLeSage/0usd)
+[![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/nginx-proxy-manager/latest)](https://hub.docker.com/r/jlesage/nginx-proxy-manager/tags) [![Build Status](https://github.com/jlesage/docker-nginx-proxy-manager/actions/workflows/build-image.yml/badge.svg?branch=master)](https://github.com/jlesage/docker-nginx-proxy-manager/actions/workflows/build-image.yml) [![GitHub Release](https://img.shields.io/github/release/jlesage/docker-nginx-proxy-manager.svg)](https://github.com/jlesage/docker-nginx-proxy-manager/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/JocelynLeSage)
 
-This is a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.jc21.com).
+This is a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.com).
+
+
 
 ---
 
-[![Nginx Proxy Manager logo](https://images.weserv.nl/?url=raw.githubusercontent.com/jlesage/docker-templates/master/jlesage/images/nginx-proxy-manager-icon.png&w=200)](https://nginxproxymanager.jc21.com)[![Nginx Proxy Manager](https://dummyimage.com/400x110/ffffff/575757&text=Nginx+Proxy+Manager)](https://nginxproxymanager.jc21.com)
+[![Nginx Proxy Manager logo](https://images.weserv.nl/?url=raw.githubusercontent.com/jlesage/docker-templates/master/jlesage/images/nginx-proxy-manager-icon.png&w=110)](https://nginxproxymanager.com)[![Nginx Proxy Manager](https://images.placeholders.dev/?width=608&height=110&fontFamily=monospace&fontWeight=400&fontSize=52&text=Nginx%20Proxy%20Manager&bgColor=rgba(0,0,0,0.0)&textColor=rgba(121,121,121,1))](https://nginxproxymanager.com)
 
-Nginx Proxy Manager enables you to easily forward to your websites running at home or otherwise, including free SSL, without having to know too much about Nginx or Letsencrypt.
+Nginx Proxy Manager enables you to easily forward to your websites running at
+home or otherwise, including free SSL, without having to know too much about
+Nginx or Letsencrypt.
 
 ---
 
 ## Table of Content
 
-   * [Docker container for Nginx Proxy Manager](#docker-container-for-nginx-proxy-manager)
-      * [Table of Content](#table-of-content)
-      * [Quick Start](#quick-start)
-      * [Usage](#usage)
-         * [Environment Variables](#environment-variables)
-         * [Data Volumes](#data-volumes)
-         * [Ports](#ports)
-         * [Changing Parameters of a Running Container](#changing-parameters-of-a-running-container)
-      * [Docker Compose File](#docker-compose-file)
-      * [Docker Image Update](#docker-image-update)
-         * [Synology](#synology)
-         * [unRAID](#unraid)
-      * [User/Group IDs](#usergroup-ids)
-      * [Accessing the GUI](#accessing-the-gui)
-      * [Shell Access](#shell-access)
-      * [Default Administrator Account](#default-administrator-account)
-      * [Accessibility From The Internet](#accessibility-from-the-internet)
-      * [Troubleshooting](#troubleshooting)
-         * [Password Reset](#password-reset)
-      * [Support or Contact](#support-or-contact)
+   * [Quick Start](#quick-start)
+   * [Usage](#usage)
+      * [Environment Variables](#environment-variables)
+         * [Deployment Considerations](#deployment-considerations)
+      * [Data Volumes](#data-volumes)
+      * [Ports](#ports)
+      * [Changing Parameters of a Running Container](#changing-parameters-of-a-running-container)
+   * [Docker Compose File](#docker-compose-file)
+   * [Docker Image Versioning](#docker-image-versioning)
+   * [Docker Image Update](#docker-image-update)
+      * [Synology](#synology)
+      * [unRAID](#unraid)
+   * [User/Group IDs](#usergroup-ids)
+   * [Accessing the GUI](#accessing-the-gui)
+   * [Shell Access](#shell-access)
+   * [Default Administrator Account](#default-administrator-account)
+   * [Accessibility From The Internet](#accessibility-from-the-internet)
+   * [Troubleshooting](#troubleshooting)
+      * [Password Reset](#password-reset)
+   * [Support or Contact](#support-or-contact)
 
 ## Quick Start
 
@@ -76,7 +80,7 @@ Nginx Proxy Manager enables you to easily forward to your websites running at ho
 and parameters should be adjusted to your need.
 
 Launch the Nginx Proxy Manager docker container with the following command:
-```
+```shell
 docker run -d \
     --name=nginx-proxy-manager \
     -p 8181:8181 \
@@ -87,13 +91,13 @@ docker run -d \
 ```
 
 Where:
-  - `/docker/appdata/nginx-proxy-manager`: This is where the application stores its configuration, log and any files needing persistency.
+  - `/docker/appdata/nginx-proxy-manager`: This is where the application stores its configuration, states, log and any files needing persistency.
 
 Browse to `http://your-host-ip:8181` to access the Nginx Proxy Manager web interface.
 
 ## Usage
 
-```
+```shell
 docker run [-d] \
     --name=nginx-proxy-manager \
     [-e <VARIABLE_NAME>=<VALUE>]... \
@@ -118,13 +122,53 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |----------------|----------------------------------------------|---------|
 |`USER_ID`| ID of the user the application runs as.  See [User/Group IDs](#usergroup-ids) to better understand when this should be set. | `1000` |
 |`GROUP_ID`| ID of the group the application runs as.  See [User/Group IDs](#usergroup-ids) to better understand when this should be set. | `1000` |
-|`SUP_GROUP_IDS`| Comma-separated list of supplementary group IDs of the application. | (unset) |
-|`UMASK`| Mask that controls how file permissions are set for newly created files. The value of the mask is in octal notation.  By default, this variable is not set and the default umask of `022` is used, meaning that newly created files are readable by everyone, but only writable by the owner. See the following online umask calculator: http://wintelguy.com/umask-calc.pl | (unset) |
-|`TZ`| [TimeZone] of the container.  Timezone can also be set by mapping `/etc/localtime` between the host and the container. | `Etc/UTC` |
-|`KEEP_APP_RUNNING`| When set to `1`, the application will be automatically restarted if it crashes or if a user quits it. | `0` |
-|`APP_NICENESS`| Priority at which the application should run.  A niceness value of -20 is the highest priority and 19 is the lowest priority.  By default, niceness is not set, meaning that the default niceness of 0 is used.  **NOTE**: A negative niceness (priority increase) requires additional permissions.  In this case, the container should be run with the docker option `--cap-add=SYS_NICE`. | (unset) |
-|`CLEAN_TMP_DIR`| When set to `1`, all files in the `/tmp` directory are deleted during the container startup. | `1` |
+|`SUP_GROUP_IDS`| Comma-separated list of supplementary group IDs of the application. | (no value) |
+|`UMASK`| Mask that controls how file permissions are set for newly created files. The value of the mask is in octal notation.  By default, the default umask value is `0022`, meaning that newly created files are readable by everyone, but only writable by the owner.  See the online umask calculator at http://wintelguy.com/umask-calc.pl. | `0022` |
+|`LANG`| Set the [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)), which defines the application's language, **if supported**.  Format of the locale is `language[_territory][.codeset]`, where language is an [ISO 639 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), territory is an [ISO 3166 country code](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) and codeset is a character set, like `UTF-8`.  For example, Australian English using the UTF-8 encoding is `en_AU.UTF-8`. | `en_US.UTF-8` |
+|`TZ`| [TimeZone](http://en.wikipedia.org/wiki/List_of_tz_database_time_zones) used by the container.  Timezone can also be set by mapping `/etc/localtime` between the host and the container. | `Etc/UTC` |
+|`KEEP_APP_RUNNING`| When set to `1`, the application will be automatically restarted when it crashes or terminates. | `0` |
+|`APP_NICENESS`| Priority at which the application should run.  A niceness value of -20 is the highest priority and 19 is the lowest priority.  The default niceness value is 0.  **NOTE**: A negative niceness (priority increase) requires additional permissions.  In this case, the container should be run with the docker option `--cap-add=SYS_NICE`. | `0` |
+|`INSTALL_PACKAGES`| Space-separated list of packages to install during the startup of the container.  Packages are installed from the repository of the Linux distribution this container is based on.  **ATTENTION**: Container functionality can be affected when installing a package that overrides existing container files (e.g. binaries). | (no value) |
+|`CONTAINER_DEBUG`| Set to `1` to enable debug logging. | `0` |
 |`DISABLE_IPV6`| When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is not enabled/supported on the host. | `0` |
+
+#### Deployment Considerations
+
+Many tools used to manage Docker containers extract environment variables
+defined by the Docker image and use them to create/deploy the container.  For
+example, this is done by:
+  - The Docker application on Synology NAS
+  - The Container Station on QNAP NAS
+  - Portainer
+  - etc.
+
+While this can be useful for the user to adjust the value of environment
+variables to fit its needs, it can also be confusing and dangerous to keep all
+of them.
+
+A good pratice is to set/keep only the variables that are needed for the
+container to behave as desired in a specific setup.  If the value of variable is
+kept to its default value, it means that it can be removed.  Keep in mind that
+all variables are optional, meaning that none of them is required for the
+container to start.
+
+Removing environment variables that are not needed provides some advantages:
+
+  - Prevents keeping variables that are no longer used by the container.  Over
+    time, with image updates, some variables might be removed.
+  - Allows the Docker image to change/fix a default value.  Again, with image
+    updates, the default value of a variable might be changed to fix an issue,
+    or to better support a new feature.
+  - Prevents changes to a variable that might affect the correct function of
+    the container.  Some undocumented variables, like `PATH` or `ENV`, are
+    required to be exposed, but are not meant to be changed by users.  However,
+    container management tools still show these variables to users.
+  - There is a bug with the Container Station on QNAP and the Docker application
+    on Synology, where an environment variable without value might not be
+    allowed.  This behavior is wrong: it's absolutely fine to have a variable
+    without value.  In fact, this container does have variables without value by
+    default.  Thus, removing uneeded variables is a good way to prevent
+    deployment issue on these devices.
 
 ### Data Volumes
 
@@ -134,7 +178,7 @@ format: `<HOST_DIR>:<CONTAINER_DIR>[:PERMISSIONS]`.
 
 | Container path  | Permissions | Description |
 |-----------------|-------------|-------------|
-|`/config`| rw | This is where the application stores its configuration, log and any files needing persistency. |
+|`/config`| rw | This is where the application stores its configuration, states, log and any files needing persistency. |
 
 ### Ports
 
@@ -194,6 +238,19 @@ services:
     volumes:
       - "/docker/appdata/nginx-proxy-manager:/config:rw"
 ```
+
+## Docker Image Versioning
+
+Each release of a Docker image is versioned.  Prior to october 2022, the
+[semantic versioning](https://semver.org) was used as the versioning scheme.
+
+Since then, versioning scheme changed to
+[calendar versioning](https://calver.org).  The format used is `YY.MM.SEQUENCE`,
+where:
+  - `YY` is the zero-padded year (relative to year 2000).
+  - `MM` is the zero-padded month.
+  - `SEQUENCE` is the incremental release number within the month (first release
+    is 1, second is 2, etc).
 
 ## Docker Image Update
 
@@ -293,12 +350,12 @@ http://<HOST IP ADDR>:8181
 
 To get shell access to the running container, execute the following command:
 
-```
+```shell
 docker exec -ti CONTAINER sh
 ```
 
 Where `CONTAINER` is the ID or the name of the container used during its
-creation (e.g. `crashplan-pro`).
+creation.
 
 ## Default Administrator Account
 
@@ -363,8 +420,6 @@ Where:
 
   - `CONTAINER_NAME` is the name of the running container.
   - `USER_EMAIL` is the email of the address to reset the password.
-
-[TimeZone]: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 ## Support or Contact
 
