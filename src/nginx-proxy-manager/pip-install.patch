@@ -1,0 +1,26 @@
+diff --git a/backend/internal/certificate.js b/backend/internal/certificate.js
+index da104a2..730d826 100644
+--- a/backend/internal/certificate.js
++++ b/backend/internal/certificate.js
+@@ -871,7 +871,7 @@ const internalCertificate = {
+ 		const escapedCredentials = certificate.meta.dns_provider_credentials.replaceAll('\'', '\\\'').replaceAll('\\', '\\\\');
+ 		const credentialsCmd     = 'mkdir -p /etc/letsencrypt/credentials 2> /dev/null; echo \'' + escapedCredentials + '\' > \'' + credentialsLocation + '\' && chmod 600 \'' + credentialsLocation + '\'';
+ 		// we call `. /opt/certbot/bin/activate` (`.` is alternative to `source` in dash) to access certbot venv
+-		let prepareCmd = '. /opt/certbot/bin/activate && pip install ' + dns_plugin.package_name + (dns_plugin.version_requirement || '') + ' ' + dns_plugin.dependencies + ' && deactivate';
++		let prepareCmd = 'pip install ' + dns_plugin.package_name + (dns_plugin.version_requirement || '') + ' ' + dns_plugin.dependencies;
+ 
+ 		// Whether the plugin has a --<name>-credentials argument
+ 		const hasConfigArg = certificate.meta.dns_provider !== 'route53';
+diff --git a/backend/setup.js b/backend/setup.js
+index a4b51c9..6d3d3e3 100644
+--- a/backend/setup.js
++++ b/backend/setup.js
+@@ -189,7 +189,7 @@ const setupCertbotPlugins = () => {
+ 				});
+ 
+ 				if (plugins.length) {
+-					const install_cmd = '. /opt/certbot/bin/activate && pip install ' + plugins.join(' ') + ' && deactivate';
++					const install_cmd = 'pip install ' + plugins.join(' ');
+ 					promises.push(utils.exec(install_cmd));
+ 				}
+ 

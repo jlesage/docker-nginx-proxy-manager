@@ -73,6 +73,9 @@ curl -# -L -f ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C /tmp/nginx-proxy-
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/frontend/package.json
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/backend/package.json
 
+log "Patching Nginx Proxy Manager backend..."
+patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/pip-install.patch
+
 cp -r /tmp/nginx-proxy-manager /app
 
 log "Building Nginx Proxy Manager frontend..."
