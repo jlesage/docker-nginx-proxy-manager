@@ -1,7 +1,7 @@
 # Docker container for Nginx Proxy Manager
 [![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/nginx-proxy-manager/latest)](https://hub.docker.com/r/jlesage/nginx-proxy-manager/tags) [![Build Status](https://github.com/jlesage/docker-nginx-proxy-manager/actions/workflows/build-image.yml/badge.svg?branch=master)](https://github.com/jlesage/docker-nginx-proxy-manager/actions/workflows/build-image.yml) [![GitHub Release](https://img.shields.io/github/release/jlesage/docker-nginx-proxy-manager.svg)](https://github.com/jlesage/docker-nginx-proxy-manager/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/JocelynLeSage)
 
-This is a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.com).
+This project implements a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.com).
 
 
 
@@ -69,6 +69,7 @@ docker run [-d] \
     [-p <HOST_PORT>:<CONTAINER_PORT>]... \
     jlesage/nginx-proxy-manager
 ```
+
 | Parameter | Description |
 |-----------|-------------|
 | -d        | Run the container in the background.  If not set, the container runs in the foreground. |
