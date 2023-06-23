@@ -188,16 +188,22 @@ format: `<HOST_DIR>:<CONTAINER_DIR>[:PERMISSIONS]`.
 
 ### Ports
 
-Here is the list of ports used by the container.  They can be mapped to the host
-via the `-p` parameter (one per port mapping).  Each mapping is defined in the
-following format: `<HOST_PORT>:<CONTAINER_PORT>`.  The port number inside the
-container cannot be changed, but you are free to use any port on the host side.
+Here is the list of ports used by the container.
 
-| Port | Mapping to host | Description |
-|------|-----------------|-------------|
-| 8181 | Mandatory | Port used to access the web interface of the application. |
-| 8080 | Mandatory | Port used to serve HTTP requests. |
-| 4443 | Mandatory | Port used to serve HTTPs requests. |
+When using the default bridge network, ports can be mapped to the host via the
+`-p` parameter (one per port mapping).  Each mapping is defined with the
+following format: `<HOST_PORT>:<CONTAINER_PORT>`.  The port number used inside
+the container might not be changeable, but you are free to use any port on the
+host side.
+
+See the [Docker Container Networking](https://docs.docker.com/config/containers/container-networking)
+documentation for more details.
+
+| Port | Protocol | Mapping to host | Description |
+|------|----------|-----------------|-------------|
+| 8181 | TCP | Mandatory | Port used to access the web interface of the application. |
+| 8080 | TCP | Mandatory | Port used to serve HTTP requests. |
+| 4443 | TCP | Mandatory | Port used to serve HTTPs requests. |
 
 ### Changing Parameters of a Running Container
 
