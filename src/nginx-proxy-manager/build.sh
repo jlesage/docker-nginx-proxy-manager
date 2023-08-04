@@ -75,6 +75,7 @@ sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\
 
 log "Patching Nginx Proxy Manager backend..."
 patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/pip-install.patch
+patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/remove-certbot-dns-oci.patch
 
 cp -r /tmp/nginx-proxy-manager /app
 
