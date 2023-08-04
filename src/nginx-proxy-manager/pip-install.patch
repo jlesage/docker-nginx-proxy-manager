@@ -6,8 +6,8 @@ index da104a2..730d826 100644
  		const escapedCredentials = certificate.meta.dns_provider_credentials.replaceAll('\'', '\\\'').replaceAll('\\', '\\\\');
  		const credentialsCmd     = 'mkdir -p /etc/letsencrypt/credentials 2> /dev/null; echo \'' + escapedCredentials + '\' > \'' + credentialsLocation + '\' && chmod 600 \'' + credentialsLocation + '\'';
  		// we call `. /opt/certbot/bin/activate` (`.` is alternative to `source` in dash) to access certbot venv
--		let prepareCmd = '. /opt/certbot/bin/activate && pip install ' + dns_plugin.package_name + (dns_plugin.version_requirement || '') + ' ' + dns_plugin.dependencies + ' && deactivate';
-+		let prepareCmd = 'pip install ' + dns_plugin.package_name + (dns_plugin.version_requirement || '') + ' ' + dns_plugin.dependencies;
+-		const prepareCmd = '. /opt/certbot/bin/activate && pip install --no-cache-dir ' + dns_plugin.package_name + (dns_plugin.version_requirement || '') + ' ' + dns_plugin.dependencies + ' && deactivate';
++		const prepareCmd = 'pip install --no-cache-dir ' + dns_plugin.package_name + (dns_plugin.version_requirement || '') + ' ' + dns_plugin.dependencies;
  
  		// Whether the plugin has a --<name>-credentials argument
  		const hasConfigArg = certificate.meta.dns_provider !== 'route53';
@@ -19,8 +19,8 @@ index a4b51c9..6d3d3e3 100644
  				});
  
  				if (plugins.length) {
--					const install_cmd = '. /opt/certbot/bin/activate && pip install ' + plugins.join(' ') + ' && deactivate';
-+					const install_cmd = 'pip install ' + plugins.join(' ');
+-					const install_cmd = '. /opt/certbot/bin/activate && pip install --no-cache-dir ' + plugins.join(' ') + ' && deactivate';
++					const install_cmd = 'pip install --no-cache-dir ' + plugins.join(' ');
  					promises.push(utils.exec(install_cmd));
  				}
  

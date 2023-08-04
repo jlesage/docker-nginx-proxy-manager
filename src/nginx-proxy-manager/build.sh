@@ -122,7 +122,6 @@ cp -rv /app/frontend/dist $ROOTFS/opt/nginx-proxy-manager/frontend
 cp -rv /app/global $ROOTFS/opt/nginx-proxy-manager/global
 
 mkdir $ROOTFS/opt/nginx-proxy-manager/bin
-cp -rv /tmp/nginx-proxy-manager/docker/rootfs/bin/handle-ipv6-setting $ROOTFS/opt/nginx-proxy-manager/bin/
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/etc/nginx $ROOTFS/etc/
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/var/www $ROOTFS/var/
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/etc/letsencrypt.ini $ROOTFS/etc/
@@ -157,7 +156,7 @@ sed -i 's|:443;|:4443;|' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
 sed -i 's|-g "error_log off;"||' $ROOTFS/opt/nginx-proxy-manager/internal/nginx.js
 
 # Remove the `user` directive, since we want nginx to run as non-root.
-sed -i 's|user root;|#user root;|' $ROOTFS/etc/nginx/nginx.conf
+sed -i 's|user npm;|#user npm;|' $ROOTFS/etc/nginx/nginx.conf
 
 # Change client_body_temp_path.
 sed -i 's|/tmp/nginx/body|/var/tmp/nginx/body|' $ROOTFS/etc/nginx/nginx.conf
@@ -189,10 +188,6 @@ ln -s /config/production.json $ROOTFS/opt/nginx-proxy-manager/config/production.
 
 # Make sure letsencrypt certificates are stored in persistent volume.
 ln -s /config/letsencrypt $ROOTFS/etc/letsencrypt
-
-# Make sure some default certbot directories are stored in persistent volume.
-ln -s /config/letsencrypt-workdir $ROOTFS/var/lib/letsencrypt
-ln -s /config/log/letsencrypt $ROOTFS/var/log/letsencrypt
 
 # Cleanup.
 find $ROOTFS/opt/nginx-proxy-manager -name "*.h" -delete
