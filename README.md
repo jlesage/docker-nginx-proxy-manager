@@ -45,8 +45,9 @@ Nginx or Letsencrypt.
 
 ## Quick Start
 
-**NOTE**: The Docker command provided in this quick start is given as an example
-and parameters should be adjusted to your need.
+**NOTE**:
+    The Docker command provided in this quick start is given as an example
+    and parameters should be adjusted to your need.
 
 Launch the Nginx Proxy Manager docker container with the following command:
 ```shell
@@ -60,6 +61,7 @@ docker run -d \
 ```
 
 Where:
+
   - `/docker/appdata/nginx-proxy-manager`: This is where the application stores its configuration, states, log and any files needing persistency.
 
 Browse to `http://your-host-ip:8181` to access the Nginx Proxy Manager web interface.
@@ -179,20 +181,23 @@ parameter(s) of an existing container.  The general idea is to destroy and
 re-create the container:
 
   1. Stop the container (if it is running):
-```
+```shell
 docker stop nginx-proxy-manager
 ```
+
   2. Remove the container:
-```
+```shell
 docker rm nginx-proxy-manager
 ```
+
   3. Create/start the container using the `docker run` command, by adjusting
      parameters as needed.
 
-**NOTE**: Since all application's data is saved under the `/config` container
-folder, destroying and re-creating a container is not a problem: nothing is lost
-and the application comes back with the same state (as long as the mapping of
-the `/config` folder remains the same).
+**NOTE**:
+    Since all application's data is saved under the `/config` container
+    folder, destroying and re-creating a container is not a problem: nothing is
+    lost and the application comes back with the same state (as long as the
+    mapping of the `/config` folder remains the same).
 
 ## Docker Compose File
 
@@ -245,17 +250,20 @@ Watchtower will seamlessly perform the necessary steps to update the container.
 Finally, the Docker image can be manually updated with these steps:
 
   1. Fetch the latest image:
-```
+```shell
 docker pull jlesage/nginx-proxy-manager
 ```
+
   2. Stop the container:
-```
+```shell
 docker stop nginx-proxy-manager
 ```
+
   3. Remove the container:
-```
+```shell
 docker rm nginx-proxy-manager
 ```
+
   4. Create and start the container using the `docker run` command, with the
 the same parameters that were used when it was deployed initially.
 
@@ -306,7 +314,7 @@ user owning the data volume on the host:
     id <username>
 
 Which gives an output like this one:
-```
+```text
 uid=1000(myuser) gid=1000(myuser) groups=1000(myuser),4(adm),24(cdrom),27(sudo),46(plugdev),113(lpadmin)
 ```
 
@@ -318,7 +326,7 @@ be given the container.
 Assuming that container's ports are mapped to the same host's ports, the
 interface of the application can be accessed with a web browser at:
 
-```
+```text
 http://<HOST IP ADDR>:8181
 ```
 
