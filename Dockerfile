@@ -71,7 +71,7 @@ COPY --from=mod_cryptography / /wheels
 RUN \
     apk --no-cache add build-base curl python3 && \
     curl -# -L "https://bootstrap.pypa.io/get-pip.py" | python3 && \
-    pip install --no-cache-dir --root=/tmp/certbot-install --prefix=/usr --find-links /wheels/ --prefer-binary certbot && \
+    pip install --no-cache-dir --root=/tmp/certbot-install --prefix=/usr --find-links /wheels/ --prefer-binary --only-binary=:all: certbot && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.so" -exec strip {} ';' && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.h" -delete && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.c" -delete && \
