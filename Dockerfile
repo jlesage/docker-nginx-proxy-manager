@@ -24,7 +24,7 @@ ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/$
 FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 
 # Get Python cryptography wheel.  It is needed for certbot.
-FROM moonbuggy2000/python-musl-wheels:cryptography38.0.1-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
+FROM moonbuggy2000/python-musl-wheels:cryptography41.0.3-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
 
 # Build UPX.
 FROM --platform=$BUILDPLATFORM alpine:3.16 AS upx
