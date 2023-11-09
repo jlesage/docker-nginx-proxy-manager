@@ -12,6 +12,7 @@ app:
   name: nginx-proxy-manager
   friendly_name: Nginx Proxy Manager
   gui_type: web
+  base_os: alpine
   gui_port: 8181
   project:
     description: |-
