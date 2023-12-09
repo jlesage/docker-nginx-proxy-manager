@@ -1,0 +1,13 @@
+Workaround for PowerDNS plugin, where its PyYAML dependency nstallation fails.
+See https://github.com/yaml/pyyaml/issues/736
+--- a/global/certbot-dns-plugins.js	2023-12-09 10:19:09.655563943 -0500
++++ b/global/certbot-dns-plugins.js	2023-12-09 10:19:28.471600576 -0500
+@@ -486,7 +486,7 @@
+ 		display_name:        'PowerDNS',
+ 		package_name:        'certbot-dns-powerdns',
+ 		version_requirement: '~=0.2.0',
+-		dependencies:        '',
++		dependencies:        'pyyaml==5.3.1',
+ 		credentials:         `dns_powerdns_api_url = https://api.mypowerdns.example.org
+ dns_powerdns_api_key = AbCbASsd!@34`,
+ 		full_plugin_name: 'dns-powerdns',
