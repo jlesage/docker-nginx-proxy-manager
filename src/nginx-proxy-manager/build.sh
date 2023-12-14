@@ -78,6 +78,7 @@ patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/pip-install.patch
 patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/remove-certbot-dns-oci.patch
 patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/powerdns-fix.patch
 patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/http2-support-fix.patch
+patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/reachability-test-fix.patch
 
 cp -r /tmp/nginx-proxy-manager /app
 

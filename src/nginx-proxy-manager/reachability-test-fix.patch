@@ -1,0 +1,64 @@
+Fixes for the server reachability test.
+- Do not apply HTTPs redirection for challenge used by the test.
+- Set the `User-Agent` to avoid 403 answer from site24x7.com.
+- Handle JSON parsing failure of the received body.
+- Better handling of different error cases.
+--- a/backend/internal/certificate.js	2023-12-11 15:50:27.947677992 -0500
++++ b/backend/internal/certificate.js	2023-12-11 16:00:10.953034576 -0500
+@@ -1163,6 +1163,7 @@
+ 			const options  = {
+ 				method:  'POST',
+ 				headers: {
++					'User-Agent':     'Mozilla/5.0',
+ 					'Content-Type':   'application/x-www-form-urlencoded',
+ 					'Content-Length': Buffer.byteLength(formBody)
+ 				}
+@@ -1175,12 +1176,22 @@
+ 
+ 					res.on('data', (chunk) => responseBody = responseBody + chunk);
+ 					res.on('end', function () {
+-						const parsedBody = JSON.parse(responseBody + '');
+-						if (res.statusCode !== 200) {
+-							logger.warn(`Failed to test HTTP challenge for domain ${domain}`, res);
++						try {
++							const parsedBody = JSON.parse(responseBody + '');
++							if (res.statusCode !== 200) {
++								logger.warn(`Failed to test HTTP challenge for domain ${domain} because HTTP status code ${res.statusCode} was returned: ${parsedBody.message}`);
++								resolve(undefined);
++							} else {
++								resolve(parsedBody);
++							}
++						} catch (err) {
++							if (res.statusCode !== 200) {
++								logger.warn(`Failed to test HTTP challenge for domain ${domain} because HTTP status code ${res.statusCode} was returned`);
++							} else {
++								logger.warn(`Failed to test HTTP challenge for domain ${domain} because response failed to be parsed: ${err.message}`);
++							}
+ 							resolve(undefined);
+ 						}
+-						resolve(parsedBody);
+ 					});
+ 				});
+ 
+@@ -1194,6 +1205,9 @@
+ 			if (!result) {
+ 				// Some error occurred while trying to get the data
+ 				return 'failed';
++			} else if (result.error) {
++				logger.info(`HTTP challenge test failed for domain ${domain} because error was returned: ${result.error.msg}`);
++				return `other:${result.error.msg}`;
+ 			} else if (`${result.responsecode}` === '200' && result.htmlresponse === 'Success') {
+ 				// Server exists and has responded with the correct data
+ 				return 'ok';
+--- a/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf	2023-12-13 08:00:40.674589907 -0500
++++ b/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf	2023-12-13 08:05:26.611112675 -0500
+@@ -1,3 +1,9 @@
+ if ($scheme = "http") {
++	set $test H;
++}
++if ($request_uri = /.well-known/acme-challenge/test-challenge) {
++	set $test "${test}T";
++}
++if ($test = H) {
+ 	return 301 https://$host$request_uri;
+ }
