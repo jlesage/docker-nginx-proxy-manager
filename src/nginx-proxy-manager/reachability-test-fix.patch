@@ -1,11 +1,14 @@
 Fixes for the server reachability test.
-- Do not apply HTTPs redirection for challenge used by the test.
-- Set the `User-Agent` to avoid 403 answer from site24x7.com.
-- Handle JSON parsing failure of the received body.
-- Better handling of different error cases.
---- a/backend/internal/certificate.js	2023-12-11 15:50:27.947677992 -0500
-+++ b/backend/internal/certificate.js	2023-12-11 16:00:10.953034576 -0500
-@@ -1163,6 +1163,7 @@
+    - Do not apply HTTPs redirection for challenge used by the test.
+    - Set the `User-Agent` to avoid 403 answer from site24x7.com.
+    - Handle JSON parsing failure of the received body.
+    - Better handling of different error cases.
+
+diff --git a/backend/internal/certificate.js b/backend/internal/certificate.js
+index f68ef30..ecbb4bf 100644
+--- a/backend/internal/certificate.js
++++ b/backend/internal/certificate.js
+@@ -1167,6 +1167,7 @@ const internalCertificate = {
  			const options  = {
  				method:  'POST',
  				headers: {
@@ -13,7 +16,7 @@ Fixes for the server reachability test.
  					'Content-Type':   'application/x-www-form-urlencoded',
  					'Content-Length': Buffer.byteLength(formBody)
  				}
-@@ -1175,12 +1176,22 @@
+@@ -1179,12 +1180,22 @@ const internalCertificate = {
  
  					res.on('data', (chunk) => responseBody = responseBody + chunk);
  					res.on('end', function () {
@@ -40,7 +43,7 @@ Fixes for the server reachability test.
  					});
  				});
  
-@@ -1194,6 +1205,9 @@
+@@ -1198,6 +1209,9 @@ const internalCertificate = {
  			if (!result) {
  				// Some error occurred while trying to get the data
  				return 'failed';
@@ -50,11 +53,14 @@ Fixes for the server reachability test.
  			} else if (`${result.responsecode}` === '200' && result.htmlresponse === 'Success') {
  				// Server exists and has responded with the correct data
  				return 'ok';
---- a/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf	2023-12-13 08:00:40.674589907 -0500
-+++ b/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf	2023-12-13 08:05:26.611112675 -0500
-@@ -1,3 +1,9 @@
+diff --git a/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf b/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf
+index 15f0d28..aa52f33 100644
+--- a/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf
++++ b/docker/rootfs/etc/nginx/conf.d/include/force-ssl.conf
+@@ -1,3 +1,10 @@
++set $test "";
  if ($scheme = "http") {
-+	set $test H;
++	set $test "H";
 +}
 +if ($request_uri = /.well-known/acme-challenge/test-challenge) {
 +	set $test "${test}T";
