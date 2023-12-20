@@ -98,6 +98,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 23.12.2
+      date: 2023-12-20
+      changes:
+        - 'Fixed warning message about uninitialized variable.'
     - version: 23.12.1
       date: 2023-12-15
       changes:
