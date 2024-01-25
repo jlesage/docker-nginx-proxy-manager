@@ -9,6 +9,7 @@ ARG DOCKER_IMAGE_VERSION=
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.9.1
+ARG CROWDSEC_OPENRESTY_BOUNCER_VERSION=1.0.1
 ARG NGINX_PROXY_MANAGER_VERSION=2.10.4
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
@@ -16,6 +17,7 @@ ARG BCRYPT_TOOL_VERSION=1.1.2
 
 # Define software download URLs.
 ARG OPENRESTY_URL=https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz
+ARG CROWDSEC_OPENRESTY_BOUNCER_URL=https://github.com/crowdsecurity/cs-openresty-bouncer/releases/download/v${CROWDSEC_OPENRESTY_BOUNCER_VERSION}/crowdsec-openresty-bouncer.tgz
 ARG NGINX_PROXY_MANAGER_URL=https://github.com/jc21/nginx-proxy-manager/archive/v${NGINX_PROXY_MANAGER_VERSION}.tar.gz
 ARG NGINX_HTTP_GEOIP2_MODULE_URL=https://github.com/leev/ngx_http_geoip2_module/archive/${NGINX_HTTP_GEOIP2_MODULE_VERSION}.tar.gz
 ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/${LIBMAXMINDDB_VERSION}/libmaxminddb-${LIBMAXMINDDB_VERSION}.tar.gz
@@ -78,6 +80,14 @@ RUN \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.exe" -delete && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type d -name tests -print0 | xargs -0 rm -r
 
+# Build cs-openresty-boucner.
+FROM alpine:3.16 AS cs-openresty-bouncer
+ARG TARGETPLATFORM
+ARG CROWDSEC_OPENRESTY_BOUNCER_URL
+COPY --from=xx / /
+COPY src/cs-openresty-bouncer /build
+RUN /build/build.sh "$CROWDSEC_OPENRESTY_BOUNCER_URL"
+
 # Pull base image.
 FROM jlesage/baseimage:alpine-3.16-v3.5.2
 
@@ -117,6 +127,7 @@ COPY --from=nginx /tmp/openresty-install/ /
 COPY --from=npm /tmp/nginx-proxy-manager-install/ /
 COPY --from=bcrypt-tool /tmp/go/bin/bcrypt-tool /usr/bin/
 COPY --from=certbot /tmp/certbot-install/ /
+COPY --from=cs-openresty-bouncer /tmp/crowdsec-openresty-bouncer-install/ /
 
 # Set internal environment variables.
 RUN \

@@ -180,6 +180,9 @@ make -C /tmp/openresty -j$(nproc)
 log "Installing OpenResty..."
 make DESTDIR=/tmp/openresty-install -C /tmp/openresty install
 
+#Install lua-resty-http required for Crowdsec OpenResty Bouncer 
+/tmp/openresty-install/var/lib/nginx/bin/opm --install-dir="/tmp/openresty-install/var/lib/nginx/site/" get pintsized/lua-resty-http
+
 rm -r \
     /tmp/openresty-install/etc/nginx/*.default \
     /tmp/openresty-install/var/lib/nginx/bin/opm \
@@ -189,5 +192,4 @@ rm -r \
     /tmp/openresty-install/var/lib/nginx/bin/md2pod.pl \
     /tmp/openresty-install/var/lib/nginx/pod \
     /tmp/openresty-install/var/lib/nginx/resty.index \
-    /tmp/openresty-install/var/lib/nginx/site \
     /tmp/openresty-install/var/run \
