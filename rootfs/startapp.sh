@@ -9,3 +9,5 @@ export SUPPRESS_NO_CONFIG_WARNING=1
 
 cd /opt/nginx-proxy-manager
 exec node --abort_on_uncaught_exception --max_old_space_size=250 index.js
+
+# vim:ft=sh:ts=4:sw=4:et:sts=4
