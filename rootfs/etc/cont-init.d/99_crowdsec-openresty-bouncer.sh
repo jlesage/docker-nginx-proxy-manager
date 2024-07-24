@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
-function set_properties() {
+set_properties() {
   sed -i "s,^$1=.*,$1=$2,g" "${3}"
 }
 
