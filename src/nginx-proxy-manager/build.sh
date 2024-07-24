@@ -74,11 +74,14 @@ sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/backend/package.json
 
 log "Patching Nginx Proxy Manager backend..."
-patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/pip-install.patch
-patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/remove-certbot-dns-oci.patch
-patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/powerdns-fix.patch
-patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/http2-support-fix.patch
-patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/reachability-test-fix.patch
+PATCHES="
+    pip-install.patch
+    remove-certbot-dns-oci.patch
+"
+for P in $PATCHES; do
+    echo "Applying $P..."
+    patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/"$P"
+done
 
 cp -r /tmp/nginx-proxy-manager /app
 
@@ -166,7 +169,7 @@ sed -i 's|user npm;|#user npm;|' $ROOTFS/etc/nginx/nginx.conf
 sed -i 's|/tmp/nginx/body|/var/tmp/nginx/body|' $ROOTFS/etc/nginx/nginx.conf
 
 # Fix the logrotate config.
-sed -i 's|root root|app app|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
+sed -i 's|npm npm|app app|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 sed -i 's|/run/nginx.pid|/run/nginx/nginx.pid|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 sed -i 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' $ROOTFS/opt/nginx-proxy-manager/setup.js
 sed -i 's|/data/logs/\*/access.log|/data/logs/access.log|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
