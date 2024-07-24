@@ -9,7 +9,7 @@ ARG DOCKER_IMAGE_VERSION=
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.19.9.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.9.22
+ARG NGINX_PROXY_MANAGER_VERSION=2.11.3
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG BCRYPT_TOOL_VERSION=1.1.2
@@ -24,7 +24,7 @@ ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/$
 FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 
 # Get Python cryptography wheel.  It is needed for certbot.
-FROM moonbuggy2000/python-musl-wheels:cryptography38.0.1-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
+FROM moonbuggy2000/python-musl-wheels:cryptography41.0.3-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
 
 # Build UPX.
 FROM --platform=$BUILDPLATFORM alpine:3.16 AS upx
@@ -71,7 +71,7 @@ COPY --from=mod_cryptography / /wheels
 RUN \
     apk --no-cache add build-base curl python3 && \
     curl -# -L "https://bootstrap.pypa.io/get-pip.py" | python3 && \
-    pip install --no-cache-dir --root=/tmp/certbot-install --prefix=/usr --find-links /wheels/ --prefer-binary certbot && \
+    pip install --no-cache-dir --root=/tmp/certbot-install --prefix=/usr --find-links /wheels/ --prefer-binary --only-binary=:all: certbot && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.so" -exec strip {} ';' && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.h" -delete && \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.c" -delete && \
@@ -79,7 +79,7 @@ RUN \
     find /tmp/certbot-install/usr/lib/python3.10/site-packages -type d -name tests -print0 | xargs -0 rm -r
 
 # Pull base image.
-FROM jlesage/baseimage:alpine-3.16-v3.4.7
+FROM jlesage/baseimage:alpine-3.16-v3.6.2
 
 ARG NGINX_PROXY_MANAGER_VERSION
 ARG DOCKER_IMAGE_VERSION

@@ -1,0 +1,19 @@
+Because of the Oracle Cloud Infrastructure DNS plugin dependencies, installing
+it causes certbot to be downgraded, which then break any execution of certbot.
+--- a/global/certbot-dns-plugins.json
++++ b/global/certbot-dns-plugins.json
+@@ -437,14 +437,6 @@
+ 		"credentials": "dns_nsone_api_key = MDAwMDAwMDAwMDAwMDAw",
+ 		"full_plugin_name": "dns-nsone"
+ 	},
+-	"oci": {
+-		"name": "Oracle Cloud Infrastructure DNS",
+-		"package_name": "certbot-dns-oci",
+-		"version": "~=0.3.6",
+-		"dependencies": "oci",
+-		"credentials": "[DEFAULT]\nuser = ocid1.user.oc1...\nfingerprint = xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx\ntenancy = ocid1.tenancy.oc1...\nregion = us-ashburn-1\nkey_file = ~/.oci/oci_api_key.pem",
+-		"full_plugin_name": "dns-oci"
+-	},
+ 	"ovh": {
+ 		"name": "OVH",
+ 		"package_name": "certbot-dns-ovh",

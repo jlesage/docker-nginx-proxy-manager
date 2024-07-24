@@ -74,7 +74,14 @@ sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\
 sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/backend/package.json
 
 log "Patching Nginx Proxy Manager backend..."
-patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/pip-install.patch
+PATCHES="
+    pip-install.patch
+    remove-certbot-dns-oci.patch
+"
+for P in $PATCHES; do
+    echo "Applying $P..."
+    patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/"$P"
+done
 
 cp -r /tmp/nginx-proxy-manager /app
 
@@ -122,7 +129,6 @@ cp -rv /app/frontend/dist $ROOTFS/opt/nginx-proxy-manager/frontend
 cp -rv /app/global $ROOTFS/opt/nginx-proxy-manager/global
 
 mkdir $ROOTFS/opt/nginx-proxy-manager/bin
-cp -rv /tmp/nginx-proxy-manager/docker/rootfs/bin/handle-ipv6-setting $ROOTFS/opt/nginx-proxy-manager/bin/
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/etc/nginx $ROOTFS/etc/
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/var/www $ROOTFS/var/
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/etc/letsencrypt.ini $ROOTFS/etc/
@@ -157,13 +163,13 @@ sed -i 's|:443;|:4443;|' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
 sed -i 's|-g "error_log off;"||' $ROOTFS/opt/nginx-proxy-manager/internal/nginx.js
 
 # Remove the `user` directive, since we want nginx to run as non-root.
-sed -i 's|user root;|#user root;|' $ROOTFS/etc/nginx/nginx.conf
+sed -i 's|user npm;|#user npm;|' $ROOTFS/etc/nginx/nginx.conf
 
 # Change client_body_temp_path.
 sed -i 's|/tmp/nginx/body|/var/tmp/nginx/body|' $ROOTFS/etc/nginx/nginx.conf
 
 # Fix the logrotate config.
-sed -i 's|root root|app app|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
+sed -i 's|npm npm|app app|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 sed -i 's|/run/nginx.pid|/run/nginx/nginx.pid|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
 sed -i 's|logrotate /etc/logrotate.d/nginx-proxy-manager|logrotate -s /config/logrotate.status /etc/logrotate.d/nginx-proxy-manager|' $ROOTFS/opt/nginx-proxy-manager/setup.js
 sed -i 's|/data/logs/\*/access.log|/data/logs/access.log|' $ROOTFS/etc/logrotate.d/nginx-proxy-manager
@@ -189,10 +195,6 @@ ln -s /config/production.json $ROOTFS/opt/nginx-proxy-manager/config/production.
 
 # Make sure letsencrypt certificates are stored in persistent volume.
 ln -s /config/letsencrypt $ROOTFS/etc/letsencrypt
-
-# Make sure some default certbot directories are stored in persistent volume.
-ln -s /config/letsencrypt-workdir $ROOTFS/var/lib/letsencrypt
-ln -s /config/log/letsencrypt $ROOTFS/var/log/letsencrypt
 
 # Cleanup.
 find $ROOTFS/opt/nginx-proxy-manager -name "*.h" -delete

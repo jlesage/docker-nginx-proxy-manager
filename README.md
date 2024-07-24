@@ -81,8 +81,9 @@ Nginx or Letsencrypt.
 
 ## Quick Start
 
-**NOTE**: The Docker command provided in this quick start is given as an example
-and parameters should be adjusted to your need.
+**NOTE**:
+    The Docker command provided in this quick start is given as an example
+    and parameters should be adjusted to your need.
 
 Launch the Nginx Proxy Manager docker container with the following command:
 ```shell
@@ -96,6 +97,7 @@ docker run -d \
 ```
 
 Where:
+
   - `/docker/appdata/nginx-proxy-manager`: This is where the application stores its configuration, states, log and any files needing persistency.
 
 Browse to `http://your-host-ip:8181` to access the Nginx Proxy Manager web interface.
@@ -113,15 +115,15 @@ docker run [-d] \
 
 | Parameter | Description |
 |-----------|-------------|
-| -d        | Run the container in the background.  If not set, the container runs in the foreground. |
-| -e        | Pass an environment variable to the container.  See the [Environment Variables](#environment-variables) section for more details. |
-| -v        | Set a volume mapping (allows to share a folder/file between the host and the container).  See the [Data Volumes](#data-volumes) section for more details. |
-| -p        | Set a network port mapping (exposes an internal container port to the host).  See the [Ports](#ports) section for more details. |
+| -d        | Run the container in the background. If not set, the container runs in the foreground. |
+| -e        | Pass an environment variable to the container. See the [Environment Variables](#environment-variables) section for more details. |
+| -v        | Set a volume mapping (allows to share a folder/file between the host and the container). See the [Data Volumes](#data-volumes) section for more details. |
+| -p        | Set a network port mapping (exposes an internal container port to the host). See the [Ports](#ports) section for more details. |
 
 ### Environment Variables
 
 To customize some properties of the container, the following environment
-variables can be passed via the `-e` parameter (one for each variable).  Value
+variables can be passed via the `-e` parameter (one for each variable). Value
 of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 
 | Variable       | Description                                  | Default |
@@ -129,19 +131,20 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`USER_ID`| ID of the user the application runs as.  See [User/Group IDs](#usergroup-ids) to better understand when this should be set. | `1000` |
 |`GROUP_ID`| ID of the group the application runs as.  See [User/Group IDs](#usergroup-ids) to better understand when this should be set. | `1000` |
 |`SUP_GROUP_IDS`| Comma-separated list of supplementary group IDs of the application. | (no value) |
-|`UMASK`| Mask that controls how file permissions are set for newly created files. The value of the mask is in octal notation.  By default, the default umask value is `0022`, meaning that newly created files are readable by everyone, but only writable by the owner.  See the online umask calculator at http://wintelguy.com/umask-calc.pl. | `0022` |
+|`UMASK`| Mask that controls how permissions are set for newly created files and folders.  The value of the mask is in octal notation.  By default, the default umask value is `0022`, meaning that newly created files and folders are readable by everyone, but only writable by the owner.  See the online umask calculator at http://wintelguy.com/umask-calc.pl. | `0022` |
 |`LANG`| Set the [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)), which defines the application's language, **if supported**.  Format of the locale is `language[_territory][.codeset]`, where language is an [ISO 639 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), territory is an [ISO 3166 country code](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) and codeset is a character set, like `UTF-8`.  For example, Australian English using the UTF-8 encoding is `en_AU.UTF-8`. | `en_US.UTF-8` |
 |`TZ`| [TimeZone](http://en.wikipedia.org/wiki/List_of_tz_database_time_zones) used by the container.  Timezone can also be set by mapping `/etc/localtime` between the host and the container. | `Etc/UTC` |
 |`KEEP_APP_RUNNING`| When set to `1`, the application will be automatically restarted when it crashes or terminates. | `0` |
 |`APP_NICENESS`| Priority at which the application should run.  A niceness value of -20 is the highest priority and 19 is the lowest priority.  The default niceness value is 0.  **NOTE**: A negative niceness (priority increase) requires additional permissions.  In this case, the container should be run with the docker option `--cap-add=SYS_NICE`. | `0` |
-|`INSTALL_PACKAGES`| Space-separated list of packages to install during the startup of the container.  Packages are installed from the repository of the Linux distribution this container is based on.  **ATTENTION**: Container functionality can be affected when installing a package that overrides existing container files (e.g. binaries). | (no value) |
+|`INSTALL_PACKAGES`| Space-separated list of packages to install during the startup of the container.  List of available packages can be found at https://mirrors.alpinelinux.org.  **ATTENTION**: Container functionality can be affected when installing a package that overrides existing container files (e.g. binaries). | (no value) |
+|`PACKAGES_MIRROR`| Mirror of the repository to use when installing packages. List of mirrors is available at https://mirrors.alpinelinux.org. | (no value) |
 |`CONTAINER_DEBUG`| Set to `1` to enable debug logging. | `0` |
 |`DISABLE_IPV6`| When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is not enabled/supported on the host. | `0` |
 
 #### Deployment Considerations
 
 Many tools used to manage Docker containers extract environment variables
-defined by the Docker image and use them to create/deploy the container.  For
+defined by the Docker image and use them to create/deploy the container. For
 example, this is done by:
   - The Docker application on Synology NAS
   - The Container Station on QNAP NAS
@@ -152,34 +155,34 @@ While this can be useful for the user to adjust the value of environment
 variables to fit its needs, it can also be confusing and dangerous to keep all
 of them.
 
-A good pratice is to set/keep only the variables that are needed for the
-container to behave as desired in a specific setup.  If the value of variable is
-kept to its default value, it means that it can be removed.  Keep in mind that
+A good practice is to set/keep only the variables that are needed for the
+container to behave as desired in a specific setup. If the value of variable is
+kept to its default value, it means that it can be removed. Keep in mind that
 all variables are optional, meaning that none of them is required for the
 container to start.
 
 Removing environment variables that are not needed provides some advantages:
 
-  - Prevents keeping variables that are no longer used by the container.  Over
+  - Prevents keeping variables that are no longer used by the container. Over
     time, with image updates, some variables might be removed.
-  - Allows the Docker image to change/fix a default value.  Again, with image
+  - Allows the Docker image to change/fix a default value. Again, with image
     updates, the default value of a variable might be changed to fix an issue,
     or to better support a new feature.
   - Prevents changes to a variable that might affect the correct function of
-    the container.  Some undocumented variables, like `PATH` or `ENV`, are
-    required to be exposed, but are not meant to be changed by users.  However,
+    the container. Some undocumented variables, like `PATH` or `ENV`, are
+    required to be exposed, but are not meant to be changed by users. However,
     container management tools still show these variables to users.
   - There is a bug with the Container Station on QNAP and the Docker application
     on Synology, where an environment variable without value might not be
-    allowed.  This behavior is wrong: it's absolutely fine to have a variable
-    without value.  In fact, this container does have variables without value by
-    default.  Thus, removing uneeded variables is a good way to prevent
+    allowed. This behavior is wrong: it's absolutely fine to have a variable
+    without value. In fact, this container does have variables without value by
+    default. Thus, removing unneeded variables is a good way to prevent
     deployment issue on these devices.
 
 ### Data Volumes
 
-The following table describes data volumes used by the container.  The mappings
-are set via the `-v` parameter.  Each mapping is specified with the following
+The following table describes data volumes used by the container. The mappings
+are set via the `-v` parameter. Each mapping is specified with the following
 format: `<HOST_DIR>:<CONTAINER_DIR>[:PERMISSIONS]`.
 
 | Container path  | Permissions | Description |
@@ -191,8 +194,8 @@ format: `<HOST_DIR>:<CONTAINER_DIR>[:PERMISSIONS]`.
 Here is the list of ports used by the container.
 
 When using the default bridge network, ports can be mapped to the host via the
-`-p` parameter (one per port mapping).  Each mapping is defined with the
-following format: `<HOST_PORT>:<CONTAINER_PORT>`.  The port number used inside
+`-p` parameter (one per port mapping). Each mapping is defined with the
+following format: `<HOST_PORT>:<CONTAINER_PORT>`. The port number used inside
 the container might not be changeable, but you are free to use any port on the
 host side.
 
@@ -211,31 +214,34 @@ As can be seen, environment variables, volume and port mappings are all specifie
 while creating the container.
 
 The following steps describe the method used to add, remove or update
-parameter(s) of an existing container.  The general idea is to destroy and
+parameter(s) of an existing container. The general idea is to destroy and
 re-create the container:
 
   1. Stop the container (if it is running):
-```
+```shell
 docker stop nginx-proxy-manager
 ```
+
   2. Remove the container:
-```
+```shell
 docker rm nginx-proxy-manager
 ```
+
   3. Create/start the container using the `docker run` command, by adjusting
      parameters as needed.
 
-**NOTE**: Since all application's data is saved under the `/config` container
-folder, destroying and re-creating a container is not a problem: nothing is lost
-and the application comes back with the same state (as long as the mapping of
-the `/config` folder remains the same).
+**NOTE**:
+    Since all application's data is saved under the `/config` container
+    folder, destroying and re-creating a container is not a problem: nothing is
+    lost and the application comes back with the same state (as long as the
+    mapping of the `/config` folder remains the same).
 
 ## Docker Compose File
 
 Here is an example of a `docker-compose.yml` file that can be used with
 [Docker Compose](https://docs.docker.com/compose/overview/).
 
-Make sure to adjust according to your needs.  Note that only mandatory network
+Make sure to adjust according to your needs. Note that only mandatory network
 ports are part of the example.
 
 ```yaml
@@ -253,11 +259,11 @@ services:
 
 ## Docker Image Versioning
 
-Each release of a Docker image is versioned.  Prior to october 2022, the
+Each release of a Docker image is versioned. Prior to october 2022, the
 [semantic versioning](https://semver.org) was used as the versioning scheme.
 
 Since then, versioning scheme changed to
-[calendar versioning](https://calver.org).  The format used is `YY.MM.SEQUENCE`,
+[calendar versioning](https://calver.org). The format used is `YY.MM.SEQUENCE`,
 where:
   - `YY` is the zero-padded year (relative to year 2000).
   - `MM` is the zero-padded month.
@@ -268,10 +274,10 @@ where:
 
 Because features are added, issues are fixed, or simply because a new version
 of the containerized application is integrated, the Docker image is regularly
-updated.  Different methods can be used to update the Docker image.
+updated. Different methods can be used to update the Docker image.
 
 The system used to run the container may have a built-in way to update
-containers.  If so, this could be your primary way to update Docker images.
+containers. If so, this could be your primary way to update Docker images.
 
 An other way is to have the image be automatically updated with [Watchtower].
 Watchtower is a container-based solution for automating Docker image updates.
@@ -281,17 +287,20 @@ Watchtower will seamlessly perform the necessary steps to update the container.
 Finally, the Docker image can be manually updated with these steps:
 
   1. Fetch the latest image:
-```
+```shell
 docker pull jlesage/nginx-proxy-manager
 ```
+
   2. Stop the container:
-```
+```shell
 docker stop nginx-proxy-manager
 ```
+
   3. Remove the container:
-```
+```shell
 docker rm nginx-proxy-manager
 ```
+
   4. Create and start the container using the `docker run` command, with the
 the same parameters that were used when it was deployed initially.
 
@@ -306,12 +315,12 @@ container image.
   2.  Click on *Registry* in the left pane.
   3.  In the search bar, type the name of the container (`jlesage/nginx-proxy-manager`).
   4.  Select the image, click *Download* and then choose the `latest` tag.
-  5.  Wait for the download to complete.  A  notification will appear once done.
+  5.  Wait for the download to complete. A notification will appear once done.
   6.  Click on *Container* in the left pane.
   7.  Select your Nginx Proxy Manager container.
   8.  Stop it by clicking *Action*->*Stop*.
   9.  Clear the container by clicking *Action*->*Reset* (or *Action*->*Clear* if
-      you don't have the latest *Docker* application).  This removes the
+      you don't have the latest *Docker* application). This removes the
       container while keeping its configuration.
   10. Start the container again by clicking *Action*->*Start*. **NOTE**:  The
       container may temporarily disappear from the list while it is re-created.
@@ -327,8 +336,8 @@ For unRAID, a container image can be updated by following these steps:
 ## User/Group IDs
 
 When using data volumes (`-v` flags), permissions issues can occur between the
-host and the container.  For example, the user within the container may not
-exist on the host.  This could prevent the host from properly accessing files
+host and the container. For example, the user within the container may not
+exist on the host. This could prevent the host from properly accessing files
 and folders on the shared volume.
 
 To avoid any problem, you can specify the user the application should run as.
@@ -342,7 +351,7 @@ user owning the data volume on the host:
     id <username>
 
 Which gives an output like this one:
-```
+```text
 uid=1000(myuser) gid=1000(myuser) groups=1000(myuser),4(adm),24(cdrom),27(sudo),46(plugdev),113(lpadmin)
 ```
 
@@ -354,7 +363,7 @@ be given the container.
 Assuming that container's ports are mapped to the same host's ports, the
 interface of the application can be accessed with a web browser at:
 
-```
+```text
 http://<HOST IP ADDR>:8181
 ```
 

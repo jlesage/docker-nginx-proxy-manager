@@ -23,8 +23,9 @@ Nginx or Letsencrypt.
 
 ## Quick Start
 
-**NOTE**: The Docker command provided in this quick start is given as an example
-and parameters should be adjusted to your need.
+**NOTE**:
+    The Docker command provided in this quick start is given as an example
+    and parameters should be adjusted to your need.
 
 Launch the Nginx Proxy Manager docker container with the following command:
 ```shell
@@ -38,6 +39,7 @@ docker run -d \
 ```
 
 Where:
+
   - `/docker/appdata/nginx-proxy-manager`: This is where the application stores its configuration, states, log and any files needing persistency.
 
 Browse to `http://your-host-ip:8181` to access the Nginx Proxy Manager web interface.
