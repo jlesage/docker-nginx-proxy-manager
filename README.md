@@ -81,9 +81,9 @@ Nginx or Letsencrypt.
 
 ## Quick Start
 
-**NOTE**:
-    The Docker command provided in this quick start is given as an example
-    and parameters should be adjusted to your need.
+> [!IMPORTANT]
+> The Docker command provided in this quick start is given as an example and
+> parameters should be adjusted to your need.
 
 Launch the Nginx Proxy Manager docker container with the following command:
 ```shell
@@ -230,11 +230,11 @@ docker rm nginx-proxy-manager
   3. Create/start the container using the `docker run` command, by adjusting
      parameters as needed.
 
-**NOTE**:
-    Since all application's data is saved under the `/config` container
-    folder, destroying and re-creating a container is not a problem: nothing is
-    lost and the application comes back with the same state (as long as the
-    mapping of the `/config` folder remains the same).
+> [!NOTE]
+> Since all application's data is saved under the `/config` container folder,
+> destroying and re-creating a container is not a problem: nothing is lost and
+> the application comes back with the same state (as long as the mapping of the
+> `/config` folder remains the same).
 
 ## Docker Compose File
 
