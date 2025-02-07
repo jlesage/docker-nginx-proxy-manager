@@ -9,7 +9,7 @@ ARG DOCKER_IMAGE_VERSION=
 
 # Define software versions.
 ARG OPENRESTY_VERSION=1.27.1.1
-ARG NGINX_PROXY_MANAGER_VERSION=2.12.2
+ARG NGINX_PROXY_MANAGER_VERSION=2.12.3
 ARG NGINX_HTTP_GEOIP2_MODULE_VERSION=3.3
 ARG LIBMAXMINDDB_VERSION=1.5.0
 ARG BCRYPT_TOOL_VERSION=1.1.2
@@ -95,7 +95,6 @@ RUN \
         python3 \
         sqlite \
         openssl \
-        apache2-utils \
         # For /opt/nginx-proxy-manager/bin/handle-ipv6-setting.
         bash \
         # For openresty.
