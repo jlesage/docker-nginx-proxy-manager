@@ -87,6 +87,7 @@ cp -r /tmp/nginx-proxy-manager /app
 
 log "Building Nginx Proxy Manager frontend..."
 (
+    export NODE_OPTIONS=--openssl-legacy-provider
     cd /app/frontend
     yarn install --network-timeout 100000
     yarn build

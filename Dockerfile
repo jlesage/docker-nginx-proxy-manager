@@ -24,10 +24,10 @@ ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/$
 FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 
 # Get Python cryptography wheel.  It is needed for certbot.
-FROM moonbuggy2000/python-musl-wheels:cryptography41.0.3-py3.10-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
+FROM moonbuggy2000/python-musl-wheels:cryptography43.0.0-py3.11-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
 
 # Build UPX.
-FROM --platform=$BUILDPLATFORM alpine:3.16 AS upx
+FROM --platform=$BUILDPLATFORM alpine:3.18 AS upx
 RUN apk --no-cache add build-base curl make cmake git && \
     mkdir /tmp/upx && \
     curl -# -L https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-src.tar.xz | tar xJ --strip 1 -C /tmp/upx && \
@@ -35,7 +35,7 @@ RUN apk --no-cache add build-base curl make cmake git && \
     cp -v /tmp/upx/build/release-gcc/upx /usr/bin/upx
 
 # Build Nginx Proxy Manager.
-FROM --platform=$BUILDPLATFORM alpine:3.16 AS npm
+FROM --platform=$BUILDPLATFORM alpine:3.18 AS npm
 ARG TARGETPLATFORM
 ARG NGINX_PROXY_MANAGER_VERSION
 ARG NGINX_PROXY_MANAGER_URL
@@ -44,7 +44,7 @@ COPY src/nginx-proxy-manager /build
 RUN /build/build.sh "$NGINX_PROXY_MANAGER_VERSION" "$NGINX_PROXY_MANAGER_URL"
 
 # Build OpenResty (nginx).
-FROM --platform=$BUILDPLATFORM alpine:3.16 AS nginx
+FROM --platform=$BUILDPLATFORM alpine:3.18 AS nginx
 ARG TARGETPLATFORM
 ARG OPENRESTY_URL
 ARG NGINX_HTTP_GEOIP2_MODULE_URL
@@ -55,7 +55,7 @@ RUN /build/build.sh "$OPENRESTY_URL" "$NGINX_HTTP_GEOIP2_MODULE_URL" "$LIBMAXMIN
 RUN xx-verify /tmp/openresty-install/usr/sbin/nginx
 
 # Build bcrypt-tool.
-FROM --platform=$BUILDPLATFORM alpine:3.16 AS bcrypt-tool
+FROM --platform=$BUILDPLATFORM alpine:3.18 AS bcrypt-tool
 ARG TARGETPLATFORM
 ARG BCRYPT_TOOL_VERSION
 COPY --from=xx / /
@@ -66,20 +66,20 @@ COPY --from=upx /usr/bin/upx /usr/bin/upx
 RUN upx /tmp/go/bin/bcrypt-tool
 
 # Build certbot.
-FROM alpine:3.16 AS certbot
+FROM alpine:3.18 AS certbot
 COPY --from=mod_cryptography / /wheels
 RUN \
     apk --no-cache add build-base curl python3 && \
     curl -# -L "https://bootstrap.pypa.io/get-pip.py" | python3 && \
     pip install --no-cache-dir --root=/tmp/certbot-install --prefix=/usr --find-links /wheels/ --prefer-binary --only-binary=:all: certbot && \
-    find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.so" -exec strip {} ';' && \
-    find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.h" -delete && \
-    find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.c" -delete && \
-    find /tmp/certbot-install/usr/lib/python3.10/site-packages -type f -name "*.exe" -delete && \
-    find /tmp/certbot-install/usr/lib/python3.10/site-packages -type d -name tests -print0 | xargs -0 rm -r
+    find /tmp/certbot-install/usr/lib/python3.11/site-packages -type f -name "*.so" -exec strip {} ';' && \
+    find /tmp/certbot-install/usr/lib/python3.11/site-packages -type f -name "*.h" -delete && \
+    find /tmp/certbot-install/usr/lib/python3.11/site-packages -type f -name "*.c" -delete && \
+    find /tmp/certbot-install/usr/lib/python3.11/site-packages -type f -name "*.exe" -delete && \
+    find /tmp/certbot-install/usr/lib/python3.11/site-packages -type d -name tests -print0 | xargs -0 rm -r
 
 # Pull base image.
-FROM jlesage/baseimage:alpine-3.16-v3.6.5
+FROM jlesage/baseimage:alpine-3.18-v3.6.5
 
 ARG NGINX_PROXY_MANAGER_VERSION
 ARG DOCKER_IMAGE_VERSION
