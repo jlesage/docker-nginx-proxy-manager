@@ -98,6 +98,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 25.03.1
+      date: 2025-03-19
+      changes:
+        - 'Fixed creation of streams.'
     - version: 25.02.1
       date: 2025-02-09
       changes:
