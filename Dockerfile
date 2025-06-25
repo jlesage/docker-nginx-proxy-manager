@@ -23,16 +23,18 @@ ARG LIBMAXMINDDB_URL=https://github.com/maxmind/libmaxminddb/releases/download/$
 # Get Dockerfile cross-compilation helpers.
 FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 
-# Get Python cryptography wheel.  It is needed for certbot.
+# Get Python cryptography wheel. It is needed for certbot.
 FROM moonbuggy2000/python-musl-wheels:cryptography43.0.0-py3.11-${TARGETARCH}${TARGETVARIANT} AS mod_cryptography
 
-# Build UPX.
-FROM --platform=$BUILDPLATFORM alpine:3.18 AS upx
-RUN apk --no-cache add build-base curl make cmake git && \
+# Get UPX (statically linked).
+# NOTE: UPX 5.x is not compatible with old kernels, e.g. 3.10 used by some
+#       Synology NASes. See https://github.com/upx/upx/issues/902
+FROM --platform=$BUILDPLATFORM alpine:3.20 AS upx
+ARG UPX_VERSION=4.2.4
+RUN apk --no-cache add curl && \
     mkdir /tmp/upx && \
-    curl -# -L https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-src.tar.xz | tar xJ --strip 1 -C /tmp/upx && \
-    make -C /tmp/upx build/release-gcc -j$(nproc) && \
-    cp -v /tmp/upx/build/release-gcc/upx /usr/bin/upx
+    curl -# -L https://github.com/upx/upx/releases/download/v${UPX_VERSION}/upx-${UPX_VERSION}-amd64_linux.tar.xz | tar xJ --strip 1 -C /tmp/upx && \
+    cp -v /tmp/upx/upx /usr/bin/upx
 
 # Build Nginx Proxy Manager.
 FROM --platform=$BUILDPLATFORM alpine:3.18 AS npm
@@ -103,10 +105,10 @@ RUN \
         && \
     # Install pip.
     # NOTE: pip from the Alpine package repository is debundled, meaning that
-    #       its dependencies are part of the system-wide ones.  This save a lot
+    #       its dependencies are part of the system-wide ones. This save a lot
     #       of space, but these dependencies conflict with the ones required by
     #       Certbot plugins. Thus, we need to manually install pip (with its
-    #       built-in dependencies).  See:
+    #       built-in dependencies). See:
     #       https://pip.pypa.io/en/stable/development/vendoring-policy/
     curl -# -L "https://bootstrap.pypa.io/get-pip.py" | python3
 
