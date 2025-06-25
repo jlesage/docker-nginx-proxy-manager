@@ -98,6 +98,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 25.06.1
+      date: 2025-06-25
+      changes:
+        - 'Updated baseimage to version 3.7.1.'
     - version: 25.03.1
       date: 2025-03-19
       changes:
