@@ -98,6 +98,25 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 25.06.1
+      date: 2025-06-25
+      changes:
+        - 'Updated baseimage to version 3.7.1.'
+    - version: 25.03.1
+      date: 2025-03-19
+      changes:
+        - 'Fixed creation of streams.'
+    - version: 25.02.1
+      date: 2025-02-09
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.12.3.'
+        - 'Updated baseimage to version 3.6.5, which brings the following changes:'
+        - '2:Increased the default service ready timeout from 5 seconds to 10 seconds and allow runtime adjustment via environment variable.'
+        - '2:Rebuild against latest distro images to get security fixes.'
+    - version: 25.01.1
+      date: 2025-01-20
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.12.2.'
     - version: 24.12.1
       date: 2024-12-07
       changes:

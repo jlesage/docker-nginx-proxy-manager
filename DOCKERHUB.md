@@ -24,8 +24,8 @@ Nginx or Letsencrypt.
 ## Quick Start
 
 **NOTE**:
-    The Docker command provided in this quick start is given as an example
-    and parameters should be adjusted to your need.
+    The Docker command provided in this quick start is an example, and parameters
+    should be adjusted to suit your needs.
 
 Launch the Nginx Proxy Manager docker container with the following command:
 ```shell
@@ -40,9 +40,9 @@ docker run -d \
 
 Where:
 
-  - `/docker/appdata/nginx-proxy-manager`: This is where the application stores its configuration, states, log and any files needing persistency.
+  - `/docker/appdata/nginx-proxy-manager`: Stores the application's configuration, state, logs, and any files requiring persistency.
 
-Browse to `http://your-host-ip:8181` to access the Nginx Proxy Manager web interface.
+Access the Nginx Proxy Manager GUI by browsing to `http://your-host-ip:8181`.
 
 ## Documentation
 
@@ -50,9 +50,7 @@ Full documentation is available at https://github.com/jlesage/docker-nginx-proxy
 
 ## Support or Contact
 
-Having troubles with the container or have questions?  Please
-[create a new issue].
+Having troubles with the container or have questions? Please
+[create a new issue](https://github.com/jlesage/docker-nginx-proxy-manager/issues).
 
-For other great Dockerized applications, see https://jlesage.github.io/docker-apps.
-
-[create a new issue]: https://github.com/jlesage/docker-nginx-proxy-manager/issues
+For other Dockerized applications, visit https://jlesage.github.io/docker-apps.
