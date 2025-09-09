@@ -1,11 +1,11 @@
 --- a/backend/lib/certbot.js
 +++ b/backend/lib/certbot.js
-@@ -63,7 +63,7 @@
- 		plugin.version      = plugin.version.replace(/{{certbot-version}}/g, CERTBOT_VERSION_REPLACEMENT);
- 		plugin.dependencies = plugin.dependencies.replace(/{{certbot-version}}/g, CERTBOT_VERSION_REPLACEMENT);
+@@ -70,7 +70,7 @@
+ 			env = Object.assign(env, plugin.env);
+ 		}
  
--		const cmd = '. /opt/certbot/bin/activate && pip install --no-cache-dir ' + plugin.dependencies + ' ' + plugin.package_name + plugin.version + ' ' + ' && deactivate';
+-		const cmd = `. /opt/certbot/bin/activate && pip install --no-cache-dir ${plugin.dependencies} ${plugin.package_name}${plugin.version}  && deactivate`;
 +		const cmd = 'pip install --no-cache-dir ' + plugin.dependencies + ' ' + plugin.package_name + plugin.version;
- 		return utils.exec(cmd)
+ 		return utils.exec(cmd, {env})
  			.then((result) => {
  				logger.complete(`Installed ${pluginKey}`);

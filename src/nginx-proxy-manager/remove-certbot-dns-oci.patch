@@ -2,7 +2,7 @@ Because of the Oracle Cloud Infrastructure DNS plugin dependencies, installing
 it causes certbot to be downgraded, which then break any execution of certbot.
 --- a/global/certbot-dns-plugins.json
 +++ b/global/certbot-dns-plugins.json
-@@ -437,14 +437,6 @@
+@@ -439,14 +439,6 @@
  		"credentials": "dns_nsone_api_key = MDAwMDAwMDAwMDAwMDAw",
  		"full_plugin_name": "dns-nsone"
  	},
