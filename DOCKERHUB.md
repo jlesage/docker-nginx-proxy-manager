@@ -9,7 +9,7 @@
 
 This is a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.com).
 
-
+> This Docker container is entirely unofficial and not made by the creators of Nginx Proxy Manager.
 
 ---
 
