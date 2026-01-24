@@ -9,7 +9,8 @@
 This project provides a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.com).
 
 > [!NOTE]
-> This Docker container is entirely unofficial and not made by the creators of Nginx Proxy Manager.
+> This Docker container is entirely unofficial and not made by the creators of
+> Nginx Proxy Manager.
 
 ---
 
