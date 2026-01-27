@@ -101,11 +101,11 @@ the `-e` parameter in the format `<VARIABLE_NAME>=<VALUE>`.
 |`LANG`| Sets the [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)), defining the application's language, if supported. Format is `language[_territory][.codeset]`, where language is an [ISO 639 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), territory is an [ISO 3166 country code](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes), and codeset is a character set, like `UTF-8`. For example, Australian English using UTF-8 is `en_AU.UTF-8`. | `en_US.UTF-8` |
 |`TZ`| [TimeZone](http://en.wikipedia.org/wiki/List_of_tz_database_time_zones) used by the container. The timezone can also be set by mapping `/etc/localtime` between the host and the container. | `Etc/UTC` |
 |`KEEP_APP_RUNNING`| When set to `1`, the application is automatically restarted if it crashes or terminates. | `0` |
-|`APP_NICENESS`| Priority at which the application runs. A niceness value of -20 is the highest, 19 is the lowest and 0 the default. **NOTE**: A negative niceness (priority increase) requires additional permissions. The container must be run with the Docker option `--cap-add=SYS_NICE`. | `0` |
+|`APP_NICENESS`| Priority at which the application runs. A niceness value of `-20` is the highest, `19` is the lowest and `0` the default. **NOTE**: A negative niceness (priority increase) requires additional permissions. The container must be run with the Docker option `--cap-add=SYS_NICE`. | `0` |
 |`INSTALL_PACKAGES`| Space-separated list of packages to install during container startup. List of available packages can be found at https://pkgs.alpinelinux.org. | (no value) |
 |`PACKAGES_MIRROR`| Mirror of the repository to use when installing packages. List of mirrors is available at https://mirrors.alpinelinux.org. | (no value) |
 |`CONTAINER_DEBUG`| When set to `1`, enables debug logging. | `0` |
-|`DISABLE_IPV6`| When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is not enabled/supported on the host. | `0` |
+|`DISABLE_IPV6`| When set to `1`, IPv6 support is disabled. This is needed when IPv6 is not enabled/supported on the host. | `0` |
 
 #### Deployment Considerations
 
@@ -357,18 +357,18 @@ and change your password.
 network type.
 
 For this container to be accessible from the Internet, port forwarding must be
-configured on your router.  This allows HTTP (port 80) and HTTPs (port 443)
+configured on your router. This allows HTTP (port 80) and HTTPs (port 443)
 traffic from the Internet to reach this container on your private network.
 
 Configuration of port forwarding differs from one router to another, but in
 general the same information must be configured:
   - **External port**: The Internet-side port to be forwarded.
-  - **Internal port**: The port to forward to.  Also called private port.
+  - **Internal port**: The port to forward to. Also called private port.
   - **Destination IP address**: The IP address of the device on the local
-    network to forward to.  Also called private IP address.
+    network to forward to. Also called private IP address.
 
 The IP address to forward to should be the IP address of the host running the
-container.  The port to forward to should be the port mapped to the container
+container. The port to forward to should be the port mapped to the container
 during its creation (via the `-p` parameter of the `docker run` command).
 
 Since the container needs to handle both HTTP and HTTPs traffic, two ports need
@@ -379,12 +379,12 @@ to be forwarded:
 | HTTP         | 8080           | XXXX                          | 80            | XXXX          | IP address of the host running the container. |
 | HTTPs        | 4443           | YYYY                          | 443           | YYYY          | IP address of the host running the container. |
 
-`XXXX` and `YYYY` are configurable port values.  Unless they conflict with other
+`XXXX` and `YYYY` are configurable port values. Unless they conflict with other
 used ports on the host, they can simply be set to the same value as the
 container port.
 
 **NOTE**: Some routers don't offer the ability to configure the internal port
-to forward to.  This means that internal port is the same as the external one.
+to forward to. This means that internal port is the same as the external one.
 In a such scenario, `XXXX` must be set to `80` and `YYYY` to `443`.
 
 For more details about port forwarding, see the following links:

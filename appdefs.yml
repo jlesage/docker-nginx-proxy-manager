@@ -26,7 +26,7 @@ app:
     extra_description: >-
       **NOTE**: For this container to be accessible from the internet, make sure ports
       **80** and **443** on the internet side of your router are properly forwarded to
-      this container.  See the documentation for more details.
+      this container. See the documentation for more details.
 
       **NOTE**: After a fresh install, the default username/password to connect to the
       management interface are:
@@ -49,18 +49,18 @@ app:
           network type.
 
           For this container to be accessible from the Internet, port forwarding must be
-          configured on your router.  This allows HTTP (port 80) and HTTPs (port 443)
+          configured on your router. This allows HTTP (port 80) and HTTPs (port 443)
           traffic from the Internet to reach this container on your private network.
 
           Configuration of port forwarding differs from one router to another, but in
           general the same information must be configured:
             - **External port**: The Internet-side port to be forwarded.
-            - **Internal port**: The port to forward to.  Also called private port.
+            - **Internal port**: The port to forward to. Also called private port.
             - **Destination IP address**: The IP address of the device on the local
-              network to forward to.  Also called private IP address.
+              network to forward to. Also called private IP address.
 
           The IP address to forward to should be the IP address of the host running the
-          container.  The port to forward to should be the port mapped to the container
+          container. The port to forward to should be the port mapped to the container
           during its creation (via the `-p` parameter of the `docker run` command).
 
           Since the container needs to handle both HTTP and HTTPs traffic, two ports need
@@ -71,12 +71,12 @@ app:
           | HTTP         | 8080           | XXXX                          | 80            | XXXX          | IP address of the host running the container. |
           | HTTPs        | 4443           | YYYY                          | 443           | YYYY          | IP address of the host running the container. |
 
-          `XXXX` and `YYYY` are configurable port values.  Unless they conflict with other
+          `XXXX` and `YYYY` are configurable port values. Unless they conflict with other
           used ports on the host, they can simply be set to the same value as the
           container port.
 
           **NOTE**: Some routers don't offer the ability to configure the internal port
-          to forward to.  This means that internal port is the same as the external one.
+          to forward to. This means that internal port is the same as the external one.
           In a such scenario, `XXXX` must be set to `80` and `YYYY` to `443`.
 
           For more details about port forwarding, see the following links:
@@ -423,14 +423,12 @@ container:
   environment_variables:
     - name: DISABLE_IPV6
       description: >-
-        When set to `1`, IPv6 support is disabled.  This is needed when IPv6 is
+        When set to `1`, IPv6 support is disabled. This is needed when IPv6 is
         not enabled/supported on the host.
       type: public
       default: 0
       unraid_template:
         title: Disable IPv6
-        description: >-
-          When set to '1', IPv6 support is disabled.
         display: advanced
         required: false
         mask: false
@@ -448,8 +446,6 @@ container:
       include_in_quick_start: true
       unraid_template:
         title: Web UI Port
-        description: >-
-          Port used to access the web interface of the application.
         default: "{{ 7800 + app.id|int }}"
         display: always
         required: true
@@ -463,8 +459,8 @@ container:
       unraid_template:
         title: HTTP Port
         description: >-
-          Port used to serve HTTP requests.  NOTE: Your router should be
-          configured to forward port 80 to this port.  If your router doesn't
+          Port used to serve HTTP requests. NOTE: Your router should be
+          configured to forward port 80 to this port. If your router doesn't
           allow setting the destination/internal IP address, this *must* be set
           to 80.
         default: "{{ app.id|int }}80"
@@ -480,8 +476,8 @@ container:
       unraid_template:
         title: HTTPs Port
         description: >-
-          Port used to serve HTTPs requests.  NOTE: Your router should be
-          configured to forward port 443 to this port.  If your router doesn't
+          Port used to serve HTTPs requests. NOTE: Your router should be
+          configured to forward port 443 to this port. If your router doesn't
           allow setting the destination/internal IP address, this *must* be set
           to 443.
         default: "{{ app.id|int }}443"
