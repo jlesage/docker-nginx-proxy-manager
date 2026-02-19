@@ -1,3 +1,39 @@
+## Note
+
+This is a drop in replacement for [jlesage/nginx-proxy-manager](https://hub.docker.com/r/jlesage/nginx-proxy-manager)
+
+This fork includes the [OpenResty Crowdsec Bouncer](https://github.com/crowdsecurity/cs-openresty-bouncer)
+
+Please see the [crowdsec_support](https://github.com/LePresidente/docker-nginx-proxy-manager/tree/crowdsec_support) branch for the changes as 
+
+Docker images hosted on dockerhub.
+
+https://hub.docker.com/r/lepresidente/nginx-proxy-manager
+
+| TAG       | cs-openresty-bouncer version|
+|-----------|-----------------------------|
+| latest    | 0.1.10 (PreRelease)          |
+
+
+Instructions to use:
+Starting the container at this point will start Nginx-Proxy-Manager as before but will create a new file in /config/crowdsec/ called crowdsec-openresty-bouncer.conf
+
+You will need to edit this file with at least the following changes then restart the container.
+
+```
+ENABLED=true
+API_URL=http://<crowdsecserver>:8080
+API_KEY=<APIKEY>
+```
+
+the crowdsec api key can be generated on the crowdsec instance using the following command 
+
+```
+cscli bouncers add npm-proxy
+```
+
+Currently this is a side project and I will try keep this up to date
+
 # Docker container for Nginx Proxy Manager
 [![Release](https://img.shields.io/github/release/jlesage/docker-nginx-proxy-manager.svg?logo=github&style=for-the-badge)](https://github.com/jlesage/docker-nginx-proxy-manager/releases/latest)
 [![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/nginx-proxy-manager/latest?logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/nginx-proxy-manager/tags)
