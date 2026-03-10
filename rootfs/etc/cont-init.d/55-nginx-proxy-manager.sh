@@ -32,6 +32,10 @@ do
     chown app:app "$DIR"
 done
 
+# Create the Python cache directory.
+mkdir -p $PYTHONPYCACHEPREFIX
+chown app:app $PYTHONPYCACHEPREFIX
+
 # Create symlinks for logs.
 [ ! -L /config/log/log ] || rm /config/log/log
 ln -snf log /config/logs
