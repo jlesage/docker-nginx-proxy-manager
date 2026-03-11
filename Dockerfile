@@ -89,8 +89,6 @@ RUN \
         python3 \
         sqlite \
         openssl \
-        # For /opt/nginx-proxy-manager/bin/handle-ipv6-setting.
-        bash \
         # For openresty.
         pcre \
         luajit \
