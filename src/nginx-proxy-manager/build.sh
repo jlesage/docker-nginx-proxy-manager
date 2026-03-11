@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 ROOTFS=/tmp/nginx-proxy-manager-install
 
-function log {
+log() {
     echo ">>> $*"
 }
 
