@@ -1,0 +1,60 @@
+--- a/backend/internal/certificate.js
++++ b/backend/internal/certificate.js
+@@ -20,7 +19,7 @@ import internalHost from "./host.js";
+ import internalNginx from "./nginx.js";
+ 
+ const letsencryptConfig = "/etc/letsencrypt.ini";
+-const certbotCommand = "certbot";
++const certbotDefaultCommand = "certbot";
+ const certbotLogsDir = "/data/logs";
+ const certbotWorkDir = "/tmp/letsencrypt-lib";
+ 
+@@ -777,6 +776,8 @@ const internalCertificate = {
+ 			`Requesting LetsEncrypt certificates for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
+ 		);
+ 
++		const certbotCommand = certbotDefaultCommand;
++
+ 		const args = [
+ 			"certonly",
+ 			"--config",
+@@ -832,6 +832,8 @@ const internalCertificate = {
+ 		// Whether the plugin has a --<name>-credentials argument
+ 		const hasConfigArg = certificate.meta.dns_provider !== "route53";
+ 
++		const certbotCommand = `${certbotDefaultCommand}-${dnsPlugin.full_plugin_name}`;
++
+ 		const args = [
+ 			"certonly",
+ 			"--config",
+@@ -931,6 +933,8 @@ const internalCertificate = {
+ 			`Renewing LetsEncrypt certificates for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
+ 		);
+ 
++		const certbotCommand = certbotDefaultCommand;
++
+ 		const args = [
+ 			"renew",
+ 			"--force-renewal",
+@@ -977,6 +981,8 @@ const internalCertificate = {
+ 			`Renewing LetsEncrypt certificates via ${dnsPlugin.name} for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
+ 		);
+ 
++		const certbotCommand = `${certbotDefaultCommand}-${dnsPlugin.full_plugin_name}`;
++
+ 		const args = [
+ 			"renew",
+ 			"--force-renewal",
+@@ -1015,6 +1021,12 @@ const internalCertificate = {
+ 	 * @returns {Promise}
+ 	 */
+ 	revokeLetsEncryptSsl: async (certificate, throwErrors) => {
++		let certbotCommand = certbotDefaultCommand;
++		if (certificate.meta.dns_challenge) {
++			const dnsPlugin = dnsPlugins[certificate.meta.dns_provider];
++			certbotCmd = `${certbotCommand}-${dnsPlugin.full_plugin_name}`;
++		}
++
+ 		logger.info(
+ 			`Revoking LetsEncrypt certificates for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
+ 		);

@@ -1,0 +1,40 @@
+From 0dbf268f37491671427e6d4af078972343f570d3 Mon Sep 17 00:00:00 2001
+From: Jamie Curnow <jc@jc21.com>
+Date: Wed, 18 Feb 2026 08:32:17 +1000
+Subject: [PATCH] Fix #5284 for older sqlite3 configurations
+
+---
+ backend/lib/config.js | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/backend/lib/config.js b/backend/lib/config.js
+index cb01a0d0d0..544bbfecb0 100644
+--- a/backend/lib/config.js
++++ b/backend/lib/config.js
+@@ -2,10 +2,13 @@ import fs from "node:fs";
+ import NodeRSA from "node-rsa";
+ import { global as logger } from "../logger.js";
+ 
+-const keysFile         = '/data/keys.json';
+-const mysqlEngine      = 'mysql2';
+-const postgresEngine   = 'pg';
+-const sqliteClientName = 'better-sqlite3';
++const keysFile               = '/data/keys.json';
++const mysqlEngine            = 'mysql2';
++const postgresEngine         = 'pg';
++const sqliteClientName       = 'better-sqlite3';
++
++// Not used for new setups anymore but may exist in legacy setups
++const legacySqliteClientName = 'sqlite3';
+ 
+ let instance = null;
+ 
+@@ -184,7 +187,7 @@ const configGet = (key) => {
+  */
+ const isSqlite = () => {
+ 	instance === null && configure();
+-	return instance.database.knex && instance.database.knex.client === sqliteClientName;
++	return instance.database.knex && [sqliteClientName, legacySqliteClientName].includes(instance.database.knex.client);
+ };
+ 
+ /**

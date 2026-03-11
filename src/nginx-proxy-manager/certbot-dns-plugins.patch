@@ -1,0 +1,26 @@
+--- a/backend/certbot/dns-plugins.json
++++ b/backend/certbot/dns-plugins.json
+@@ -439,14 +439,6 @@
+ 		"credentials": "# Obtain API token using https://github.com/JoeJoeTV/mchost24-api-python\ndns_mchost24_api_token=<insert obtained API token here>",
+ 		"full_plugin_name": "dns-mchost24"
+ 	},
+-	"mijnhost": {
+-		"name": "mijn.host",
+-		"package_name": "certbot-dns-mijn-host",
+-		"version": "~=0.0.4",
+-		"dependencies": "",
+-		"credentials": "dns_mijn_host_api_key=0123456789abcdef0123456789abcdef",
+-		"full_plugin_name": "dns-mijn-host"
+-	},
+ 	"namecheap": {
+ 		"name": "Namecheap",
+ 		"package_name": "certbot-dns-namecheap",
+@@ -587,7 +579,7 @@
+                 "name": "Selectel api v2",
+                 "package_name": "certbot-dns-selectel-api-v2",
+                 "version": "~=0.3.0",
+-                "dependencies": "",
++                "dependencies": "certbot=={{certbot-version}}",
+                 "credentials": "dns_selectel_api_v2_account_id = your_account_id\ndns_selectel_api_v2_project_name = your_project\ndns_selectel_api_v2_username = your_username\ndns_selectel_api_v2_password = your_password",
+                 "full_plugin_name": "dns-selectel-api-v2"
+         },

@@ -70,17 +70,20 @@ curl -# -L -f ${NGINX_PROXY_MANAGER_URL} | tar xz --strip 1 -C /tmp/nginx-proxy-
 #
 
 # Set the NginxProxyManager version.
-sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/frontend/package.json
-sed -i "s/\"version\": \"0.0.0\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/backend/package.json
+sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/frontend/package.json
+sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\",/\"version\": \"${NGINX_PROXY_MANAGER_VERSION}\",/" /tmp/nginx-proxy-manager/backend/package.json
 
 log "Patching Nginx Proxy Manager backend..."
 PATCHES="
-    pip-install.patch
-    remove-certbot-dns-oci.patch
+    fix-legacy-sqlite3.patch
+    bcrypt.patch
+    certbot-dns-plugins.patch
+    certbot-command.patch
+    certbot-disable-plugin-install.patch
 "
 for P in $PATCHES; do
     echo "Applying $P..."
-    patch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/"$P"
+    patch --no-backup-if-mismatch -p1 -d /tmp/nginx-proxy-manager < "$SCRIPT_DIR"/"$P"
 done
 
 cp -r /tmp/nginx-proxy-manager /app
@@ -90,6 +93,7 @@ log "Building Nginx Proxy Manager frontend..."
     export NODE_OPTIONS=--openssl-legacy-provider
     cd /app/frontend
     yarn install --network-timeout 100000
+    yarn locale-compile
     yarn build
     node-prune
 )
@@ -110,7 +114,9 @@ log "Building Nginx Proxy Manager backend..."
     # for another achitecture.  Note that NPM install should also use yarn.lock.
     npm install --legacy-peer-deps --omit=dev --omit=optional --target_platform=linux --target_arch=$ARCH
     node-prune
-    rm -rf /app/backend/node_modules/sqlite3/build
+    # better-sqlite3 should be used, but some legacy/old installations might
+    # still use the sqlite3 module (configured in production.json).
+    #rm -rf /app/backend/node_modules/sqlite3
 )
 
 log "Installing Nginx Proxy Manager..."
@@ -127,7 +133,6 @@ mkdir \
 
 cp -rv /app/backend $ROOTFS/opt/nginx-proxy-manager
 cp -rv /app/frontend/dist $ROOTFS/opt/nginx-proxy-manager/frontend
-cp -rv /app/global $ROOTFS/opt/nginx-proxy-manager/global
 
 mkdir $ROOTFS/opt/nginx-proxy-manager/bin
 cp -rv /tmp/nginx-proxy-manager/docker/rootfs/etc/nginx $ROOTFS/etc/
@@ -160,8 +165,8 @@ sed -i 's|listen 443 |listen 4443 |' $ROOTFS/opt/nginx-proxy-manager/templates/_
 sed -i 's|:443 |:4443 |' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
 sed -i 's|:443;|:4443;|' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
 
-# Fix nginx test command line.
-sed -i 's|-g "error_log off;"||' $ROOTFS/opt/nginx-proxy-manager/internal/nginx.js
+# Fix nginx test command line: "error_log off;" is not a valid nginx config.
+sed -i 's|"error_log off;"|"error_log /dev/null;"|' $ROOTFS/opt/nginx-proxy-manager/internal/nginx.js
 
 # Remove the `user` directive, since we want nginx to run as non-root.
 sed -i 's|user npm;|#user npm;|' $ROOTFS/etc/nginx/nginx.conf
