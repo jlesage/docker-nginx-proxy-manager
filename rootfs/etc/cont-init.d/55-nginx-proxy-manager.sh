@@ -49,9 +49,8 @@ do
     sed -i 's|/data/logs/|/config/log/|' "$file"
 done
 
-# Install default config.
+# Install default config files.
 [ -f /config/nginx/ip_ranges.conf ] || cp /defaults/ip_ranges.conf /config/nginx/
-[ -f /config/production.json ] || cp /defaults/production.json /config/
 
 # Make sure there is no migration lock held.
 # See https://github.com/jlesage/docker-nginx-proxy-manager/issues/4
