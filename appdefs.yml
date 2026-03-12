@@ -27,26 +27,14 @@ app:
       **NOTE**: For this container to be accessible from the internet, make sure ports
       **80** and **443** on the internet side of your router are properly forwarded to
       this container. See the documentation for more details.
-
-      **NOTE**: After a fresh install, the default username/password to connect to the
-      management interface are:
-      > admin@example.com/changeme.
   documentation:
     sections:
-      - title: Default Administrator Account
-        level: 2
-        content: |-
-          After a fresh install, use the following credentials to login:
-            - Email address: `admin@example.com`
-            - Password: `changeme`
-
-          After you login with this default user, you will be asked to modify your details
-          and change your password.
       - title: Accessibility From The Internet
         level: 2
         content: |-
-          **NOTE:** This section assumes that the container is using the default `bridge`
-          network type.
+          > [!NOTE]
+          > This section assumes that the container is using the default `bridge` network
+          > type.
 
           For this container to be accessible from the Internet, port forwarding must be
           configured on your router. This allows HTTP (port 80) and HTTPs (port 443)
@@ -75,9 +63,10 @@ app:
           used ports on the host, they can simply be set to the same value as the
           container port.
 
-          **NOTE**: Some routers don't offer the ability to configure the internal port
-          to forward to. This means that internal port is the same as the external one.
-          In a such scenario, `XXXX` must be set to `80` and `YYYY` to `443`.
+          > [!NOTE]
+          > Some routers don't offer the ability to configure the internal port to forward
+          > to. This means that internal port is the same as the external one. In a such
+          > scenario, `XXXX` must be set to `80` and `YYYY` to `443`.
 
           For more details about port forwarding, see the following links:
             - [How to Port Forward - General Guide to Multiple Router Brands](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)

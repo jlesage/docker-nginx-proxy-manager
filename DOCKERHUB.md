@@ -7,7 +7,8 @@
 [![Source](https://img.shields.io/badge/Source-GitHub-blue?logo=github&style=for-the-badge)](https://github.com/jlesage/docker-nginx-proxy-manager)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://paypal.me/JocelynLeSage)
 
-This is a Docker container for [Nginx Proxy Manager](https://nginxproxymanager.com).
+This project provides a lightweight and secure Docker container for
+[Nginx Proxy Manager](https://nginxproxymanager.com).
 
 > This Docker container is entirely unofficial and not made by the creators of
 > Nginx Proxy Manager.
