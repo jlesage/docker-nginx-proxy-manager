@@ -32,6 +32,7 @@ fi
 
 apk --no-cache add \
     coreutils \
+    patchelf \
     xxhash \
     curl \
     jq \
@@ -51,6 +52,23 @@ apk --no-cache add \
     rust \
     cargo \
 
+# Needed to build cryptography wheel (linux/386).
+if [ "$TARGETPLATFORM" = "linux/386" ]; then
+    apk --no-cache add \
+        openssl-dev \
+
+fi
+
+# Needed to build lxml wheel (linux/386).
+if [ "$TARGETPLATFORM" = "linux/386" ]; then
+    apk --no-cache add \
+        libxml2-dev \
+        libxml2-static \
+        libxslt-dev \
+        libxslt-static \
+
+fi
+
 #
 # Build certbot.
 #
@@ -63,6 +81,7 @@ curl -# -L -o /packages/cryptography-46.0.5-cp312-abi3-linux_armv7l.whl \
     https://wheels.eeems.codes/cryptography/cryptography-46.0.5-cp312-abi3-linux_armv7l.whl
 
 export OSTYPE='linux-gnu'
+export STATIC_DEPS=true # For lxml wheel
 mkdir /tmp/certbot-symlinks
 
 log "Installing certbot..."
@@ -144,3 +163,37 @@ while IFS= read -r line; do
     fi
 done < "$TMP_FILE"
 rm -f "$TMP_FILE" /tmp/.seen*
+
+log "Checking libraries dependencies..."
+for lib in $(find /opt/certbot/ -type f -name "*.so" -exec patchelf --print-needed {} ';' | sort -u)
+do
+    if [ "$TARGETPLATFORM" = "linux/386" ]; then
+        case "$lib" in
+            libgcc_s*)
+                ;;
+            libc.musl-*)
+                ;;
+            libffi.so.8)
+                ;;
+            libcrypto.so.3)
+                ;;
+            libssl.so.3)
+                ;;
+            *)
+                echo "ERROR: New library dependency: $lib"
+                exit 1
+                ;;
+        esac
+    else
+        case "$lib" in
+            libgcc_s*)
+                ;;
+            libc.musl-*)
+                ;;
+            *)
+                echo "ERROR: New library dependency: $lib"
+                exit 1
+                ;;
+        esac
+    fi
+done

@@ -67,6 +67,7 @@ RUN upx /tmp/go/bin/bcrypt-tool
 
 # Build certbot and its plugins.
 FROM alpine:3.23 AS certbot
+ARG TARGETPLATFORM
 ARG CERTBOT_VERSION
 COPY --from=npm /tmp/nginx-proxy-manager-install/opt/nginx-proxy-manager/certbot/dns-plugins.json /build/
 COPY src/certbot /build
