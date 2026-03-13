@@ -1,0 +1,13 @@
+diff --git a/backend/index.js b/backend/index.js
+index 00285667..b5a9739d 100644
+--- a/backend/index.js
++++ b/backend/index.js
+@@ -8,7 +8,7 @@ import { migrateUp } from "./migrate.js";
+ import { getCompiledSchema } from "./schema/index.js";
+ import setup from "./setup.js";
+ 
+-const IP_RANGES_FETCH_ENABLED = process.env.IP_RANGES_FETCH_ENABLED !== "false";
++const IP_RANGES_FETCH_ENABLED = !(["off", "false", "0", "no", "disable", "disabled"].includes(process.env.IP_RANGES_FETCH_ENABLED.toLowerCase()));
+ 
+ async function appStart() {
+ 	return migrateUp()

@@ -76,6 +76,7 @@ sed -i "s/\"version\": \"[0-9]\+\.[0-9]\+\.[0-9]\+\",/\"version\": \"${NGINX_PRO
 log "Patching Nginx Proxy Manager backend..."
 PATCHES="
     fix-legacy-sqlite3.patch
+    ip-ranges-fetch.patch \
     bcrypt.patch
     certbot-dns-plugins.patch
     certbot-command.patch
