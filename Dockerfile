@@ -113,7 +113,9 @@ RUN \
 
 # Set public environment variables.
 ENV \
-    DISABLE_IPV6=0
+    DISABLE_IPV6=0 \
+    DISABLE_RESOLVER=0 \
+    IP_RANGES_FETCH_ENABLED=1
 
 # Expose ports.
 #   - 8080: HTTP traffic

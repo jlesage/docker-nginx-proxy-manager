@@ -421,6 +421,30 @@ container:
         display: advanced
         required: false
         mask: false
+    - name: DISABLE_RESOLVER
+      description: >-
+        When set to `1`, usage of NGINX resolver is disabled.
+      type: public
+      default: 0
+      unraid_template:
+        title: Disable NGINX Resolver
+        display: advanced
+        required: false
+        mask: false
+    - name: IP_RANGES_FETCH_ENABLED
+      description: >-
+        When set to `1`, official Cloudflare and CloudFront IP ranges are
+        periodically fetched to define a trusted list. This ensures the system
+        recognizes these providers as legitimate intermediaries, allowing it use
+        the original client IP from request headers instead of the provider's
+        IP.
+      type: public
+      default: 1
+      unraid_template:
+        title: Fetch IP Ranges
+        display: advanced
+        required: false
+        mask: false
 
   # Volumes
   volumes: []

@@ -106,6 +106,8 @@ the `-e` parameter in the format `<VARIABLE_NAME>=<VALUE>`.
 |`PACKAGES_MIRROR`| Mirror of the repository to use when installing packages. List of mirrors is available at https://mirrors.alpinelinux.org. | (no value) |
 |`CONTAINER_DEBUG`| When set to `1`, enables debug logging. | `0` |
 |`DISABLE_IPV6`| When set to `1`, IPv6 support is disabled. This is needed when IPv6 is not enabled/supported on the host. | `0` |
+|`DISABLE_RESOLVER`| When set to `1`, usage of NGINX resolver is disabled. | `0` |
+|`IP_RANGES_FETCH_ENABLED`| When set to `1`, official Cloudflare and CloudFront IP ranges are periodically fetched to define a trusted list. This ensures the system recognizes these providers as legitimate intermediaries, allowing it use the original client IP from request headers instead of the provider's IP. | `1` |
 
 #### Deployment Considerations
 
