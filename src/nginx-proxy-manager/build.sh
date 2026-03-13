@@ -110,9 +110,9 @@ log "Building Nginx Proxy Manager backend..."
         *) echo "ERROR: Unsupported arch: $(xx-info arch)."; exit 1 ;;
     esac
     cd /app/backend
-    # Use NPM instead of yarn because yarn doesn't seem to be able to install
-    # for another achitecture.  Note that NPM install should also use yarn.lock.
-    npm install --legacy-peer-deps --omit=dev --omit=optional --target_platform=linux --target_arch=$ARCH
+    npm_config_arch=$ARCH npm_config_platform=linux \
+    npm_config_enable_lto=false \
+    yarn install --production --ignore-optional --network-timeout 100000
     node-prune
     # better-sqlite3 should be used, but some legacy/old installations might
     # still use the sqlite3 module (configured in production.json).
