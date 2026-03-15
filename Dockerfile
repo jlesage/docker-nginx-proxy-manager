@@ -74,7 +74,7 @@ COPY src/certbot /build
 RUN /build/build.sh "$CERTBOT_VERSION" /build/dns-plugins.json
 
 # Pull base image.
-FROM jlesage/baseimage:alpine-3.23-v3.10.4
+FROM jlesage/baseimage:alpine-3.23-v3.10.5
 
 ARG NGINX_PROXY_MANAGER_VERSION
 ARG DOCKER_IMAGE_VERSION
