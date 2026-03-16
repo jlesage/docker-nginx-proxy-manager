@@ -87,6 +87,13 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 26.03.1
+      date: 2026-03-15
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.14.0.'
+        - 'Certbot plugins are now pre-installed with their own virtual environment.'
+        - 'Updated OpenResty to version 1.27.1.2.'
+        - 'Updated baseimage to version 3.10.5, now based on Alpine Linux 3.23.'
     - version: 25.09.1
       date: 2025-09-13
       changes:
