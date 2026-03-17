@@ -16,6 +16,11 @@ log() {
     echo ">>> $*"
 }
 
+# Version 3.5.x should not be used for now.
+# https://github.com/jlesage/docker-nginx-proxy-manager/issues/349
+OPENSSL_VERSION=3.4.4
+OPENSSL_URL=https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz
+
 OPENRESTY_URL="${1:-}"
 NGINX_HTTP_GEOIP2_MODULE_URL="${2:-}"
 LIBMAXMINDDB_URL="${3:-}"
@@ -52,7 +57,6 @@ xx-apk --no-cache --no-scripts add \
     g++ \
     linux-headers \
     pcre-dev \
-    openssl-dev \
     zlib-dev \
     luajit-dev \
 
@@ -71,6 +75,10 @@ curl -# -L -f ${NGINX_HTTP_GEOIP2_MODULE_URL} | tar xz --strip 1 -C /tmp/ngx_htt
 log "Downloading libmaxminddb..."
 mkdir /tmp/libmaxminddb
 curl -# -L -f ${LIBMAXMINDDB_URL} | tar xz --strip 1 -C /tmp/libmaxminddb
+
+log "Downloading OpenSSL..."
+mkdir /tmp/openssl
+curl -# -L -f ${OPENSSL_URL} | tar xz --strip 1 -C /tmp/openssl
 
 #
 # Compile.
@@ -99,12 +107,28 @@ NGINX_SRC_DIR="$(find /tmp/openresty/bundle -mindepth 1 -maxdepth 1 -type d -nam
 curl -# -L -f https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/nginx-cross.patch | patch -p1 -d "$NGINX_SRC_DIR"
 curl -# -L -f https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/0001-Allow-the-overriding-of-the-endianness-via-the-confi.patch | patch -p1 -d "$NGINX_SRC_DIR"
 
-case "$(xx-info arch)" in
+ARCH="$(xx-info arch)"
+VARIANT="$(xx-info variant)"
+
+case "$ARCH" in
     amd64) PTRSIZE=8; ENDIANNESS=little ;;
     arm64) PTRSIZE=8; ENDIANNESS=little ;;
     386)   PTRSIZE=4; ENDIANNESS=little ;;
     arm)   PTRSIZE=4; ENDIANNESS=little ;;
-    *) echo "Unknown ARCH: $(xx-info arch)" ; exit 1 ;;
+    *) echo "Unknown arch: $ARCH" ; exit 1 ;;
+esac
+
+case "$ARCH" in
+    amd64) OPENSSL_ARCH=linux-x86_64 ;;
+    386)   OPENSSL_ARCH=linux-elf ;;
+    arm64) OPENSSL_ARCH=linux-aarch64 ;;
+    arm)
+        case "$VARIANT" in
+            v7) OPENSSL_ARCH=linux-armv7 ;;
+            *)  OPENSSL_ARCH=linux-armv4 ;;
+        esac
+        ;;
+    *) echo "Unknown arch: $ARCH" ; exit 1 ;;
 esac
 
 log "Configuring OpenResty..."
@@ -170,6 +194,8 @@ log "Configuring OpenResty..."
         --with-stream_realip_module \
         --with-stream_ssl_preread_module \
         --with-pcre-jit \
+        --with-openssl=/tmp/openssl \
+        --with-openssl-opt=$OPENSSL_ARCH \
         \
         --add-module=/tmp/ngx_http_geoip2_module \
 )
