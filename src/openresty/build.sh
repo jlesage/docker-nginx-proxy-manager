@@ -122,12 +122,7 @@ case "$ARCH" in
     amd64) OPENSSL_ARCH=linux-x86_64 ;;
     386)   OPENSSL_ARCH=linux-elf ;;
     arm64) OPENSSL_ARCH=linux-aarch64 ;;
-    arm)
-        case "$VARIANT" in
-            v7) OPENSSL_ARCH=linux-armv7 ;;
-            *)  OPENSSL_ARCH=linux-armv4 ;;
-        esac
-        ;;
+    arm)   OPENSSL_ARCH=linux-armv4 ;;
     *) echo "Unknown arch: $ARCH" ; exit 1 ;;
 esac
 
