@@ -71,4 +71,15 @@ fi
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /etc/nginx/conf.d
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /config/nginx
 
+# Backup the database if needed.
+if [ -f /config/database.sqlite ]; then
+    cur_version="$(awk '/"version"/ { gsub(/[",]/, "", $2); print $2 }' /opt/nginx-proxy-manager/package.json)"
+    prev_version="$(cat /config/.npm_version 2>/dev/null || true)"
+    if [ "$prev_version" != "$cur_version" ]; then
+        echo "creating database backup..."
+        cp /config/database.sqlite /config/"database.sqlite.bk-${prev_version:-unknown}"
+    fi
+    echo "$cur_version" > /config/.npm_version
+fi
+
 # vim:ft=sh:ts=4:sw=4:et:sts=4
