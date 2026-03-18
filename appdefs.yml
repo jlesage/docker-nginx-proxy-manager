@@ -87,6 +87,11 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 26.03.2
+      date: 2026-03-18
+      changes:
+        - 'Fixed an issue where connection from Cloudflare would fail during the SSL handshake.'
+        - 'Perform a backup of the database when upgrading to a new version of Nginx Proxy Manager.'
     - version: 26.03.1
       date: 2026-03-15
       changes:
