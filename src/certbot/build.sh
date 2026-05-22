@@ -122,7 +122,6 @@ rm -rf /opt/certbot/*/lib/python*/site-packages/__pycache__
 rm -rf /opt/certbot/*/lib/python*/site-packages/*.dist-info/licenses
 rm -rf /opt/certbot/*/lib/python*/site-packages/*.dist-info/sboms
 rm -f /opt/certbot/*/bin/activate.*
-find /opt/certbot/*/lib/python*/site-packages/*.dist-info -type f -not -name "*.txt" -delete
 find /opt/certbot/*/lib/python*/site-packages -type d -name "tests" -exec rm -rf {} +
 find /opt/certbot/*/lib/python*/site-packages -type d -name "test" -exec rm -rf {} +
 find /opt/certbot/*/lib/python*/site-packages -type d -name "docs" -exec rm -rf {} +
