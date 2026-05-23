@@ -87,6 +87,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 26.05.1
+      date: 2026-05-23
+      changes:
+        - 'Fixed an issue causing some plugins to fail to run.'
     - version: 26.03.2
       date: 2026-03-18
       changes:
