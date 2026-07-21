@@ -81,6 +81,17 @@ mkdir /packages
 
 export OSTYPE='linux-gnu'
 export STATIC_DEPS=true # For lxml wheel
+
+# On linux/386 under QEMU/buildx, uname -m reports x86_64 (64-bit kernel) while
+# userspace is 32-bit. Python/maturin then tag built wheels as linux_x86_64, and
+# uv rejects them for musllinux i686 (e.g. pydantic-core for certbot-dns-hostinger).
+# Force the correct platform tag for native extension builds.
+case "$TARGETPLATFORM" in
+    linux/386)
+        export _PYTHON_HOST_PLATFORM=linux-i686
+        ;;
+esac
+
 mkdir /tmp/certbot-symlinks
 
 log "Installing certbot..."
