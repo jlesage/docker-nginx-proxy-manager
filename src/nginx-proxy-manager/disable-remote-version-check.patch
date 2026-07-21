@@ -1,0 +1,34 @@
+#
+# Disable checking for the latest Nginx Proxy Manager version from GitHub.
+#
+--- a/backend/internal/remote-version.js
++++ b/backend/internal/remote-version.js
+@@ -15,26 +15,12 @@
+ 	 * @return {Promise<{current: string, latest: string, update_available: boolean}>} Version info
+ 	 */
+ 	get: async () => {
+-		if (
+-			!internalRemoteVersion.last_result ||
+-			!internalRemoteVersion.last_fetch_time ||
+-			Date.now() - internalRemoteVersion.last_fetch_time > internalRemoteVersion.cache_timeout
+-		) {
+-			const raw = await internalRemoteVersion.fetchUrl(VERSION_URL);
+-			const data = JSON.parse(raw);
+-			internalRemoteVersion.last_result = data;
+-			internalRemoteVersion.last_fetch_time = Date.now();
+-		} else {
+-			debug(logger, "Using cached remote version result");
+-		}
+-
+-		const latestVersion = internalRemoteVersion.last_result.tag_name;
+ 		const version = pjson.version.split("-").shift().split(".");
+ 		const currentVersion = `v${version[0]}.${version[1]}.${version[2]}`;
+ 		return {
+ 			current: currentVersion,
+-			latest: latestVersion,
+-			update_available: internalRemoteVersion.compareVersions(currentVersion, latestVersion),
++			latest: currentVersion,
++			update_available: false,
+ 		};
+ 	},
+ 

@@ -80,6 +80,7 @@ PATCHES="
     certbot-dns-plugins.patch
     certbot-command.patch
     certbot-disable-plugin-install.patch
+    disable-remote-version-check.patch
 "
 for P in $PATCHES; do
     echo "Applying $P..."
