@@ -5,10 +5,10 @@
 --- a/backend/lib/certbot.js
 +++ b/backend/lib/certbot.js
 @@ -63,7 +63,7 @@
- 		env = Object.assign(env, plugin.env);
- 	}
+ 				.join(" ")
+ 		: "";
  
--	const cmd = `. /opt/certbot/bin/activate && pip install --no-cache-dir ${plugin.dependencies} ${plugin.package_name}${plugin.version}  && deactivate`;
+-	const cmd = `. /opt/certbot/bin/activate && pip install --no-cache-dir ${quotedDeps} '${plugin.package_name}${plugin.version}' && deactivate`;
 +	const cmd = `/bin/true`;
  	return utils
  		.exec(cmd, { env })

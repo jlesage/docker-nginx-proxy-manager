@@ -170,7 +170,7 @@ do
             case "$lib" in
                 libgcc_s*)
                     ;;
-                libc.musl-*)
+                libc.musl-*|libc.so)
                     ;;
                 libffi.so.8)
                     ;;
@@ -189,7 +189,7 @@ do
             case "$lib" in
                 libgcc_s*)
                     ;;
-                libc.musl-*)
+                libc.musl-*|libc.so)
                     ;;
                 *)
                     echo "ERROR: New library dependency for $TARGETPLATFORM: $lib"

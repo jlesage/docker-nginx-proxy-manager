@@ -4,14 +4,14 @@
 --- a/backend/package.json
 +++ b/backend/package.json
 @@ -16,7 +16,7 @@
- 		"ajv": "^8.18.0",
- 		"archiver": "^7.0.1",
+ 		"ajv": "^8.20.0",
+ 		"archiver": "^8.0.0",
  		"batchflow": "^0.4.0",
 -		"bcrypt": "^6.0.0",
 +		"bcryptjs": "^3.0.3",
- 		"better-sqlite3": "^12.6.2",
+ 		"better-sqlite3": "^12.10.0",
  		"body-parser": "^2.2.2",
- 		"compression": "^1.8.1",
+ 		"chalk": "5.6.2",
 --- a/backend/models/auth.js
 +++ b/backend/models/auth.js
 @@ -16,7 +16,7 @@
