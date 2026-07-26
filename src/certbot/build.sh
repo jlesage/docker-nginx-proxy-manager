@@ -135,7 +135,16 @@ rm -rf /opt/certbot/*/lib/python*/site-packages/*.dist-info/sboms
 rm -f /opt/certbot/*/bin/activate.*
 find /opt/certbot/*/lib/python*/site-packages -type d -name "tests" -exec rm -rf {} +
 find /opt/certbot/*/lib/python*/site-packages -type d -name "test" -exec rm -rf {} +
-find /opt/certbot/*/lib/python*/site-packages -type d -name "docs" -exec rm -rf {} +
+# Remove documentation trees only. Keep directories that are real Python packages
+# (have __init__.py): botocore/docs and boto3/docs are imported at runtime by
+# certbot-dns-route53 (via boto3), and deleting them causes:
+#   No module named 'botocore.docs'
+find /opt/certbot/*/lib/python*/site-packages -type d -name "docs" | while IFS= read -r dir; do
+    if [ -f "$dir/__init__.py" ]; then
+        continue
+    fi
+    rm -rf "$dir"
+done
 find /opt/certbot/*/lib/python*/site-packages -type f -name "CACHEDIR.TAG" -delete
 
 log "Stripping libraries..."
