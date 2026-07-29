@@ -126,7 +126,7 @@ jobs:
           build-args: |
             DOCKER_IMAGE_VERSION=${{ steps.prep.outputs.label_version }}
           cache-from: type=registry,ref=${{ env.CACHE_IMAGE }}
-          cache-to: type=registry,ref=${{ env.CACHE_IMAGE }},mode=max,image-manifest=true,oci-mediatypes=true,ignore-error=true
+          cache-to: type=registry,ref=${{ env.CACHE_IMAGE }},mode=max
 
       - name: Inspect
         if: ${{ steps.prep.outputs.is_release == 'yes' }}
