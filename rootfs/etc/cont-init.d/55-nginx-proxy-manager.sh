@@ -67,9 +67,28 @@ if is-bool-val-false "${DISABLE_RESOLVER:-0}"; then
     fi
 fi
 
+# Generate the administration interface server from the template.
+admin_port="${NPM_ADMIN_PORT:-8181}"
+case "$admin_port" in
+    *[!0-9]*)
+        log "ERROR: NPM_ADMIN_PORT must be a number between 1 and 65535."
+        exit 1
+        ;;
+    *)
+        if [ "$admin_port" -lt 1 ] || [ "$admin_port" -gt 65535 ]; then
+            log "ERROR: NPM_ADMIN_PORT must be a number between 1 and 65535."
+            exit 1
+        fi
+        ;;
+esac
+mkdir -p /tmp/nginx
+cp /etc/nginx/conf.d/production.conf.template /tmp/nginx/production.conf
+sed-patch "s/{{NPM_ADMIN_PORT}}/${admin_port}/g" /tmp/nginx/production.conf
+
 # Handle IPv6 settings.
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /etc/nginx/conf.d
 /opt/nginx-proxy-manager/bin/handle-ipv6-setting /config/nginx
+/opt/nginx-proxy-manager/bin/handle-ipv6-setting /tmp/nginx
 
 # Backup the database if needed.
 if [ -f /config/database.sqlite ]; then

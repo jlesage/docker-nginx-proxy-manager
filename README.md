@@ -108,6 +108,7 @@ the `-e` parameter in the format `<VARIABLE_NAME>=<VALUE>`.
 |`DISABLE_IPV6`| When set to `1`, IPv6 support is disabled. This is needed when IPv6 is not enabled/supported on the host. | `0` |
 |`DISABLE_RESOLVER`| When set to `1`, usage of NGINX resolver is disabled. | `0` |
 |`IP_RANGES_FETCH_ENABLED`| When set to `1`, official Cloudflare and CloudFront IP ranges are periodically fetched to define a trusted list. This ensures the system recognizes these providers as legitimate intermediaries, allowing it use the original client IP from request headers instead of the provider's IP. | `1` |
+|`NPM_ADMIN_PORT`| Port used by the administration web interface. This port is internal to the container and typically does not need to be changed. By default, a container uses the default bridge network, requiring each internal port to be mapped to an external port (using the `-p` or `--publish` argument). If another network type is used, changing this port may prevent conflicts with other services/containers. | `8181` |
 
 #### Deployment Considerations
 
@@ -167,7 +168,7 @@ documentation for details.
 
 | Port | Protocol | Mapping to Host | Description |
 |------|----------|-----------------|-------------|
-| 8181 | TCP | Mandatory | Port used to access the web interface of the application. |
+| 8181 | TCP | Mandatory | Port used to access the administration web interface. For non-default bridge networks, the port can be changed with the `NPM_ADMIN_PORT` environment variable. |
 | 8080 | TCP | Mandatory | Port used to serve HTTP requests. |
 | 4443 | TCP | Mandatory | Port used to serve HTTPs requests. |
 

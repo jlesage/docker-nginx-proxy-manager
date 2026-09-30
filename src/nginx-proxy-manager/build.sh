@@ -144,11 +144,11 @@ cp -rv /tmp/nginx-proxy-manager/docker/rootfs/etc/logrotate.d $ROOTFS/etc/
 # Remove the nginx development config.
 rm $ROOTFS/etc/nginx/conf.d/dev.conf
 
-# Change the management interface port to the unprivileged port 8181.
-sed -i 's|81 default|8181 default|' $ROOTFS/etc/nginx/conf.d/production.conf
+# Change the management interface root. The listen port is filled in at startup.
+sed -i 's|/app/frontend;|/opt/nginx-proxy-manager/frontend;|' $ROOTFS/etc/nginx/conf.d/production.conf.template
 
-# Change the management interface root.
-sed -i 's|/app/frontend;|/opt/nginx-proxy-manager/frontend;|' $ROOTFS/etc/nginx/conf.d/production.conf
+# Generated at startup. Kept out of the persistent volume.
+ln -sf /tmp/nginx/production.conf $ROOTFS/etc/nginx/conf.d/production.conf
 
 # Change the HTTP port 80 to the unprivileged port 8080.
 sed -i 's|80;|8080;|' $ROOTFS/etc/nginx/conf.d/default.conf

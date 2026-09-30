@@ -483,6 +483,26 @@ container:
         display: advanced
         required: false
         mask: false
+    - name: NPM_ADMIN_PORT
+      description: >-
+        Port used by the administration web interface. This port is internal to
+        the container and typically does not need to be changed. By default, a
+        container uses the default bridge network, requiring each internal port
+        to be mapped to an external port (using the `-p` or `--publish`
+        argument). If another network type is used, changing this port may
+        prevent conflicts with other services/containers.
+      type: public
+      default: 8181
+      unraid_template:
+        title: Admin Listening Port (Non-Bridge Network Type)
+        description: >-
+          Port used by the administration web interface. This port is internal
+          to the container and typically does not need to be changed. NOTE:
+          This setting is relevant only when the Network Type is set to
+          something else than Bridge.
+        display: advanced
+        required: false
+        mask: false
 
   # Volumes
   volumes: []
@@ -492,7 +512,9 @@ container:
     - number: 8181
       protocol: tcp
       description: >-
-        Port used to access the web interface of the application.
+        Port used to access the administration web interface. For non-default
+        bridge networks, the port can be changed with the `NPM_ADMIN_PORT`
+        environment variable.
       mandatory: true
       include_in_quick_start: true
       unraid_template:

@@ -1,6 +1,6 @@
 --- a/backend/internal/certificate.js
 +++ b/backend/internal/certificate.js
-@@ -20,7 +19,7 @@ import internalHost from "./host.js";
+@@ -20,7 +20,7 @@
  import internalNginx from "./nginx.js";
  
  const letsencryptConfig = "/etc/letsencrypt.ini";
@@ -9,7 +9,7 @@
  const certbotLogsDir = "/data/logs";
  const certbotWorkDir = "/tmp/letsencrypt-lib";
  
-@@ -777,6 +776,8 @@ const internalCertificate = {
+@@ -779,6 +779,8 @@
  			`Requesting LetsEncrypt certificates for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
  		);
  
@@ -17,8 +17,8 @@
 +
  		const args = [
  			"certonly",
- 			"--config",
-@@ -832,6 +832,8 @@ const internalCertificate = {
+ 			"-n", // non-interactive
+@@ -835,6 +837,8 @@
  		// Whether the plugin has a --<name>-credentials argument
  		const hasConfigArg = certificate.meta.dns_provider !== "route53";
  
@@ -26,8 +26,8 @@
 +
  		const args = [
  			"certonly",
- 			"--config",
-@@ -931,6 +933,8 @@ const internalCertificate = {
+ 			"-n", // non-interactive
+@@ -945,6 +949,8 @@
  			`Renewing LetsEncrypt certificates for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
  		);
  
@@ -36,23 +36,23 @@
  		const args = [
  			"renew",
  			"--force-renewal",
-@@ -977,6 +981,8 @@ const internalCertificate = {
- 			`Renewing LetsEncrypt certificates via ${dnsPlugin.name} for Cert #${certificate.id}: ${certificate.domain_names.join(", ")}`,
- 		);
+@@ -1028,6 +1034,8 @@
+ 			);
+ 		}
  
 +		const certbotCommand = `${certbotDefaultCommand}-${dnsPlugin.full_plugin_name}`;
 +
  		const args = [
  			"renew",
  			"--force-renewal",
-@@ -1015,6 +1021,12 @@ const internalCertificate = {
+@@ -1076,6 +1084,12 @@
  	 * @returns {Promise}
  	 */
  	revokeLetsEncryptSsl: async (certificate, throwErrors) => {
 +		let certbotCommand = certbotDefaultCommand;
 +		if (certificate.meta.dns_challenge) {
 +			const dnsPlugin = dnsPlugins[certificate.meta.dns_provider];
-+			certbotCmd = `${certbotCommand}-${dnsPlugin.full_plugin_name}`;
++			certbotCommand = `${certbotCommand}-${dnsPlugin.full_plugin_name}`;
 +		}
 +
  		logger.info(

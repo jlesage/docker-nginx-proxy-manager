@@ -3,18 +3,18 @@
 #
 --- a/backend/package.json
 +++ b/backend/package.json
-@@ -16,7 +16,7 @@
+@@ -17,7 +17,7 @@
  		"ajv": "^8.20.0",
  		"archiver": "^8.0.0",
  		"batchflow": "^0.4.0",
 -		"bcrypt": "^6.0.0",
 +		"bcryptjs": "^3.0.3",
- 		"better-sqlite3": "^12.10.0",
- 		"body-parser": "^2.2.2",
+ 		"better-sqlite3": "^13.0.3",
+ 		"body-parser": "^2.3.0",
  		"chalk": "5.6.2",
 --- a/backend/models/auth.js
 +++ b/backend/models/auth.js
-@@ -16,7 +16,7 @@
+@@ -1,7 +1,7 @@
  // Objection Docs:
  // http://vincit.github.io/objection.js/
  
@@ -23,8 +23,6 @@
  import { Model } from "objection";
  import db from "../db.js";
  import { convertBoolFieldsToInt, convertIntFieldsToBool } from "../lib/helpers.js";
-diff --git a/backend/internal/2fa.js b/backend/internal/2fa.js
-index 43307e02..dac3f135 100644
 --- a/backend/internal/2fa.js
 +++ b/backend/internal/2fa.js
 @@ -1,5 +1,5 @@
