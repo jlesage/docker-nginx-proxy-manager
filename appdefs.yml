@@ -87,6 +87,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 26.10.1
+      date: 2026-10-05
+      changes:
+        - 'Updated Nginx Proxy Manager to version 2.16.0.'
     - version: 26.09.1
       date: 2026-09-22
       changes:
