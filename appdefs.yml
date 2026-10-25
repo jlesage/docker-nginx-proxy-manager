@@ -87,6 +87,10 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 26.10.2
+      date: 2026-10-25
+      changes:
+        - 'Updated installed packages to get latest security fixes.'
     - version: 26.10.1
       date: 2026-10-05
       changes:
