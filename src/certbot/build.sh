@@ -44,7 +44,40 @@ apk --no-cache add \
 apk --no-cache add \
     build-base \
     python3-dev \
-    go \
+
+# certbot-dns-multi 5.6.0 compiles a Go extension. Its go.mod requires
+# Go >= 1.26.0. Alpine 3.23 ships Go 1.25 and sets GOTOOLCHAIN=local, so
+# that toolchain refuses to download a newer one.
+GO_VERSION=1.27.4
+case "$TARGETPLATFORM" in
+    linux/amd64)
+        GO_ARCH=amd64
+        GO_SHA256=7226736c2339719cda28fbf3a54d71aa63bcefe376e98cef00034268dab24840
+        ;;
+    linux/386)
+        GO_ARCH=386
+        GO_SHA256=6ecb45737d2315acb0dbbc97ea8e13e7c19d4c796abe8d68907c40bce6f50bf7
+        ;;
+    linux/arm64)
+        GO_ARCH=arm64
+        GO_SHA256=3392582988a273a87ab5043ee1b2c9c17a2c3c00580bf9326c47a2e0aaaeac92
+        ;;
+    linux/arm/v6|linux/arm/v7)
+        GO_ARCH=armv6l
+        GO_SHA256=e50964c41c6e187375387939e2f380de7250eba44e2259dfeb75c540d9d585c3
+        ;;
+    *)
+        log "ERROR: Unsupported platform for Go: $TARGETPLATFORM"
+        exit 1
+        ;;
+esac
+log "Installing Go ${GO_VERSION} (${GO_ARCH})..."
+curl -# -L -f "https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz" -o /tmp/go.tgz
+echo "${GO_SHA256}  /tmp/go.tgz" | sha256sum -c -
+tar -C /usr/local -xzf /tmp/go.tgz
+rm -f /tmp/go.tgz
+export PATH="/usr/local/go/bin:${PATH}"
+export GOTOOLCHAIN=local
 
 # Needed to build cffi.
 apk --no-cache add \
