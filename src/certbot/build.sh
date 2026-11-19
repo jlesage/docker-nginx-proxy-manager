@@ -125,6 +125,24 @@ case "$TARGETPLATFORM" in
         ;;
 esac
 
+# lxml publishes no musllinux i686 wheel, so linux/386 builds it from source.
+# STATIC_DEPS makes that build download zlib from https://zlib.net/. The
+# tarball lxml checksums, zlib 1.3.2, is no longer there. Fetch it from
+# /fossils/ and give the build that directory.
+lxml_config=""
+case "$TARGETPLATFORM" in
+    linux/386)
+        log "Downloading zlib 1.3.2 for the lxml build..."
+        mkdir -p /tmp/lxml-deps
+        curl -# -L -f "https://zlib.net/fossils/zlib-1.3.2.tar.gz" \
+            -o /tmp/lxml-deps/zlib-1.3.2.tar.gz
+        # lxml reads --download-dir when setup.py starts. setuptools applies
+        # --build-option only to bdist_wheel, which is too late, so this has
+        # to be a --global-option.
+        lxml_config="--config-settings-package lxml:--global-option=--download-dir=/tmp/lxml-deps"
+        ;;
+esac
+
 mkdir /tmp/certbot-symlinks
 
 log "Installing certbot..."
@@ -155,7 +173,7 @@ for plugin in $(jq -r 'keys[]' "$CERTBOT_PLUGINS"); do
     esac
     uv venv /opt/certbot/$full_plugin_name
     . /opt/certbot/$full_plugin_name/bin/activate
-    uv pip install --find-links /packages/ $deps $pkg_name$pkg_ver
+    uv pip install --find-links /packages/ $lxml_config $deps $pkg_name$pkg_ver
     uv pip uninstall setuptools
     deactivate
     ln -s /opt/certbot/$full_plugin_name/bin/certbot /tmp/certbot-symlinks/certbot-$full_plugin_name
