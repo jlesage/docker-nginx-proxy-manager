@@ -107,6 +107,9 @@ NGINX_SRC_DIR="$(find /tmp/openresty/bundle -mindepth 1 -maxdepth 1 -type d -nam
 curl -# -L -f https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/nginx-cross.patch | patch -p1 -d "$NGINX_SRC_DIR"
 curl -# -L -f https://github.com/openembedded/meta-openembedded/raw/master/meta-webserver/recipes-httpd/nginx/files/0001-Allow-the-overriding-of-the-endianness-via-the-confi.patch | patch -p1 -d "$NGINX_SRC_DIR"
 
+# Apply nginx 1.31.9 changes to get security fixes.
+patch --no-backup-if-mismatch -p1 -d "$NGINX_SRC_DIR" < "$(dirname "$0")/nginx-1.31.9.patch"
+
 ARCH="$(xx-info arch)"
 VARIANT="$(xx-info variant)"
 
