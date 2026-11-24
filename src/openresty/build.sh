@@ -50,6 +50,7 @@ apk --no-cache add \
     clang \
     perl \
     file \
+    libcap-setcap \
 
 xx-apk --no-cache --no-scripts add \
     musl-dev \
@@ -200,6 +201,7 @@ make -C /tmp/openresty -j$(nproc)
 
 log "Installing OpenResty..."
 make DESTDIR=/tmp/openresty-install -C /tmp/openresty install
+setcap 'cap_net_bind_service=+ep' /tmp/openresty-install/usr/sbin/nginx
 
 rm -r \
     /tmp/openresty-install/etc/nginx/*.default \
