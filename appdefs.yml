@@ -63,6 +63,10 @@ app:
           used ports on the host, they can simply be set to the same value as the
           container port.
 
+          `8080` and `4443` are the default container ports. On a non-default bridge
+          network they can be changed with `NPM_HTTP_PORT` and `NPM_HTTPS_PORT`, and
+          `-p` must publish the new container port.
+
           > [!NOTE]
           > Some routers don't offer the ability to configure the internal port to forward
           > to. This means that internal port is the same as the external one. In a such
@@ -517,6 +521,46 @@ container:
         display: advanced
         required: false
         mask: false
+    - name: NPM_HTTP_PORT
+      description: >-
+        Port used to serve HTTP requests. This port is internal to the
+        container and typically does not need to be changed. By default, a
+        container uses the default bridge network, requiring each internal port
+        to be mapped to an external port (using the `-p` or `--publish`
+        argument). If another network type is used, changing this port may
+        prevent conflicts with other services/containers.
+      type: public
+      default: 8080
+      unraid_template:
+        title: HTTP Listening Port (Non-Bridge Network Type)
+        description: >-
+          Port used to serve HTTP requests. This port is internal to the
+          container and typically does not need to be changed. NOTE: This
+          setting is relevant only when the Network Type is set to something
+          else than Bridge.
+        display: advanced
+        required: false
+        mask: false
+    - name: NPM_HTTPS_PORT
+      description: >-
+        Port used to serve HTTPs requests. This port is internal to the
+        container and typically does not need to be changed. By default, a
+        container uses the default bridge network, requiring each internal port
+        to be mapped to an external port (using the `-p` or `--publish`
+        argument). If another network type is used, changing this port may
+        prevent conflicts with other services/containers.
+      type: public
+      default: 4443
+      unraid_template:
+        title: HTTPs Listening Port (Non-Bridge Network Type)
+        description: >-
+          Port used to serve HTTPs requests. This port is internal to the
+          container and typically does not need to be changed. NOTE: This
+          setting is relevant only when the Network Type is set to something
+          else than Bridge.
+        display: advanced
+        required: false
+        mask: false
 
   # Volumes
   volumes: []
@@ -540,7 +584,8 @@ container:
     - number: 8080
       protocol: tcp
       description: >-
-        Port used to serve HTTP requests.
+        Port used to serve HTTP requests. For non-default bridge networks, the
+        port can be changed with the `NPM_HTTP_PORT` environment variable.
       mandatory: true
       include_in_quick_start: true
       unraid_template:
@@ -557,7 +602,8 @@ container:
     - number: 4443
       protocol: tcp
       description: >-
-        Port used to serve HTTPs requests.
+        Port used to serve HTTPs requests. For non-default bridge networks, the
+        port can be changed with the `NPM_HTTPS_PORT` environment variable.
       mandatory: true
       include_in_quick_start: true
       unraid_template:

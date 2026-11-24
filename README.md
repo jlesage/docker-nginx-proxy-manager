@@ -109,6 +109,8 @@ the `-e` parameter in the format `<VARIABLE_NAME>=<VALUE>`.
 |`DISABLE_RESOLVER`| When set to `1`, usage of NGINX resolver is disabled. | `0` |
 |`IP_RANGES_FETCH_ENABLED`| When set to `1`, official Cloudflare and CloudFront IP ranges are periodically fetched to define a trusted list. This ensures the system recognizes these providers as legitimate intermediaries, allowing it use the original client IP from request headers instead of the provider's IP. | `1` |
 |`NPM_ADMIN_PORT`| Port used by the administration web interface. This port is internal to the container and typically does not need to be changed. By default, a container uses the default bridge network, requiring each internal port to be mapped to an external port (using the `-p` or `--publish` argument). If another network type is used, changing this port may prevent conflicts with other services/containers. | `8181` |
+|`NPM_HTTP_PORT`| Port used to serve HTTP requests. This port is internal to the container and typically does not need to be changed. By default, a container uses the default bridge network, requiring each internal port to be mapped to an external port (using the `-p` or `--publish` argument). If another network type is used, changing this port may prevent conflicts with other services/containers. | `8080` |
+|`NPM_HTTPS_PORT`| Port used to serve HTTPs requests. This port is internal to the container and typically does not need to be changed. By default, a container uses the default bridge network, requiring each internal port to be mapped to an external port (using the `-p` or `--publish` argument). If another network type is used, changing this port may prevent conflicts with other services/containers. | `4443` |
 
 #### Deployment Considerations
 
@@ -169,8 +171,8 @@ documentation for details.
 | Port | Protocol | Mapping to Host | Description |
 |------|----------|-----------------|-------------|
 | 8181 | TCP | Mandatory | Port used to access the administration web interface. For non-default bridge networks, the port can be changed with the `NPM_ADMIN_PORT` environment variable. |
-| 8080 | TCP | Mandatory | Port used to serve HTTP requests. |
-| 4443 | TCP | Mandatory | Port used to serve HTTPs requests. |
+| 8080 | TCP | Mandatory | Port used to serve HTTP requests. For non-default bridge networks, the port can be changed with the `NPM_HTTP_PORT` environment variable. |
+| 4443 | TCP | Mandatory | Port used to serve HTTPs requests. For non-default bridge networks, the port can be changed with the `NPM_HTTPS_PORT` environment variable. |
 
 ### Changing Parameters of a Running Container
 
@@ -376,6 +378,10 @@ to be forwarded:
 `XXXX` and `YYYY` are configurable port values. Unless they conflict with other
 used ports on the host, they can simply be set to the same value as the
 container port.
+
+`8080` and `4443` are the default container ports. On a non-default bridge
+network they can be changed with `NPM_HTTP_PORT` and `NPM_HTTPS_PORT`, and
+`-p` must publish the new container port.
 
 > [!NOTE]
 > Some routers don't offer the ability to configure the internal port to forward

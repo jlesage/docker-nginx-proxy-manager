@@ -1,0 +1,14 @@
+--- a/backend/lib/utils.js
++++ b/backend/lib/utils.js
+@@ -85,7 +85,10 @@ const omitRows = (omissions) => {
+  */
+ const getRenderEngine = () => {
+ 	const renderEngine = new Liquid({
+-		root: `${__dirname}/../templates/`,
++		root: [
++			`${__dirname}/../templates/`,
++			'/tmp/nginx-proxy-manager/templates/',
++		]
+ 	});
+ 
+ 	/**

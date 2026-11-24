@@ -114,6 +114,8 @@ RUN \
 # Set public environment variables.
 ENV \
     NPM_ADMIN_PORT=8181 \
+    NPM_HTTP_PORT=8080 \
+    NPM_HTTPS_PORT=4443 \
     DISABLE_IPV6=0 \
     DISABLE_RESOLVER=0 \
     IP_RANGES_FETCH_ENABLED=1

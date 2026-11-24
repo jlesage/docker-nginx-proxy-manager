@@ -20,6 +20,13 @@ log() {
     echo ">>> $*"
 }
 
+tokenize_listen_ports() {
+    sed -i -E \
+        -e 's/^([[:space:]]*#?listen[[:space:]]+)(\[::\]:)?80([^0-9])/\1\2__HTTP_PORT__\3/' \
+        -e 's/^([[:space:]]*#?listen[[:space:]]+)(\[::\]:)?443([^0-9])/\1\2__HTTPS_PORT__\3/' \
+        "$1"
+}
+
 NGINX_PROXY_MANAGER_VERSION="$1"
 NGINX_PROXY_MANAGER_URL="$2"
 
@@ -81,6 +88,7 @@ PATCHES="
     certbot-command.patch
     certbot-disable-plugin-install.patch
     disable-remote-version-check.patch
+    template-root-dir.patch \
 "
 for P in $PATCHES; do
     echo "Applying $P..."
@@ -150,21 +158,19 @@ sed -i 's|/app/frontend;|/opt/nginx-proxy-manager/frontend;|' $ROOTFS/etc/nginx/
 # Generated at startup. Kept out of the persistent volume.
 ln -sf /tmp/nginx/production.conf $ROOTFS/etc/nginx/conf.d/production.conf
 
-# Change the HTTP port 80 to the unprivileged port 8080.
-sed -i 's|80;|8080;|' $ROOTFS/etc/nginx/conf.d/default.conf
-sed -i 's|"80";|"8080";|' $ROOTFS/etc/nginx/conf.d/default.conf
-sed -i 's|listen 80;|listen 8080;|' $ROOTFS/opt/nginx-proxy-manager/templates/letsencrypt-request.conf
-sed -i 's|:80;|:8080;|' $ROOTFS/opt/nginx-proxy-manager/templates/letsencrypt-request.conf
-sed -i 's|listen 80;|listen 8080;|' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
-sed -i 's|:80;|:8080;|' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
-sed -i 's|80 default;|8080 default;|' $ROOTFS/opt/nginx-proxy-manager/templates/default.conf
+# Convert hard-coded ports (80/443) to placeholders in default config file.
+tokenize_listen_ports $ROOTFS/etc/nginx/conf.d/default.conf
+mv $ROOTFS/etc/nginx/conf.d/default.conf $ROOTFS/etc/nginx/conf.d/default.conf.template
+ln -sf /tmp/nginx/default.conf $ROOTFS/etc/nginx/conf.d/default.conf
 
-# Change the HTTPs port 443 to the unprivileged port 4443.
-sed -i 's|443 |4443 |' $ROOTFS/etc/nginx/conf.d/default.conf
-sed -i 's|"443";|"4443";|' $ROOTFS/etc/nginx/conf.d/default.conf
-sed -i 's|listen 443 |listen 4443 |' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
-sed -i 's|:443 |:4443 |' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
-sed -i 's|:443;|:4443;|' $ROOTFS/opt/nginx-proxy-manager/templates/_listen.conf
+# Convert hard-coded ports (80/443) to placeholders in templates.
+for tmpl in _listen.conf default.conf letsencrypt-request.conf; do
+    tokenize_listen_ports $ROOTFS/opt/nginx-proxy-manager/templates/$tmpl
+    mv $ROOTFS/opt/nginx-proxy-manager/templates/$tmpl \
+        $ROOTFS/opt/nginx-proxy-manager/templates/$tmpl.in
+    ln -sf /tmp/nginx-proxy-manager/templates/$tmpl \
+        $ROOTFS/opt/nginx-proxy-manager/templates/$tmpl
+done
 
 # Fix nginx test command line: "error_log off;" is not a valid nginx config.
 sed -i 's|"error_log off;"|"error_log /dev/null;"|' $ROOTFS/opt/nginx-proxy-manager/internal/nginx.js
