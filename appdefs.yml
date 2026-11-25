@@ -91,6 +91,12 @@ app:
             - `CONTAINER_NAME` is the name of the running container.
             - `USER_EMAIL` is the email of the address to reset the password.
   changelog:
+    - version: 26.11.2
+      date: 2026-11-25
+      changes:
+        - 'Added the ability to configure the HTTP and HTTPS listening ports.'
+        - 'Updated OpenResty to version 1.31.9.1.'
+        - 'Updated baseimage to version 3.11.13.'
     - version: 26.11.1
       date: 2026-11-20
       changes:
